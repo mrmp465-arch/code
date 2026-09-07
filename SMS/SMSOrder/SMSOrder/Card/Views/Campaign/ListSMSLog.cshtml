@@ -1,0 +1,94 @@
+﻿@using SMS.Data.DTO
+@model List<SMSLogs>
+@using SMS.Utility
+@using SMS.CMS.Helper
+@{ var idx = 0; }
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+            <th>STT</th>
+            <th>Sdt</th>
+            <th>Telco</th>
+            <th>Nội dung</th>
+            <th>Số SMS</th>
+            <th>Thời gian</th>
+            <th>Trạng thái</th>
+            <th>Thời gian phản hồi</th>
+            <th>Trạng thái gửi</th>
+            <th>Port</th>
+            <th>Sender</th>
+            <th>Chốt</th>
+        </tr>
+    </thead>
+    @if (Model != null)
+    {
+        if (Model.Count > 0)
+        {
+            foreach (var obj in Model)
+            {
+                { idx++; }
+<tr>
+
+    <td style="text-align:left;">@(idx + (ViewBag.CurrentPage - 1) * ViewBag.PageSize)</td>
+    <td style="text-align:left;">@obj.Number</td>
+    <td>@(StringUtils.GetTelCoName(StringUtils.GetTelCo(obj.Number)))</td>
+    <td style="text-align:left;">@obj.Contents</td>
+    <td style="text-align:left!important">@obj.CountSMS</td>
+    <td>@string.Format("{0:dd/MM/yyyy HH:mm}", obj.StartTime)</td>
+    <td>@Html.Raw(HtmlHelpers.GetCamStatus(obj.Status))</td>
+    <td>
+        @if (obj.ResponseTime.Year > 2017)
+        {<div>@string.Format("{0:dd/MM/yyyy HH:mm}", obj.ResponseTime)</div>}
+    </td>
+    
+    <td>@Html.Raw(HtmlHelpers.GetResponeStatus(obj.ResponseStatus)) @obj.ResponseMessage </td>
+    <td style="text-align:left;">@obj.Port</td>
+    <td style="text-align:left;">@obj.Sender</td>
+    <td>@(obj.Confirm == 0 ? " Chưa chốt" : " Đã chốt")</td>
+</tr>
+
+            }
+        }
+    }
+
+</table>
+<script type="text/javascript">
+        var PageOnSize = '@ViewBag.PageSize';
+    var CurrentPage = '@ViewBag.CurrentPage';
+     $(document).ready(function () {
+
+        $("#pager2").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest(page); }
+        });
+
+
+    });
+    function BindDataRequest(currentPage) {
+                var params = {
+
+                   id:"@ViewBag.id",
+                     keyword: $("#txtEmail2").val(),
+                    'pageSize': PageOnSize,
+                      port: $("#txtPort").val(),
+                telco: $('#ddlTelco').val(),
+                 status: $('#ddlStatus2').val(),
+                };
+                params.currentPage = currentPage;
+                var urlRequestAns = "@Url.Action("ListSMSLog")";
+                Utils.Loading();
+                $.ajax({
+                    type: 'GET',
+                    url: urlRequestAns,
+                    data: params,
+                    success: function (data) {
+                        $("#ListSMSLog").html(data);
+                        Utils.UnLoading();
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            };
+</script>

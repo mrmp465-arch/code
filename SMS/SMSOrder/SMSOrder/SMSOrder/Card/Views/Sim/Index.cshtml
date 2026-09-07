@@ -1,0 +1,238 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách Sim";
+}
+@using SMS.Data.DTO
+@{
+
+    List<Groups> ListGroup = ViewBag.GroupList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><i class="fa fa-wrench"></i>@ViewBag.Title</div>
+            <div class="box-body">
+                <div class="row" id="form">
+
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <select class="form-control" id="ddlGroup">
+                            @if (ListGroup != null && ListGroup.Count > 0)
+                            {
+                                foreach (var obj in ListGroup)
+                                {
+                                    <option value="@obj.GroupID">@obj.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2  col-sm-6 col-xs-6">
+                        <select class="form-control" id="ddlTelco">
+                            <option value="">Mạng</option>
+                            <option value="VTT">VTT</option>
+                            <option value="VNP">VNP</option>
+                            <option value="VMS">VMS</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <select class="form-control" id="ddlActive">
+                            <option value="-1">--Trạng thái--</option>
+                            <option value="1">Hoạt Động</option>
+                            <option value="0">Khóa</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6 submit" style="text-align:center">
+                        <button type="button" id="btnSearch" class="btn btn-primary"><i class="fa fa-search"></i> Tìm Kiếm</button>
+
+                        <a href="javascript:;" onclick="Upload()" class="btn btn-primary"><i class="fa fa-upload"></i> Upload từ excel</a>
+                       
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <div class="mailbox-controls">
+
+                        @if (ViewBag.IsDelete)
+                        {
+                            <button class="btn btn-default" onclick="DeleteSim()"><i class="fa fa-trash-o"></i> Xóa</button>
+                        }
+                        <button class="btn btn-default" title="Thêm mới" onclick="AddSim()"><i class="fa fa-plus"></i> Thêm mới</button>
+                        <a href="javascript:;" onclick="UploadTran()" class="btn btn-default"><i class="fa fa-upload"></i> Upload giao dịch</a>
+
+                        <div class="pull-right ng-binding">
+                            <h5 id="lbtotal" style="font-weight: bold"></h5>
+
+                        </div>
+                    </div>
+
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+
+                        <div id="ListSim">
+                            @Html.Action("ListSim")
+                        </div>
+                        <div class="dataTables_paginate" id="pager">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .pagination {
+        margin-bottom: 0;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlGroup").change(function () {
+            GetList(1);
+        });
+        $("#ddlActive").change(function () {
+            GetList(1);
+        });
+        $("#ddlTelco").change(function () {
+            GetList(1);
+        });
+        function GetList(currentPage) {
+            parameters = {
+                group: $('#ddlGroup :selected').val(),
+                telco: $('#ddlTelco :selected').val(),
+                status: $('#ddlActive :selected').val(),
+                keyword: $("#txtEmail").val(),
+                currentPage: currentPage
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/Sim/ListSim";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#ListSim").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+
+    });
+
+    function DeleteSim() {
+        var arr_checked_items = [];
+        $('input[type="checkbox"][name="chk_item"]:checked').each(function (i, e) {
+            arr_checked_items.push($(e).val());
+        });
+
+        if (arr_checked_items.length > 0) {
+            bootbox.confirm("Bạn muốn xóa sim", function (conf) {
+                if (conf == 1) {
+                    var urlUpstatus = "/Sim/DeleteMuti";
+                    Utils.Loading();
+                    $.ajax({
+                        type: 'POST',
+                        url: urlUpstatus,
+                        data: addAntiForgeryToken({ arrId: arr_checked_items }),
+                        success: function (data) {
+                            Utils.UnLoading();
+                            if (data.ResponseCode >= 0) {
+                                //bootbox.alert(data.Description);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                bootbox.alert(data.Description);
+                                return;
+                            }
+                        },
+                        error: function () {
+                            Utils.UnLoading();
+                        }
+                    });
+                }
+
+                return;
+            });
+        }
+        else {
+            bootbox.alert("Bạn phải chọn ít nhất 1 tài khoản");
+        }
+    }
+
+    function Upload() {
+        var pageurl = "/Sim/Upload/";
+        $.ajax({
+            type: 'GET',
+            url: pageurl,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    title: "Upload danh sách sim từ excel",
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Đóng",
+                            className: "btn-success",
+                            callback: function () {
+
+                                $("#btnSearch").click();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+    }
+    function UploadTran() {
+        var pageurl = "/Sim/UploadTran/";
+        $.ajax({
+            type: 'GET',
+            url: pageurl,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    title: "Upload giao dịch nạp tiền từ excel",
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Đóng",
+                            className: "btn-success",
+                            callback: function () {
+
+                                $("#btnSearch").click();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+    }
+</script>

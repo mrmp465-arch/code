@@ -1,0 +1,47 @@
+﻿@using SMS.Data.DTO
+@model List<SMSOutbox>
+@using SMS.Utility
+@using SMS.CMS.Helper
+@{ var idx = 0; }
+
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+
+            <th style="text-align:left;">STT</th>
+            <th style="text-align:left;">Port</th>
+            @*<th style="text-align:left;">Số điện thoại</th>*@
+            <th style="text-align:left;">Tổng đài</th>
+
+            <th>Nội dung</th>
+            <th>Thời gian</th>
+
+        </tr>
+
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+
+        foreach (var obj in Model)
+        {
+            { idx++; }
+<tr>
+
+    <td style="text-align:left;">@(idx)</td>
+    <td style="text-align:left;">
+        @obj.Port
+
+    </td>
+    @*<td style="text-align:left;">@obj.Number</td>*@
+    <td style="text-align:left;">@obj.Sender</td>
+    <td style="text-align:left;min-width:200px">
+        @obj.Content
+    </td>
+    <td style="text-align:left; width:150px;">
+        @obj.Time.ToString("dd/MM/yyyy HH:mm:ss")
+    </td>
+</tr>
+        }
+    }
+</table>
+

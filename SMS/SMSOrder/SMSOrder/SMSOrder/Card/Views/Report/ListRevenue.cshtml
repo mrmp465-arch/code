@@ -1,0 +1,102 @@
+﻿@using SMS.Data.DTO
+@using SMS.CMS.Helper
+@using SMS.Utility
+@model List<SMSReport>
+@{
+    List<string> LstDate = ViewBag.lstCate;
+    List<string> LstName = ViewBag.lstUserName;
+    List<Users> ListUser = ViewBag.lstUser;
+}
+<div class="table-responsive">
+    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+        @if (Model != null && Model.Count > 0)
+        {
+
+            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                <thead>
+                    <tr class="rowsao">
+                        <th rowspan="2">Ngày</th>
+                        <th rowspan="2">Sản lượng</th>
+                        <th colspan="@LstName.Count">Số SMS </th>
+                        <th colspan="@LstName.Count">Doanh số </th>
+
+                        @if (ViewBag.IsAdmin)
+                        {
+                            <th rowspan="2">Tổng</th>
+                        }
+                    </tr>
+                    <tr class="rowsao">
+                        @foreach (var item in LstName)
+                        {
+                            <th>@item</th>
+                        }
+                        @foreach (var item in LstName)
+                        {
+                            <th>@item</th>
+                        }
+                    </tr>
+
+                </thead>
+                <tr>
+                    <td><b>Tổng</b></td>
+                    <td><b>@Model.Sum(a => a.Total)</b> </td>
+                    @foreach (var item in LstName)
+                    {
+                        <td><b>@Model.Where(x => x.CreatedUser == item).Sum(a => a.Total)</b> </td>
+                    }
+                    @foreach (var item in LstName)
+                    {
+                        <td><b>@(StringUtils.InsertCommaNoStyle(Model.Where(x => x.CreatedUser == item).Sum(a => a.Total) * ListUser.FirstOrDefault(x => x.Username == item).PercentVTT))</b> </td>
+                    }
+                    @if (ViewBag.IsAdmin)
+                    {
+                        <td>
+                            <b>  @(StringUtils.InsertCommaNoStyle(Model.Sum(x => x.Total * ListUser.FirstOrDefault(u => u.Username == x.CreatedUser).PercentVTT)))</b>
+                        </td>
+                    }
+                </tr>
+                @for (int i =0; i <=LstDate.Count - 1; i++)
+                {
+                    var obj = LstDate[i];
+                    <tr>
+                        <td>@StringUtils.FormatDay( obj)</td>
+                        <td>@Model.Where(x => x.Data == obj).Sum(a => a.Total) </td>
+                        @foreach (var item in LstName)
+                        {
+                            if (Model.Exists(x => x.Data == obj && x.CreatedUser == item))
+                            {
+                                <td>@Model.FirstOrDefault(x => x.Data == obj && x.CreatedUser == item).Total </td>
+                            }
+                            else
+                            {
+                                <td>0</td>
+                            }
+                        }
+                        @foreach (var item in LstName)
+                        {
+                            if (Model.Exists(x => x.Data == obj && x.CreatedUser == item))
+                            {
+                                <td>@(StringUtils.InsertCommaNoStyle(Model.FirstOrDefault(x => x.Data == obj && x.CreatedUser == item).Total * ListUser.FirstOrDefault(x => x.Username == item).PercentVTT)) </td>
+                            }
+                            else
+                            {
+                                <td>0</td>
+                            }
+                        }
+                        @if (ViewBag.IsAdmin)
+                        {
+
+                            <td>
+                                <b> @(StringUtils.InsertCommaNoStyle(Model.Where(a => a.Data == obj).Sum(x => x.Total * ListUser.FirstOrDefault(u => u.Username == x.CreatedUser).PercentVTT)))</b>
+                            </td>
+                        }
+                    </tr>
+
+                }
+
+
+            </table>
+        }
+    </div>
+</div>
+

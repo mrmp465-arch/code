@@ -1,0 +1,37 @@
+﻿@using SMS.Data.DTO
+@model List<Contents>
+@using SMS.Utility
+@using SMS.CMS.Helper
+<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+    <i class="fa fa-bell-o"></i>
+    @if (ViewBag.TotalRecord > 0)
+    {
+        <span class="label label label-warning">@ViewBag.TotalRecord</span>
+    }
+
+</a>
+@if (Model!=null)
+{
+    <ul class="dropdown-menu">
+
+        <li>
+            <!-- inner menu: contains the actual data -->
+            <ul class="menu">
+                @foreach (var item in Model.Select((value, i) => new { i, value }))
+                {
+                    <li>
+                        <a href="@Url.Action("Detail","AdminContent",new {Id=item.value.Id,Title=StringUtils.ConvertToRewriteLink(item.value.Title) })">
+                            <i class="fa fa-warning text-yellow"></i>  @Html.Raw(item.value.Title)
+                          
+                        </a>
+
+                    </li>
+                }
+
+
+
+            </ul>
+        </li>
+        
+    </ul>
+}

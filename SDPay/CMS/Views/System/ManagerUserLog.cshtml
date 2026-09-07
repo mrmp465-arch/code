@@ -1,0 +1,146 @@
+﻿@using CMS.Data.DTO
+@{
+   
+    List<Users> ListUser = ViewBag.UserList;
+    UserSession CurrentUser = ViewBag.CurrentUser;
+}
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Subheader-->
+    <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
+        <div class="container-fluid ">
+            <!--begin::Details-->
+            <div class="filter-inline mr-2">
+                <!--begin::Title-->
+                <div class="filter-form mb-2  align-items-center">
+                    <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">@ViewBag.Title</h5>
+                </div>
+                <!--end::Title-->
+                <!--begin::Separator-->
+                <!--end::Separator-->
+                <!--begin::Search Form-->
+                <div class="filter-form mb-2 ">
+
+                    <div class="input-group input-group-sm input-group-solid" style="max-width: 175px">
+                        <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+
+                    </div>
+                </div>
+                
+                <div class="filter-form label-form mb-2 ml-5" id="datetimeFromDate">
+
+
+
+                    <label class="control-label mt-3 mr-2"><i class="fa fa-calendar"></i>Từ Ngày</label>
+                    <input type="datetime-local" id="fromDate" value="@ViewBag.fromDate" class="form-control" name="datetimeFromDate" />
+
+
+                </div>
+                <div class="filter-form label-form mb-2 ml-5  " id="datetimeToDate">
+
+                    <label class="control-label mt-3 mr-2"><i class="fa fa-calendar"></i>Đến Ngày</label>
+                    <input type="datetime-local" value="@ViewBag.toDate" id="toDate" class="form-control" name="datetimeToDate" />
+
+                </div>
+                <div class="float-right filter-form  align-items-end">
+
+                    <!--begin::Button-->
+                    <a href="javascript:;" id="btnSearch" class="float-right mb-2 btn btn-success font-weight-bold py-2 px-5 ml-2">Tìm kiếm</a>
+                    <!--end::Button-->
+
+                </div>
+                <!--end::Search Form-->
+
+            </div>
+            <!--end::Details-->
+            <!--begin::Toolbar-->
+            <!--end::Toolbar-->
+        </div>
+    </div>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Card-->
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-loaded" id="UserlogPartial" style="position: static; zoom: 1;">
+                          
+                        </div>
+                    </div>
+
+                    <div class="datatable-pager datatable-paging-loaded" id="pager">
+                    </div>
+
+                </div>
+
+            </div>
+            <!--end::Card-->
+
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetList(1);
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+
+        $("#btnClear").click(function () {
+            deleteData();
+        });
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlUser").change(function () {
+            GetList(1);
+        });
+        function GetList(currentPage) {
+            parameters = {
+                'FromDate': $("#fromDate").val(),
+                'keyword': $("#txtEmail").val(),
+                'ToDate': $("#toDate").val(),
+                
+                'currentPage': currentPage
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+            Utils.Loading();
+            var urlRequestAns =  "@Url.Action("ListUserLog")";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#UserlogPartial").html(data);
+                    Utils.UnLoading();
+                },
+                error: function () {
+                    Utils.UnLoading();
+                }
+            });
+        }
+
+    });
+
+</script>

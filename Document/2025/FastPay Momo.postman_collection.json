@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "f7f2e565-439d-4188-a8f9-12c607e8c651",
+		"name": "FastPay Momo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "849035"
+	},
+	"item": [
+		{
+			"name": "Momo- Lấy ví",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"partnerCode\":\"xxx\",\"requestTime\":\"202504032002111\",\"signature\":\"c7bd424a03031de23591fc4882907813\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.moquito.xyz/bankin/getmomo.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"moquito",
+						"xyz"
+					],
+					"path": [
+						"bankin",
+						"getmomo.ashx"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

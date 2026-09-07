@@ -1,0 +1,102 @@
+﻿
+
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span>Danh sách thư viện</div>
+            <div class="box-body">
+
+                <div class="col-md-12 col-xs-12">
+                    <div class="row" id="form">
+
+                        <div class="form-group col-md-4 col-xs-12 col-sm-6">
+                            <label for="txtEmail" class="control-label"><i class="fa fa-pencil"></i>Từ Khóa</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+                            </div>
+                        </div>
+                        <div class="form-group submit" style="text-align:right;">
+                            <a href="@Url.Action("AddContentInfo")" class="btn btn-primary" target="_blank">Thêm mới</a>
+
+                        </div>
+
+                    </div>
+                    <div class="table-responsive">
+                        <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                            <div id="ListPopupContent">
+                                @Html.Action("ListPopupContent")
+                            </div>
+                            <div class="dataTables_paginate" id="pager">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12" style="display:none">
+                    <div class="form-group col-md-12">
+                        <label for="txtImageUrl" class="control-label col-md-4">Nội dung :</label>
+                        <div class="col-md-8">
+                            <textarea id="hdContent" style="height: 100px;" cols="20" name="description" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .modal-dialog {
+        width: 60% !important;
+        height: 60% !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlActive").change(function () {
+            GetList(1);
+        });
+
+        function GetList(currentPage) {
+            parameters = {
+               
+                email: $("#txtEmail").val(),
+                currentPage: currentPage
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/AdminContent/ListPopupContent";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#ListPopupContent").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+
+    });
+
+
+</script>

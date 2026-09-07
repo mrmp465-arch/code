@@ -1,0 +1,319 @@
+﻿@using SMS.Data.DTO
+@model Contacts
+@{
+    List<Groups> ListGroup = ViewBag.GroupList;
+}
+@using SMS.CMS.Helper
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="messager-body">
+                        <div class="alert alert-success display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <label>Đã lưu dữ liệu thành công !!!</label>
+                        </div>
+                        <div class="alert alert-danger display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtNumber" class="control-label col-md-3">Số điện thoại :<span class="required">*</span></label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="tel" id="txtNumber" maxlength="10" name="number" value="@Model.Number" class="form-control" placeholder="Nhập số điện thoại" />
+                            </div>
+                        </div>
+                    </div>
+             
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="txtGroup">Nhóm :</label>
+                        <div class="col-md-9">
+                            <input type="text" id="txtGroup" maxlength="50" value="@HtmlHelpers.GetGroupyName(Model.Group, ViewBag.GroupList)" class="form-control" name="group" autocomplete="off" placeholder="Nhóm sẽ được tạo mới nếu chưa tồn tại" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtName" class="control-label col-md-3">Tên :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtName" maxlength="50" value="@Model.Name" class="form-control" placeholder="Nhập tên" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="txtEmail2" class="control-label col-md-3">Email :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtEmail2" maxlength="50" value="@Model.Email" class="form-control" placeholder="Nhập email" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="txtBirthDay" class="control-label col-md-3">Ngày sinh :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtBirthDay" data-date-format="DD/MM/YYYY" maxlength="50" value="@(Model.Birthday.HasValue? Model.Birthday.Value.ToString("dd/MM/yyyy"):"" )" class="form-control" placeholder="Nhập ngày sinh(dd/MM/yyyy" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="txtBirthDay" class="control-label col-md-3">Giới tính :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input class="form-check-input" style="display:none" type="radio" value="0" name='Gender' @if (Model.Gender == 0) { @Html.Raw("checked") ; } />
+                                <input class="form-check-input" type="radio" value="1" name='Gender' @if (Model.Gender == 1) { @Html.Raw("checked") ; } /> Nam
+                                <input class="form-check-input" type="radio" value="2" name='Gender' @if (Model.Gender == 2) { @Html.Raw("checked") ; } /> Nữ
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOption1" class="control-label col-md-3">Tùy chọn :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtOption1" maxlength="50" value="@Model.Option1" class="form-control" placeholder="Nhập tùy chọn" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOption2" class="control-label col-md-3">Tùy chọn 2 :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtOption2" maxlength="50" value="@Model.Option2" class="form-control" placeholder="Nhập tùy chọn 2" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOption3" class="control-label col-md-3">Tùy chọn 3 :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtOption3" maxlength="50" value="@Model.Option3" class="form-control" placeholder="Nhập tùy chọn 3" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="txtOption4" class="control-label col-md-3">Tùy chọn 4 :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtOption4" maxlength="50" value="@Model.Option4" class="form-control" placeholder="Nhập tùy chọn 4" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="txtOption5" class="control-label col-md-3">Tùy chọn 5 :</label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtOption5" maxlength="50" value="@Model.Option5" class="form-control" placeholder="Nhập tùy chọn5" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-footer form-horizontal">
+                    <div class="form-group submit">
+                        <button type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i> Cập nhập</button>
+
+                        <button type="button" class="btn btn-default" id="btnBack" data-dismiss="modal"><i class="fa fa-backward"></i> Hủy</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 30% !important;
+        height: 60% !important;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+
+        .modal-dialog {
+            width: 90% !important;
+            height: 90% !important;
+        }
+    }
+</style>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$("#txGroup").autocomplete({
+        //    source: function (request, response) {
+        //        $.ajax({
+        //            url: "/Contact/AutoCompleteGroup/?Searchtext=" + request.term,
+        //            dataType: "json",
+        //            success: function (data) {
+        //                response(data);
+
+        //            }
+        //        });
+        //    },
+        //    select: function (event, ui) {
+        //        $(this).val(ui.item.value);
+        //        //window.location = jQuery.query.set("author", $("#txtaccount").val()).set("page", "1");
+        //    },
+        //    minLength: 1
+        //});
+        $('#txtBirthDay').datetimepicker({
+                pickTime: false,
+                autoclose: true
+            });
+            $("button.close").click(function () {
+                $(this).parent().css("display", "none");
+            });
+            $('#defaultForm').bootstrapValidator({
+                message: 'This value is not valid',
+                //live: 'submitted',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+
+                    number: {
+                        message: 'The name is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'só điện thoại không được bỏ trống'
+                            },
+
+                            stringLength: {
+                                min: 10,
+                                max: 12,
+                                message: 'số điện thoại không đúng định dạng'
+                            },
+
+                        }
+                    },
+                    group: {
+                        message: 'The group is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'vui lòng chọn nhóm'
+                            },
+
+
+                        }
+                    },
+                }
+            })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+            $("#btnReset").click(function () {
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+                $(".alert-danger").css("display", "none");
+                $(".alert-success").css("display", "none");
+            });
+            //Save Data
+            function SaveData() {
+                var param = {
+                    'Id': '@Model.Id',
+                    'Number': $("#txtNumber").val(),
+                    'Name': $("#txtName").val(),
+                    'Email': $("#txtEmail2").val(),
+                    'Gender': $("input:radio[name='Gender']:checked").val(),
+                    'Option1': $("#txtOption1").val(),
+                    'Option2': $("#txtOption2").val(),
+                    'Option3': $("#txtOption3").val(),
+                    'Option4': $("#txtOption4").val(),
+                    'Option5': $("#txtOption5").val(),
+                    'BirthDay': $('#txtBirthDay').val(),
+                    'GroupName': $("#txtGroup").val(),
+                }
+
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SaveData")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+
+                            $('.modal ').modal('hide');
+                            $("#btnSearch").click();
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+            };
+        });
+
+
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Sonstructs the suggestion engine
+        var cars = @Html.Raw(ViewBag.JsonGroup);
+        //var cars = ["Audi", "BMW"];
+        // Constructing the suggestion engine
+        var cars = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: cars
+        });
+
+        // Initializing the typeahead
+        $('#txtGroup').typeahead({
+            hint: false,
+            //highlight: true, /* Enable substring highlighting */
+            minLength: 1 /* Specify minimum characters required for showing result */
+        },
+            {
+                name: 'cars',
+                source: cars
+            });
+        });
+        
+
+    //});
+</script>
+<style>
+    .twitter-typeahead
+    {
+        width:100%
+    }
+</style>

@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="2FACode" xml:space="preserve">
+    <value>谷歌验证码</value>
+  </data>
+  <data name="2FASetup" xml:space="preserve">
+    <value>设置谷歌验证码</value>
+  </data>
+  <data name="2FAWrong" xml:space="preserve">
+    <value>谷歌验证码错误</value>
+  </data>
+  <data name="6Password" xml:space="preserve">
+    <value>密码必须至少有 6 个字符</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>账号</value>
+  </data>
+  <data name="AccountName" xml:space="preserve">
+    <value>账号名</value>
+  </data>
+  <data name="AccountNumber" xml:space="preserve">
+    <value>银行账号</value>
+  </data>
+  <data name="AccountReceive" xml:space="preserve">
+    <value>收款账号</value>
+  </data>
+  <data name="AccountReceive1" xml:space="preserve">
+    <value>收款账号</value>
+  </data>
+  <data name="AccountTranfer" xml:space="preserve">
+    <value>出款账号</value>
+  </data>
+  <data name="AccountTranfer1" xml:space="preserve">
+    <value>出款账号</value>
+  </data>
+  <data name="AddMoney" xml:space="preserve">
+    <value>加钱</value>
+  </data>
+  <data name="Alert" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="AmountMin10" xml:space="preserve">
+    <value>最低金额为2M</value>
+  </data>
+  <data name="AmountReceive" xml:space="preserve">
+    <value>总金额</value>
+  </data>
+  <data name="AmountTransfer" xml:space="preserve">
+    <value>转账金额</value>
+  </data>
+  <data name="AmountUser" xml:space="preserve">
+    <value>商户余额</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>余额</value>
+  </data>
+  <data name="BalanceAfter" xml:space="preserve">
+    <value>前余额</value>
+  </data>
+  <data name="BalanceBefore" xml:space="preserve">
+    <value>后余额</value>
+  </data>
+  <data name="BalanceFluctuation" xml:space="preserve">
+    <value>余额变动</value>
+  </data>
+  <data name="BankCode" xml:space="preserve">
+    <value>银行编码</value>
+  </data>
+  <data name="Callback" xml:space="preserve">
+    <value>回调</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Cash" xml:space="preserve">
+    <value>出款</value>
+  </data>
+  <data name="CashAmount" xml:space="preserve">
+    <value>出款金额</value>
+  </data>
+  <data name="CashFee" xml:space="preserve">
+    <value>出款手续费</value>
+  </data>
+  <data name="CashFlow" xml:space="preserve">
+    <value>现金周转</value>
+  </data>
+  <data name="CashOrderNumber" xml:space="preserve">
+    <value>出款次数</value>
+  </data>
+  <data name="CashOrderNumberSuccess" xml:space="preserve">
+    <value>出款次数成功</value>
+  </data>
+  <data name="CashRateSuccess" xml:space="preserve">
+    <value>出款成功率</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>改变</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>更换密码</value>
+  </data>
+  <data name="Completiontime" xml:space="preserve">
+    <value>时间完成</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>输入密码</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="CreatedTime" xml:space="preserve">
+    <value>提交时间</value>
+  </data>
+  <data name="CreateWithdrawalOrder" xml:space="preserve">
+    <value>提交订单出款</value>
+  </data>
+  <data name="Creationtime" xml:space="preserve">
+    <value>提交时间</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>日</value>
+  </data>
+  <data name="DayStatitics" xml:space="preserve">
+    <value>每日收益图表</value>
+  </data>
+  <data name="DeductMoney" xml:space="preserve">
+    <value>扣钱</value>
+  </data>
+  <data name="Deposit" xml:space="preserve">
+    <value>入款</value>
+  </data>
+  <data name="DepositAmount" xml:space="preserve">
+    <value>出款</value>
+  </data>
+  <data name="DepositFee" xml:space="preserve">
+    <value>入款费率</value>
+  </data>
+  <data name="DepositOrderNumber" xml:space="preserve">
+    <value>入款字数</value>
+  </data>
+  <data name="DepositOrderNumberSuccess" xml:space="preserve">
+    <value>入款成功字数</value>
+  </data>
+  <data name="DepositRateSuccess" xml:space="preserve">
+    <value>入款成功率</value>
+  </data>
+  <data name="ExportExcel" xml:space="preserve">
+    <value>导出Excel</value>
+  </data>
+  <data name="Fail" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="Fee" xml:space="preserve">
+    <value>费率</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>自从</value>
+    <comment>From</comment>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>指导</value>
+  </data>
+  <data name="Help1" xml:space="preserve">
+    <value>用手机下载谷歌验证码</value>
+  </data>
+  <data name="Help2" xml:space="preserve">
+    <value>使用软件谷歌验证码扫码</value>
+  </data>
+  <data name="Help3" xml:space="preserve">
+    <value>扫码后把6为数字放进去确认</value>
+  </data>
+  <data name="Help4" xml:space="preserve">
+    <value>下次登录必须使用谷歌验证码才可以登录</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>历史</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>商户号</value>
+  </data>
+  <data name="Keyword" xml:space="preserve">
+    <value>咨询</value>
+  </data>
+  <data name="Last7day" xml:space="preserve">
+    <value>7天前</value>
+  </data>
+  <data name="LastTime" xml:space="preserve">
+    <value>完成时间</value>
+  </data>
+  <data name="ListWithdrawalOrders" xml:space="preserve">
+    <value>出款字数名单</value>
+  </data>
+  <data name="LogDetail" xml:space="preserve">
+    <value>交易信息明细</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Money" xml:space="preserve">
+    <value>金额</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>月</value>
+    <comment>Month</comment>
+  </data>
+  <data name="MonthStatitics" xml:space="preserve">
+    <value>月收益</value>
+  </data>
+  <data name="NewsPassword" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="NotEnoughBalance" xml:space="preserve">
+    <value>余额不足</value>
+  </data>
+  <data name="NotEnoughInformation" xml:space="preserve">
+    <value>输入信息不足</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>旧密码</value>
+  </data>
+  <data name="OldPasswordWrong" xml:space="preserve">
+    <value>旧密码错误</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="OrderInfo" xml:space="preserve">
+    <value>交易代码</value>
+  </data>
+  <data name="OrderNo" xml:space="preserve">
+    <value>备注（内容）</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>商户</value>
+    <comment>Partner</comment>
+  </data>
+  <data name="PassowrdNotEqual" xml:space="preserve">
+    <value>更新后的密码不匹配</value>
+  </data>
+  <data name="PasswordSuccess" xml:space="preserve">
+    <value>密码修改成功</value>
+  </data>
+  <data name="Pedding" xml:space="preserve">
+    <value>待办的</value>
+  </data>
+  <data name="PreviousMonthCharge" xml:space="preserve">
+    <value>与上月相比增长率</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>比率</value>
+  </data>
+  <data name="RealAmount" xml:space="preserve">
+    <value>实际金额</value>
+  </data>
+  <data name="Reconcilation" xml:space="preserve">
+    <value>统计</value>
+  </data>
+  <data name="RefCode" xml:space="preserve">
+    <value>订单号</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>汇报</value>
+  </data>
+  <data name="ReportPartner" xml:space="preserve">
+    <value>按客户划分的收入统计</value>
+  </data>
+  <data name="ReportTime" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="ReportUserDaily" xml:space="preserve">
+    <value>最后一天向合作伙伴汇报</value>
+  </data>
+  <data name="SecuritySetupOK" xml:space="preserve">
+    <value>设置谷歌验证码成功</value>
+  </data>
+  <data name="Statitics" xml:space="preserve">
+    <value>统计收益</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="SuccessOrder" xml:space="preserve">
+    <value>提交成功</value>
+  </data>
+  <data name="Suspect" xml:space="preserve">
+    <value>怀疑</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>到</value>
+    <comment>To</comment>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>今天</value>
+  </data>
+  <data name="Topupbalance" xml:space="preserve">
+    <value>充值余额</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>总</value>
+  </data>
+  <data name="TransactionType" xml:space="preserve">
+    <value>交易类型</value>
+  </data>
+  <data name="TransferInfo" xml:space="preserve">
+    <value>转账信息</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>查</value>
+  </data>
+  <data name="ViewLog" xml:space="preserve">
+    <value>查交易</value>
+  </data>
+  <data name="WaitApproval" xml:space="preserve">
+    <value>未确认</value>
+  </data>
+  <data name="WithdrawalHistory" xml:space="preserve">
+    <value>出款历史</value>
+  </data>
+  <data name="Withdrawbalance" xml:space="preserve">
+    <value>提取余额</value>
+  </data>
+  <data name="WithdrawMoney" xml:space="preserve">
+    <value>下发</value>
+  </data>
+  <data name="WrongAccount" xml:space="preserve">
+    <value>收款账号错误</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>年</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>昨天</value>
+  </data>
+</root>

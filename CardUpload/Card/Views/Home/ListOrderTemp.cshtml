@@ -1,0 +1,192 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model List<OrderInput>
+<input type="hidden" id="hdTokenUrl" value="@ViewBag.TokenUrl" />
+<div class="table-responsive">
+    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+        @if (Model != null && Model.Count > 0)
+        {
+
+            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                <thead>
+                    <tr class="rowsao">
+
+                        <th>Mobile</th>
+                        <th>Telco</th>
+                        <th>Amount</th>
+                        <th>MinAll</th>
+
+                        <th>OTP</th>
+                        <th>Tác vụ</th>
+                    </tr>
+                </thead>
+                @if (Model.Count > 0)
+                {
+                    foreach (var obj in Model)
+                    {
+                        <tr>
+
+
+                            <td>@obj.Mobile</td>
+
+                            <td >@HtmlHelpers.GetTopupType(int.Parse(obj.TopupType),obj.Telco.ToUpper())</td>
+
+                            <td>@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())</td>
+
+                            <td>
+                                @obj.AmountMinAll
+                            </td>
+
+
+                            <td>
+                                <div id="dvOTP_@obj.Id" >
+                                    <a onclick="OTPAjax('@obj.Id','@obj.Mobile')" href="javascript:;" >GetOTP</a>
+                                </div>
+                                <div id="dvConfir_@obj.Id" style="display:none;">
+                                    <input type="text" id="txtOTP_@obj.Id" placeholder="Nhập OTP" autocomplete="off" style="width:79px;">
+                                    <a href="javascript:;" onclick="TOKENAjax('@obj.Id','@obj.Mobile')" >  Xác nhận</a>
+                                </div>
+                               
+                            </td>
+                            <td>
+                                <a href="javascript:;" onclick="Delete('@obj.Id')">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+    </div>
+</div>
+<script>
+    function TOKENAjax(id, mobile) {
+        var otp = {
+            Command: "GETTOKEN",
+            Mobile: mobile,
+            Otp: $("#txtOTP_"+id).val(),
+            DeviceId: $("#hdDevideId").val(),
+        }
+        //alert($("#txtOTP_" + id).val());
+        //return;
+        if ($("#txtOTP_" + id).val() == '') {
+            alert("Vui lòng nhập OTP");
+            return;
+        }
+        Utils.Loading();
+        $.ajax({
+            type: "post",
+            datatype: "json",
+            url: $("#hdTokenUrl").val(),
+            success: function (data) {
+                Utils.UnLoading();
+                if (data.Code == "1") {
+
+                    //update order
+                    //var password = data.Data;
+                    $.ajax({
+                        type: 'POST',
+                        url: "/Home/OrderUpdate",
+                        data: addAntiForgeryToken({ Id: id, password: data.Data}),
+                        success: function (data) {
+                            Utils.UnLoading();
+                            if (data.ResponseCode >= 0) {
+
+                                location.reload();
+                            }
+                            else {
+                                showmess(data.Description, "error", "btn-danger");
+                                return;
+                            }
+                        }
+                    });
+                }
+                else {
+
+                    if (data.Data == "One time password is expired. Please get new password to login.") {
+                        OTPAjax(id, mobile);
+                        alert("Nhập lại OTP").show();
+                        //get lại otp
+                    }
+                    else {
+
+                        showmess("Lỗi nhập sai OTP", "error", "btn-danger");
+
+                    }
+                }
+
+            },
+
+            data: JSON.stringify(otp)
+        });
+    }
+    function Delete(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn xoa giao dịch  ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Home/OrderDelete",
+                    data: addAntiForgeryToken({ Id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            location.reload();
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    function OTPAjax(id, mobile) {
+        var otp = {
+            Command: "GETOTP",
+            Mobile: mobile,
+            DeviceId: $("#hdDevideId").val(),
+        }
+        Utils.Loading();
+        $.ajax({
+            type: "post",
+            datatype: "json",
+            url: $("#hdTokenUrl").val(),
+            success: function (data) {
+                Utils.UnLoading();
+                if (data.Code == "1") {
+                   
+                    $("#dvOTP_"+id).hide();
+                    $("#dvConfir_"+id).show();
+                    //$("#txtPassword_"+id).val('');
+                } else {
+                    alert(data.Data);
+                }
+
+            },
+
+            data: JSON.stringify(otp)
+        });
+    }
+    function showmess(mess, type, ButtonClass) {
+        swal({
+            title: '',
+            text: mess,
+            type: type,
+            confirmButtonClass: ButtonClass,
+            closeOnConfirm: false,
+            allowOutsideClick: true
+        },
+            function (isConfirm) {
+                location.reload();
+            });
+    }
+    
+    //showmess("Lỗi nhập sai OTP!", "error", "btn-danger");
+    //showmess("Giao dịch thành công!", "success", "btn-success");
+</script>

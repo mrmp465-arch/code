@@ -1,0 +1,10 @@
+﻿@using SMS.Utility
+<li class="dropdown user user-menu hidden-xs">
+    <div class="balance"> Số dư: <span class="label label-success" style="font-size:13px"><b >@StringUtils.InsertCommaNoStyle(ViewBag.Balance.ToString())</b></span></div>
+</li>
+<li class="dropdown user user-menu hidden-xs">
+    <div class="balance"> Số đang xử lý: <span class="label label-warning" style="font-size:13px"><b>@StringUtils.InsertCommaNoStyle(ViewBag.BalanceHold.ToString())</b></span></div>
+</li>
+<li class="dropdown user user-menu visible-xs hidden-lg">
+    <div class="balance"> <b>@StringUtils.InsertCommaNoStyle(ViewBag.Balance.ToString())</b> -  <b>@StringUtils.InsertCommaNoStyle(ViewBag.BalanceHold.ToString())</b></div>
+</li>

@@ -1,0 +1,195 @@
+﻿@using CMS.Data.DTO
+@model List<Users>
+
+    <table class="datatable-table ">
+        <thead class="datatable-head">
+            <tr class="datatable-row" style="left: 0px;">
+                <th data-field="ID" class="datatable-cell-left datatable-cell datatable-cell-sort"><span>#</span></th>
+
+                <th data-field="Name" data-autohide-disabled="false" class="datatable-cell datatable-cell-sort"><span> Username</span></th>
+                @*<th data-field="Mail" class="datatable-cell datatable-cell-sort"><span> Email</span></th>*@
+                <th data-field="FullName" class="datatable-cell datatable-cell-sort"><span> Họ Tên</span></th>
+                <th data-field="CreateName" class="datatable-cell datatable-cell-sort"><span> Người tạo</span></th>
+                @if (ViewBag.IsUpdate)
+                {
+                    <th data-field="Status" class="datatable-cell datatable-cell-sort"><span>Trạng Thái</span></th>
+                }
+                @if (ViewBag.IsUpdate || ViewBag.IsFullControl || ViewBag.IsDelete)
+                {
+                    <th data-field="Action" class="datatable-cell datatable-cell-sort"><span>Chức Năng</span></th>
+
+                }
+            </tr>
+        </thead>
+        <tbody class="datatable-body" style="">
+            @if (Model != null && Model.Count > 0)
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    var obj = Model[i];
+                    <tr data-row="@i" class="datatable-row" style="left: 0px;">
+
+                        <td data-field="ID" class="datatable-cell">
+                            <div class="font-weight-bold">@obj.UserID</div>
+                        </td>
+                        <td data-autohide-disabled="false" data-field="Name" class="datatable-cell">
+                            <div class="font-weight-bold text-primary">@obj.Username</div>
+                        </td>
+                        @*<td data-field="Mail" class="datatable-cell">
+                            <div class="font-weight-bold">@obj.Email</div>
+                        </td>*@
+                        <td data-field="FullName" class="datatable-cell">
+                            <div class="font-weight-bold">@obj.FullName</div>
+                        </td>
+                        <td data-field="CreateName" class="datatable-cell">
+                            <div class="font-weight-bold">@obj.CreatedUser</div>
+                        </td>
+                        @if (ViewBag.IsUpdate)
+                        {
+                            <td data-field="Status" class="datatable-cell">
+                                <div class="font-weight-bold">
+                                    @if (obj.Status == true)
+                                    {
+                                        <a href="javascript:;" title="Kích hoạt trạng thái không hoạt động" onclick="UpdateStatusUser(@obj.UserID, 1);"><i class="fa fa-check"></i></a>
+
+
+
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:;" title="Kích hoạt trạng thái hoạt động" onclick="UpdateStatusUser(@obj.UserID,0);"><i class="fa fa-ban"></i></a>
+
+                                    }
+
+                                </div>
+                            </td>
+                        }
+                        @if (ViewBag.IsUpdate || ViewBag.IsFullControl || ViewBag.IsDelete)
+
+                        {
+                            <td data-field="Action" class="datatable-cell">
+                                <div class="font-weight-bold">
+                                    <a href="@Url.Action("GetUserInfo", new { id = obj.UserID })"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:;" title="Delete" onclick="DeleteData(@obj.UserID)"><i class="fa fa-trash-o"></i></a>
+
+
+                                    <a href="javascript:" title="Thêm tài khoản" onclick="PartnerUser('@(CMS.Utility.Encrypt.Base64Encode(obj.UserID))')"><i class="fa fa-plus" aria-hidden="true"></i> </a>
+
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+
+
+        </tbody>
+    </table>
+
+
+<script type="text/javascript">
+
+    var PageOnSize = '@ViewBag.PageSize';
+        var CurrentPage = '@ViewBag.CurrentPage';
+
+    function BindDataRequest(currentPage) {
+            var params = {
+                isActive: $('#ddlActive :selected').val(),
+                email: $("#txtEmail").val(),
+                //createdUser: $("#ddlUser").val(),
+                currentPage: currentPage,
+                pageSize: PageOnSize
+            };
+            var urlRequestAns = "@Url.Action("ListUsers")";
+            Utils.Loading();
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: params,
+                success: function (data) {
+                    $("#kt_datatable").html(data);
+                    Utils.UnLoading();
+                },
+                error: function () {
+                    Utils.UnLoading();
+                }
+            });
+    }
+     $(document).ready(function () {
+
+        $("#pager").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest(page); }
+        });
+
+
+    });
+    function DeleteData(id) {
+        var IsDelete = "true"
+        if (IsDelete != "true") {
+            bootbox.alert("Bạn không có quyền xóa chức năng");
+            return;
+        }
+        bootbox.confirm("Bạn chắc chắn muốn xóa tài khoản này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("DeleteUser")",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function UpdateStatusUser(id, status) {
+        var type = "Vô hiệu hóa";
+        if (status == 0) {
+            type = "Kích hoạt";
+        }
+        bootbox.confirm("Bạn muốn " + type + " Tài khoản này ?", function (conf) {
+            if (conf == 1) {
+                var urlUpstatus = "@Url.Action("UpdateActiveUser")";
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: urlUpstatus,
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                            Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    },
+                    error: function () {
+                         Utils.UnLoading();
+                    }
+                });
+            }
+            return;
+        });
+    }
+    function PartnerUser(id) {
+        var url = "/System/PartnerUser/" + id;
+        var confirmFunc = BindDataRequest(1);
+        Utils.PopupManager(url, confirmFunc);
+    }
+</script>
+

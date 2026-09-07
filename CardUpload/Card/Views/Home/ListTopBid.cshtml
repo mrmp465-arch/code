@@ -1,0 +1,40 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model List<OrderReport>
+
+
+@if (Model.Count > 0)
+{
+    foreach (var obj in Model.Select((value, i) => new { i, value }))
+    {
+
+
+        <div class="col-lg-2 col-md-4 col-xs-12 carditem ">
+            <div class="card bg bg-light text-dark ">
+                <div class="card-top" alt="@obj.value.OrderNo">
+
+
+                    <div class="card-title pull-left" style="width:100%">
+                        <span class="step" style="float:left">@string.Format("{0:F0}", obj.value.BidRate)</span>
+                        <div class="card_ballance">
+                            @( StringUtils.InsertCommaNoStyle(obj.value.AmoutSuccess.ToString()))/@(StringUtils.InsertCommaNoStyle(obj.value.Amount.ToString()))
+                        </div>
+
+
+                    </div>
+                    @if (ViewBag.UserType == 1)
+                    {
+                        <div style="font-size:12px;padding-bottom:20px;float:left">@obj.value.OrderNo <br />@obj.value.UserApi</div>
+                    }
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    }
+}

@@ -1,0 +1,212 @@
+﻿@using SMS.Data.DTO
+@model List<Contents>
+@using SMS.Utility
+@using SMS.CMS.Helper
+@{ var idx = 0; }
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+
+            <th style="text-align:left;">STT</th>
+            <th style="text-align:left;">Tên</th>
+            @*<th>Trạng Thái</th>*@
+           
+            <th>Tác vụ</th>
+        </tr>
+
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+
+        foreach (var obj in Model)
+        {
+            { idx++; }
+            <tr>
+
+                <td style="text-align:left;">@(idx + (ViewBag.CurrentPage - 1) * ViewBag.PageSize )</td>
+                <td style="text-align:left;">
+                    <a href="@Url.Action("GetContentInfo", new { Id = obj.Id })"> @obj.Title</a>
+
+                </td>
+
+                @*<td>
+                    @if (obj.Status == 1)
+                    {
+                        <a href="javascript:;" title="Kích hoạt trạng thái không hoạt động" onclick="UpdateStatusUser('@obj.Id', 0);"><i class="fa fa-check"></i></a>
+
+                    }
+                    else
+                    {
+                        <a href="javascript:;" title="Kích hoạt trạng thái hoạt động" class="unactive" onclick="UpdateStatusUser('@obj.Id',1);"><i class="fa fa-ban"></i></a>
+
+                    }
+                </td>*@
+
+
+
+                @if (ViewBag.IsUpdate || ViewBag.IsFullControl || ViewBag.IsDelete)
+                {
+
+                    <td style="text-align:left">
+
+
+
+
+                        @if (ViewBag.IsDelete)
+                        {
+                            <a href="javascript:;" title="Delete" onclick="DeleteData('@obj.Id')"><i class="fa fa-trash-o"></i></a><text>&nbsp;</text>
+                        }
+
+
+                    </td>
+                }
+            </tr>
+        }
+    }
+</table>
+
+<script type="text/javascript">
+        var PageOnSize = '@ViewBag.PageSize';
+    var CurrentPage = '@ViewBag.CurrentPage';
+     $(document).ready(function () {
+
+        $("#pager").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest(page); }
+        });
+
+
+    });
+    //$('#dataTables').DataTable({
+    //    "bPaginate": false,
+    //    "searching": false,
+    //    "ordering": true,
+    //    "info": false
+    //});
+</script>
+<script type="text/javascript">
+    function toggle(source) {
+        checkboxes = document.getElementsByName('chk_item');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+    function BindDataRequest(currentPage) {
+        var params = {
+            isActive: $('#ddlActive :selected').val(),
+            email: $("#txtEmail").val(),
+
+            currentPage: currentPage,
+            pageSize: PageOnSize
+        };
+        var urlRequestAns = "/AdminContent/ListContent";
+        Utils.Loading();
+        $.ajax({
+            type: 'GET',
+            url: urlRequestAns,
+            data: params,
+            success: function (data) {
+                $("#ListContent").html(data);
+                Utils.UnLoading();
+            },
+            error: function () {
+                Utils.UnLoading();
+            }
+        });
+    }
+    function DeleteData(id) {
+       
+        bootbox.confirm("Bạn chắc chắn muốn xóa nội dung này này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/AdminContent/Delete",
+                    data: addAntiForgeryToken({ ID: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+
+    function UpdateStatusUser(id, status) {
+        var type = "Vô hiệu hóa";
+        if (status == 1) {
+            type = "Kích hoạt";
+        }
+        bootbox.confirm("Bạn muốn " + type + " bài viết này ?", function (conf) {
+            if (conf == 1) {
+                var urlUpstatus = "/AdminContent/UpdateStatus";
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: urlUpstatus,
+                    data: addAntiForgeryToken({ Id: id, status: status }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            }
+            return;
+        });
+    }
+    function SetHot(id, status) {
+        var type = "Bỏ ghim đầu trang";
+        if (status == 1) {
+            type = "Ghim đầu trang";
+        }
+        bootbox.confirm("Bạn muốn " + type + " bài viết này ?", function (conf) {
+            if (conf == 1) {
+                var urlUpstatus = "/AdminContent/SetHot";
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: urlUpstatus,
+                    data: addAntiForgeryToken({ Id: id, status: status }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            }
+            return;
+        });
+    }
+
+
+</script>
+

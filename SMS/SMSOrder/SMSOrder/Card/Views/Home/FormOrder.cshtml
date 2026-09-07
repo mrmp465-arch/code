@@ -1,0 +1,541 @@
+﻿@model SMS.Data.DTO.Users
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Thêm nhanh giao dịch @ViewBag.MKBH</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                        <i class="fa fa-history"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body maxheight01">
+                <div id="StatusBard">
+                    @{ Html.RenderAction("StatusBar", "Home", new { user = Model });}
+                </div>
+
+                <form id="defaultForm2" method="post" class="form-horizontal formcard">
+                    <div class="wr-crf-tb1" id="pnMain">
+                        <h3>B1. Chọn mạng</h3>
+                        <ul class="wr-crf-tul clearfix card_type">
+                            <li class="">
+                                <a href="javascript:;" class="@(Model.StatusVTT?"active":"notactive")">
+                                    <img src="/Content/img/vt.png" alt="">
+                                    <input type="radio" name="rdoCardType" class="ratio_deposite" value="VTT" />
+                                </a>
+
+
+                            </li>
+                            <li class="">
+                                <a href="javascript:;" class="@(Model.StatusVNP?"active":"notactive")">
+                                    <img src="/Content/img/vn.png" alt="">
+                                    <input type="radio" name="rdoCardType" class="ratio_deposite" value="VNP" />
+                                </a>
+                            </li>
+
+                            <li class="">
+                                <a href="javascript:;" class="@(Model.StatusVMS?"active":"notactive")">
+                                    <img src="/Content/img/mb.png" alt="">
+                                    <input type="radio" name="rdoCardType" class="ratio_deposite" value="VMS" />
+                                </a>
+                            </li>
+
+
+
+                        </ul>
+
+
+                        <h3>B2 Thẻ nhỏ nhất - Thẻ càng to thời gian chạy càng lâu</h3>
+                        <ul class="wr-crf-tul wr-crf-tul2 clearfix amount_type">
+                            <li class="">
+                                <a href="javascript:;">
+                                    10.000
+                                    <input type="radio" name="rdoAmountType" class="ratio_amount" value="10000" />
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">
+                                    20.000
+                                    <input type="radio" name="rdoAmountType" class="ratio_amount" value="20000" />
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:;">
+                                    50.000
+                                    <input type="radio" name="rdoAmountType" class="ratio_amount" value="50000" />
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">
+                                    100.000
+                                    <input type="radio" name="rdoAmountType" class="ratio_amount" value="100000" />
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">
+                                    200.000
+                                    <input type="radio" name="rdoAmountType" class="ratio_amount" value="200000" />
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">
+                                    500.000
+                                    <input type="radio" name="rdoAmountType" class="ratio_amount" value="500000" />
+                                </a>
+                            </li>
+                        </ul>
+                        <h3>B3. Thông tin giao dịch</h3>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" placeholder="Họ tên khách hàng(không bắt buộc)" id="txtFullname">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-5 form-mobile">
+                                <input type="text" class="form-control" placeholder="Số điện thoại (tài khoản) cần nạp" id="txtMobile">
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" placeholder="Số tiền cần nạp" id="txtAmount">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input class="form-control" type="text" id="txtPassword" placeholder="Mật khẩu MyViettel MyVNPT(nếu có)" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 col-xs-6">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="1" checked="">
+                                    Trả trước
+                                </label>
+                            </div>
+                            <div class="col-md-3 col-xs-6 nopadding">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="2">
+                                    Trả sau
+                                </label>
+                            </div>
+                            <div class="col-md-3 col-xs-6">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="3">
+                                    Internet
+                                </label>
+                            </div>
+                            <div class="col-md-3 col-xs-6 nopadding">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="4">
+                                    Nạp Edu
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 col-xs-6">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="5">
+                                    ĐT cố định
+                                </label>
+                            </div>
+                            <div class="col-md-3 col-xs-6 nopadding">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="6">
+                                    Nhà thuốc
+                                </label>
+                            </div>
+                            <div class="col-md-3 col-xs-6">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="7">
+                                    Tiêm chủng
+                                </label>
+                            </div>
+                            <div class="col-md-3 col-xs-6 nopadding">
+                                <label>
+                                    <input type="radio" name="rdTopupType" value="8">
+                                    Nạp ShopOne
+                                </label>
+                            </div>
+                        </div>
+                        <h3>B3. Mật khẩu bán hàng</h3>
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <input name="DummyUsername" type="text" style="display:none;">
+                                <input name="DummyPassword" type="password" style="display:none;">
+                                <input type="password" class="form-control" placeholder="Nhập mật khẩu bán hàng" id="txtPassword2" value="@ViewBag.MKBH" autocomplete="new-password">
+                            </div>
+                        </div>
+                        <p id="msgBox" class="wr-crf-err"></p>
+                        <ul class="wr-crf-btn">
+                            <li><a href="javascript:;" class="wrf-btn-left wrf-btn-del" onclick="javascript:location.reload()">Hủy</a></li>
+                            <li><a href="javascript:;" onclick="validateData()" class="wrf-btn-right wrf-btn-ss">Thêm giao dịch</a></li>
+                        </ul>
+                        <input type="hidden" id="ddlLoaiThe" name="ddlLoaiThe" />
+                        <input type="hidden" id="dlMinAll" value="50000" name="ddlAmount" />
+                        <input type="hidden" id="hdDevideId" value="@ViewBag.DevideId" />
+                        <input type="hidden" id="hdTokenUrl" value="@ViewBag.TokenUrl" />
+                        <input type="hidden" id="hdPassword" name="hdPassword" />
+                    </div>
+                    <div class="wr-crf-tb1" id="pnOTP" style="display:none;margin-top:20px">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input class="form-control" type="text" id="txtOTP" placeholder="OTP" autocomplete="off">
+                            </div>
+                        </div>
+                        <p id="msgBox2" class="wr-crf-err"></p>
+                        <ul class="wr-crf-btn">
+                            <li><a href="javascript:;" class="wrf-btn-left wrf-btn-del" onclick="javascript:location.reload()">Hủy</a></li>
+                            <li><a href="javascript:;" onclick="TOKENAjax()" class="wrf-btn-right wrf-btn-ss">Xác nhận</a></li>
+                        </ul>
+                    </div>
+                </form>
+
+                <!-- /.row -->
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+<script src="~/Content/js/formvalidate.js"></script>
+<script>
+    function formatPrice(price) {
+        var fixedToSix = (Math.round(price * 1000000) / 1000000);
+        return (Math.round(fixedToSix) == fixedToSix + 0.000001 ? fixedToSix + 0.000001 : fixedToSix);
+    }
+    Number.prototype.formatMoney = function (c, d, t) {
+        var n = this,
+            c = isNaN(c = Math.abs(c)) ? 2 : c,
+            d = d == undefined ? "." : d,
+            t = t == undefined ? "," : t,
+            s = n < 0 ? "-" : "",
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };
+    var unformat = function (value, decimal) {
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        // Recursively unformat arrays:
+        //            if (isArray(value)) {
+        //                return map(value, function (val) {
+        //                    return unformat(val, decimal);
+        //                });
+        //            }
+        // Fails silently (need decent errors):
+        value = value || 0;
+        // Return the value as-is if it's already a number:
+        if (typeof value === "number") return value;
+        // Default decimal point is "." but could be set to eg. "," in opts:
+        decimal = decimal || ",";
+        // Build regex to strip out everything except digits, decimal point and minus sign:
+        var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
+            unformatted = parseFloat(
+                ("" + value)
+                    .replace(/\((.*)\)/, "-$1") // replace bracketed values with negatives
+                    .replace(regex, '') // strip out any cruft
+                    .replace(decimal, ',') // make sure decimal point is standard
+            );
+        // This will fail silently which may cause trouble, let's wait and see:
+        return !isNaN(unformatted) ? unformatted : 0;
+    };
+    $(".card_type li .active").click(function () {
+
+        selectCard(this);
+    });
+    function selectCard(obj) {
+
+        var o = $(obj).find("input");
+        $(".ratio_deposite").prop("checked", false);
+
+        o.prop('checked', true);
+        var value = o.val();
+        $("#ddlLoaiThe").val(value);
+
+        $(".card_type li").removeClass("active");
+        $(obj).parent().addClass("active");
+
+        if ($("#ddlLoaiThe").val() == 'VMS') {
+            if ($("#txtMobile").val() != '') {
+                GetToken();
+            }
+        }
+    }
+    $(".amount_type li a").click(function () {
+
+        selectAmount(this);
+    });
+    function selectAmount(obj) {
+
+        var o = $(obj).find("input");
+        $(".ratio_amount").prop("checked", false);
+
+        o.prop('checked', true);
+        var value = o.val();
+        $("#dlMinAll").val(value);
+
+        $(".amount_type li").removeClass("active");
+        $(obj).parent().addClass("active");
+    }
+</script>
+<script>
+
+
+
+    function validateData() {
+
+        if (!ValidateControls("Vui lòng chọn mạng", "#ddlLoaiThe")) {
+            return false;
+        }
+        if (!ValidateControls("Vui lòng nhập số tiền cần nạp", "#txtAmount")) {
+            return false;
+        }
+        if (!ValidateControls("Vui lòng nhập số điện thoại (tài khoản) cần nạp", "#txtMobile")) {
+            return false;
+        }
+
+        var amount = $('#txtAmount').val();
+        amount = amount.replace('.', '').replace('.', '').replace('.', '');
+        if (amount < 10000000) {
+            $("#msgBox").html("Số tiền nhỏ hơn 10000000.").show();
+
+            $('#txtAmount').focus();
+        }
+        if (!ValidateControls("Vui nhập mật khẩu bán hàng", "#txtPassword2")) {
+            return false;
+        }
+        var password = $("#hdPassword").val();
+        if (password == '')
+            password = $("#txtPassword").val();
+
+        if ($("#ddlLoaiThe").val() == 'VMS' && password == '') {
+            OTPAjax();
+            return;
+        }
+
+        if (password == '') {
+            if ($("#ddlLoaiThe").val() == 'VNP') {
+                $("#msgBox").html("Vui lòng nhập mật khẩu MyViettel MyVNPT.").show();
+                $('#txtPassword').focus();
+                return;
+            }
+            if ($("#ddlLoaiThe").val() == 'VTT' && $("input:radio[name ='rdTopupType']:checked").val() != 2) {
+                $("#msgBox").html("Vui lòng nhập mật khẩu MyViettel MyVNPT.").show();
+                $('#txtPassword').focus();
+                return;
+            }
+        }
+
+
+        var param = {
+            'Amount': amount,
+            'Telco': $("#ddlLoaiThe").val(),
+            'AmountMinAll': $("#dlMinAll").val(),
+            'Mobile': $("#txtMobile").val(),
+            'FullName': $("#txtFullname").val(),
+            'Password': password,
+            'Password2': $("#txtPassword2").val(),
+            'TopupType': $("input:radio[name ='rdTopupType']:checked").val(),
+        };
+        Utils.Loading();
+        $.ajax({
+            type: 'POST',
+            url: "/Home/FormOrder",
+            data: addAntiForgeryToken(param),
+            async: true,
+            success: function (data) {
+                Utils.UnLoading();
+
+                if (data.ResponseCode > 0) {
+
+                  
+                    showmess("Tạo giao dịch thành công!", "success", "btn-success");
+                }
+                else {
+                    showmess(data.Description, "error", "btn-danger");
+                   
+
+                }
+            }
+        });
+    }
+    function GetToken() {
+
+        var param = {
+            'Mobile': $("#txtMobile").val(),
+            'Telco': $("#ddlLoaiThe").val(),
+        };
+        $.ajax({
+            type: 'POST',
+            url: "/Home/GetToken",
+            data: addAntiForgeryToken(param),
+            async: true,
+            success: function (data) {
+                Utils.UnLoading();
+
+                if (data.ResponseCode > 0) {
+                    $("#hdPassword").val(data.Description);
+
+                }
+
+            }
+        });
+    }
+    function SetToken() {
+        var param = {
+            'Mobile': $("#txtMobile").val(),
+            'Token': $("#txtPassword").val(),
+        };
+        $.ajax({
+            type: 'POST',
+            url: "/Home/SetToken",
+            data: addAntiForgeryToken(param),
+            async: true,
+            success: function (data) {
+                Utils.UnLoading();
+
+                if (data.ResponseCode > 0) {
+                    $("#hdPassword").val(data.Description);
+
+                }
+
+            }
+        });
+    }
+    $('#txtMobile').change(function (e) {
+        if ($("#ddlLoaiThe").val() == 'VMS') {
+            if ($("#txtMobile").val() != '') {
+                GetToken();
+            }
+        }
+
+    });
+
+    $("#txtAmount").keyup(function () {
+        var val = $(this).val();
+        if (val) {
+
+            val = val.replace('.', '').replace('.', '').replace('.', '');
+            val = unformat(val, 0);
+            //$(this).val(val);
+
+            var price = parseInt(val);
+
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.');
+            $(this).val(formatMoneyVNDVal);
+        }
+    }).blur(function () {
+        var val = $(this).val();
+        if (val) {
+            //console.log(val);
+            val = val.replace('.', '').replace('.', '').replace('.', '');
+            var rate = 10000;
+            var min = 10000;
+            //console.log(val);
+            if (val < min)
+                val = min;
+            val = Math.round(val / rate) * rate;
+            val = unformat(val, 0);
+            //$(this).val(val);
+
+            var price = parseInt(val);
+
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.');
+            $(this).val(formatMoneyVNDVal);
+        }
+    });
+</script>
+<script>
+    function OTPAjax() {
+        var otp = {
+            Command: "GETOTP",
+            Mobile: $("#txtMobile").val(),
+            DeviceId: $("#hdDevideId").val(),
+        }
+        Utils.Loading();
+        $.ajax({
+            type: "post",
+            datatype: "json",
+            url: $("#hdTokenUrl").val(),
+            success: function (data) {
+                Utils.UnLoading();
+                if (data.Code == "1") {
+                    //$("#tokenhelp").text('Điền OTP để lẫy Token');
+
+                    $("#pnMain").hide();
+                    $("#pnOTP").show();
+                    $("#txtPassword").val('');
+                } else {
+                    $("#msgBox").text(data.Data);
+                }
+
+            },
+
+            data: JSON.stringify(otp)
+        });
+    }
+    function TOKENAjax() {
+        var otp = {
+            Command: "GETTOKEN",
+            Mobile: $("#txtMobile").val(),
+            Otp: $("#txtOTP").val(),
+            DeviceId: $("#hdDevideId").val(),
+        }
+        if (!ValidateControls("Vui nhập OTP", "#txtOTP", '#msgBox2')) {
+            return false;
+        }
+        Utils.Loading();
+        $.ajax({
+            type: "post",
+            datatype: "json",
+            url: $("#hdTokenUrl").val(),
+            success: function (data) {
+                Utils.UnLoading();
+                if (data.Code == "1") {
+
+                    $("#txtPassword").val(data.Data);
+                    SetToken();
+                    validateData();
+                }
+                else {
+
+                    if (data.Data == "One time password is expired. Please get new password to login.") {
+                        OTPAjax();
+                        $("#msgBox2").text("Nhập lại OTP").show();
+                        //get lại otp
+                    }
+                    else {
+                       
+                        showmess("Lỗi nhập sai OTP", "error", "btn-danger");
+
+                    }
+                }
+
+            },
+
+            data: JSON.stringify(otp)
+        });
+    }
+    function showmess(mess, type, ButtonClass) {
+        swal({
+            title:'',
+            text: mess,
+            type: type,
+            confirmButtonClass: ButtonClass,
+            closeOnConfirm: false,
+            allowOutsideClick: true
+        },
+            function (isConfirm) {
+                location.reload();
+            });
+    }
+    //showmess("Lỗi nhập sai OTP!", "error", "btn-danger");
+    //showmess("Giao dịch thành công!", "success", "btn-success");
+</script>

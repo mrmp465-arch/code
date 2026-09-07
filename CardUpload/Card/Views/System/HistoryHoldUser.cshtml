@@ -1,0 +1,32 @@
+﻿
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span>Lịch sử hoàn tiền : @ViewBag.UserName </div>
+            <div class="box-body">
+
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="ListTransactionHold">
+                            @Html.Action("ListTransactionHold", "System", new { username = ViewBag.UserName })
+                        </div>
+
+                        <div class="dataTables_paginate" id="pager2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 70% !important;
+        height: 98% !important;
+    }
+</style>
+
+
+
+
+

@@ -1,0 +1,69 @@
+﻿@using SMS.Data.DTO;
+@model SMS.Data.DTO.Users
+@if (Model != null)
+{
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="/" class="logo" style="height:56px!important">
+
+            <span class="logo-mini"><b>SMS</b></span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>SMS</b>CMS</span>
+           
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            
+            <div class="navbar-custom-menu">
+
+                <ul class="nav navbar-nav">
+
+                    @*<li class="dropdown notifications-menu" id="headernoti">
+                            @{ Html.RenderAction("TopContent", "AdminContent");}
+                        </li>*@
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#">
+                            <img src="~/Content/img/admin.png" class="user-image" alt="User Image">
+                            <span>@Model.Username</span>
+                        </a>
+
+                    </li>
+
+                    @{ Html.RenderAction("Balance", "Home", new { user = Model });}
+
+                    <!-- Control Sidebar Toggle Button -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-sort-desc"></i></a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <!-- Menu Footer-->
+                            <li>
+                                <a href="@Url.Action("ChangePassword", "System")"> <i class="fa fa-key"></i> Đổi mật khẩu</a>
+                            </li>
+                           
+                            <li>
+                                <a href="@Url.Action("MyHistory", "System")"> <i class="fa fa-history"></i> Lịch sử giao dịch</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Login","Account",new { act="out"})"> <i class="fa fa-sign-out"></i> Thoát</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+}
+else
+{
+    <script>
+        window.location.href="@Url.Action("Login","Account")"
+    </script>
+}

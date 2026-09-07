@@ -1,0 +1,115 @@
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
+<script src="~/Content/js/jquery.matchHeight.js"></script>
+@if (ViewBag.Type >= 2)
+{
+    <div class="row">
+        <div class="col-md-6 nopadding FormOrder" style="padding-right:5px !important;">
+            @{ Html.RenderAction("BuyCard", "Home");}
+        </div>
+
+        <div class="col-md-6 nopadding">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Danh sách mua thẻ</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                                    <i class="fa fa-history"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="box-body maxheight01">
+
+                            @{ Html.RenderAction("ListBuyCard", "Home");}
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 nopadding FormOrder" style="padding-right:5px !important;">
+            @{ Html.RenderAction("TopupOrder", "Home");}
+        </div>
+
+        <div class="col-md-6 nopadding">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Danh sách topup</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                                    <i class="fa fa-history"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="box-body maxheight02">
+
+                            @{ Html.RenderAction("ListTopupOrder", "Home");}
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.maxheight01').matchHeight();
+        $('.maxheight02').matchHeight();
+        function showmess(mess, type, ButtonClass) {
+            swal({
+                title: '',
+                text: mess,
+                type: type,
+                confirmButtonClass: ButtonClass,
+                closeOnConfirm: false,
+                allowOutsideClick: true
+            },
+                function (isConfirm) {
+                    location.reload();
+                });
+        }
+    </script>
+
+
+
+
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6 nopadding FormOrder" style="padding-right:5px !important;">
+            @{ Html.RenderAction("CardOrder", "Home");}
+        </div>
+
+        <div class="col-md-6 nopadding">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Danh sách thẻ</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                                    <i class="fa fa-history"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="box-body maxheight01">
+
+                            @{ Html.RenderAction("ListCardOrder", "Home");}
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+        </div>
+    </div>
+}

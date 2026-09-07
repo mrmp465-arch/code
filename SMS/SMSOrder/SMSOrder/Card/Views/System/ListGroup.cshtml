@@ -1,0 +1,60 @@
+﻿@using SMS.Data.DTO
+@model List<Groups>
+
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+            <th> ID</th>
+            <th>Name</th>
+            <th>Quản trị</th>
+
+        </tr>
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var obj in Model)
+        {
+            <tr>
+                <td>@obj.GroupID</td>
+                <td>@obj.Name</td>
+                <td>
+                    @if (ViewBag.IsUpdate)
+                    {
+                        <a href="@Url.Action("GetGroupInfo", new { id = obj.GroupID })"><i class="fa fa-edit"></i></a>
+                    }
+                    <a href="javascript:;" title="Delete" onclick="DeleteData('@obj.GroupID')"><i class="fa fa-trash-o"></i></a><text>&nbsp;</text>
+                </td>
+            </tr>
+        }
+    }
+</table>
+<script>
+    function DeleteData(id) {
+
+        bootbox.confirm("Xóa nhóm sẽ xóa danh bạ của nhóm. Bạn chắc chắn muốn xóa nhóm này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/System/DeleteGroup",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            window.location.reload();
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+</script>
+
+ 

@@ -1,0 +1,198 @@
+﻿@using SMS.Data.DTO
+@model List<Contacts>
+@using SMS.Utility
+@using SMS.CMS.Helper
+@{ var idx = 0; }
+
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+            <th><input type="checkbox" id="chk_all" name="chk_all" onClick="toggle(this)" /></th>
+            <th style="text-align:left;">STT</th>
+            <th style="text-align:left;">Số điện thoại</th>
+            <th style="text-align:left;">Nhóm</th>
+            <th>Tên</th>
+            @*<th>Email</th>
+            <th>Ngày sinh</th>*@
+            <th>Tùy chọn</th>
+            <th>Tùy chọn 1</th>
+            <th>Tùy chọn 2</th>
+            <th>Mạng</th>
+            <th>Tác vụ</th>
+        </tr>
+
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+
+        foreach (var obj in Model)
+        {
+            { idx++; }
+    <tr>
+        <td>
+            <input type="checkbox" class="chk_item" name="chk_item" value="@(Encrypt.Base64Encode(obj.Id))" />
+        </td>
+        <td style="text-align:left;">@(idx + (ViewBag.CurrentPage - 1) * ViewBag.PageSize )</td>
+        <td style="text-align:left;">
+            <a href="javascript:;" onclick="EditContact(@obj.Id)"> @obj.Number</a>
+
+        </td>
+        <td style="text-align:left;">@HtmlHelpers.GetGroupyName(obj.Group, ViewBag.GroupList)</td>
+        <td>
+            @obj.Name
+        </td>
+        @*<td>
+            @obj.Email
+        </td>
+        <td>
+            @(obj.Birthday.HasValue ? obj.Birthday.Value.ToString("dd/MM/yyyy") : "" )
+        </td>*@
+        <td>@obj.Option1</td>
+        <td>@obj.Option2</td>
+        <td>@obj.Option3</td>
+        <td>@StringUtils.GetTelCoName(obj.Telco)</td>
+        <td style="text-align:left">
+
+            <a href="javascript:;" title="Delete" onclick="DeleteData('@(Encrypt.Base64Encode(obj.Id))')"><i class="fa fa-trash-o"></i></a><text>&nbsp;</text>
+
+
+        </td>
+    </tr>
+        }
+    }
+</table>
+
+<script type="text/javascript">
+        var PageOnSize = '@ViewBag.PageSize';
+    var CurrentPage = '@ViewBag.CurrentPage';
+     $(document).ready(function () {
+         $("#lbtotal").html("Tổng số : @(ViewBag.TotalRecord)");
+        $("#pager").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest(page); }
+        });
+
+
+    });
+    //$('#dataTables').DataTable({
+    //    "bPaginate": false,
+    //    "searching": false,
+    //    "ordering": true,
+    //    "info": false
+    //});
+</script>
+<script type="text/javascript">
+    function toggle(source) {
+        checkboxes = document.getElementsByName('chk_item');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+    function BindDataRequest(currentPage) {
+        var params = {
+            group: $('#ddlGroup :selected').val(),
+            email: $("#txtEmail").val(),
+
+            currentPage: currentPage,
+            pageSize: PageOnSize
+        };
+        var urlRequestAns = "/Contact/ListContact";
+        Utils.Loading();
+        $.ajax({
+            type: 'GET',
+            url: urlRequestAns,
+            data: params,
+            success: function (data) {
+                $("#ListContact").html(data);
+                Utils.UnLoading();
+            },
+            error: function () {
+                Utils.UnLoading();
+            }
+        });
+    }
+    function DeleteData(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn xóa dữ liệu này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Contact/Delete",
+                    data: addAntiForgeryToken({ Id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    function AddContact() {
+        var pageurl = "/Contact/AddContactInfo/";
+        $.ajax({
+            type: 'GET',
+            url: pageurl,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    title:"Thêm mới danh bạ",
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Đóng",
+                            className: "btn-success",
+                            callback: function () {
+                              
+                                $("#btnSearch").click();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        
+        
+    }
+    function EditContact(id) {
+        var pageurl = "/Contact/GetContactInfo/"+id;
+        $.ajax({
+            type: 'GET',
+            url: pageurl,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    title: "Cập nhật danh bạ",
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Đóng",
+                            className: "btn-success",
+                            callback: function () {
+                                
+                                $("#btnSearch").click();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+    }
+</script>
+

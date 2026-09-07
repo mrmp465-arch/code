@@ -1,0 +1,38 @@
+﻿@using Card.Data.DTO;
+@using Card.Utility
+@using Card.Utility
+@using Card.CMS.Models
+@model List<BankGateReport>
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+            <th>Time</th>
+
+            <th>Tổng số giao dịch</th>
+            <th>Tổng số tiền</th>
+
+        </tr>
+    </thead>
+    @if (Model.Count > 0)
+    {
+        foreach (var obj in Model)
+        {
+
+            <tr>
+
+                <td style="text-align:left;">@obj.Time</td>
+                <td style="text-align:left;">@obj.TotalTransaction</td>
+                <td style="text-align:left;">@StringUtils.InsertCommaNoStyle(obj.TotalAmount.ToString().Replace(".00", ""))</td>
+
+            </tr>
+
+        }
+        <tr>
+            <td>
+                Tổng
+            </td>
+            <td style="text-align:left;">@Model.Sum(x => x.TotalTransaction)</td>
+            <td style="text-align:left;">@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.TotalAmount).ToString().Replace(".00", ""))</td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Danh sách người dùng";
+}
+@using SMS.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+    List<Groups> ListGroup = ViewBag.GroupList;
+    Users CurrentUser = ViewBag.CurrentUser;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <span class="glyphicon glyphicon-user"></span>
+                @ViewBag.Title
+            </div>
+            <div class="box-body">
+                <div class="row" id="form">
+                    <div class="col-md-12">
+                        <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                            <select class="form-control" id="ddlActive">
+                                <option value="-1">--Trạng thái--</option>
+                                <option value="1">Hoạt Động</option>
+                                <option value="0">Không Hoạt Động</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3 col-xs-12 col-sm-6" @if (ListUser.Count<=1) { @Html.Raw("style='display:none'") ; }>
+                            <select class="form-control" id="ddlUser">
+                                @if (ListUser != null && ListUser.Count > 0)
+                                {
+                                    foreach (var obj in ListUser)
+                                    {
+                                        <option value="@obj.Username">@obj.Username</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                       
+                        <div class="form-group col-md-2 col-xs-12 col-sm-6">
+
+                            <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+                        </div>
+                        <div class="form-group col-md-1 col-xs-12 col-sm-6">
+                            <button type="button" id="btnSearch" class="btn btn-primary" style="display:none">Tìm Kiếm</button>
+                            <a href="@Url.Action("AddUserInfo")" class="btn btn-primary btAdd">Thêm User</a>
+
+                        </div>
+                    </div>
+                  
+                </div>
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="UsersPartial">
+                            @Html.Action("ListUsers", "System")
+                        </div>
+
+                        <div class="dataTables_paginate" id="pager">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlActive").change(function () {
+            GetList(1);
+        });
+        $("#ddlUser").change(function () {
+            GetList(1);
+        });
+        $("#ddlGroup").change(function () {
+            GetList(1);
+        });
+        $("#ddlTelco").change(function () {
+            $('.ddlPercent').hide();
+            $('#ddlPercent' + $("#ddlTelco").val()).show();
+        });
+        function GetList(currentPage) {
+            parameters = {
+                isActive: $('#ddlActive :selected').val(),
+                email: $("#txtEmail").val(),
+                createdUser: $("#ddlUser").val(),
+       
+                currentPage: currentPage
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/System/ListUsers";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#UsersPartial").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+
+    });
+
+   
+</script>
+<style>
+    label {
+        min-width: 86px;
+    }
+</style>
+

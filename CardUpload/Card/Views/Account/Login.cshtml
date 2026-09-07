@@ -1,0 +1,126 @@
+﻿@using Card.Utility;
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="login-box">
+    <div class="login-logo">
+        <a href="/">Card</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">Đăng nhập</p>
+        <div id="formlogin">
+            <p id="msgBox" style="color: #c82e29; font-weight: bold; font-size: 13px"></p>
+            <div class="form-group has-feedback">
+                <input type="text" id="txtName" class="form-control" placeholder="Tên đăng nhập">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" id="txtPassword" class="form-control" placeholder="Mật khẩu">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+
+            <div class="form-group has-feedback Capcha">
+
+
+                <input type="text" id="txtCapchar" class="form-control" placeholder="Mã xác thực" maxlength="3" name="Capchar" />
+                <img id="imgCapcha" src="~/Handler/CaptchaImage.ashx?w=100&h=40&rnd=@(StringUtils.RandomNumber(0, 100))" style="height:34px" alt="" />
+                <div style="clear: both;"></div>
+
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button type="button" onclick="validateData()" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </div>
+
+
+        <a href="#">Quên mật khẩu</a><br>
+
+    </div>
+    <!-- /.login-box-body -->
+</div>
+<style>
+    @@media (max-width: 768px)
+    {
+        .login-box, .register-box {
+            width: 95%;
+            margin-top: 20px;
+        }
+    }
+    
+</style>
+@section scripts{
+
+    <script>
+
+    function refreshCaptcha() {
+        var capt = "/Handler/CaptchaImage.ashx?ss=" + Math.random() + "&w=100&h=40";
+        $("#imgCapcha").attr("src", capt);
+    }
+    $("#txtCapchar").keyup(function () {
+        var val = $(this).val();
+        val = val.toUpperCase();
+        $(this).val(val);
+    });
+
+    $('#formlogin input[type="text"],#formlogin input[type="password"]').on('keypress', function (event) {
+        if (event.which === 13) {
+
+            validateData();
+        }
+    });
+    function validateData() {
+        if (!ValidateControls("Vui lòng nhập tên đăng nhập !", "#txtName")) {
+        return false;
+        }
+
+        if (!ValidateControls("Vui lòng nhập mật khẩu !", "#txtPassword")) {
+        return false;
+        }
+
+        var postdata = {
+        Username: $('#txtName').val(),
+        Password: $('#txtPassword').val(),
+        Capchar: $('#txtCapchar').val()
+        };
+    //ShowProgress();
+        $.ajax({
+            type: "post",
+            //dataType: "html",
+            url: '@Url.Action("Login", "Account")',
+            data: addAntiForgeryToken(postdata),
+            success: function (data) {
+
+
+                if (data.success == true)
+                {
+                    var url = '@ViewBag.url';
+
+                    if (url.length > 0) {
+                        window.location.href = url;
+                        return;
+                    }
+                    window.location.href = '/';
+
+                }
+                else
+                {
+                    refreshCaptcha();
+                    $("#msgBox").html(data.msg).show();
+                 }
+
+              }
+        });
+
+    }
+    </script>
+}

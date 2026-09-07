@@ -1,0 +1,168 @@
+﻿@using SMS.Data.DTO
+@model SMSDictionary
+
+@using SMS.CMS.Helper
+
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="messager-body">
+                        <div class="alert alert-success display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <label>Đã lưu dữ liệu thành công !!!</label>
+                        </div>
+                        <div class="alert alert-danger display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtKey" class="control-label col-md-3">Key :<span class="required">*</span></label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="tel" id="txtKey" maxlength="10" name="number" value="@Model.Key" class="form-control" @if (Model.Id > 0) { @Html.Raw("Readonly") ; } />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="txtValue">Value :</label>
+                        <div class="col-md-9">
+                            <input type="text" id="txtValue" maxlength="50" value="@Model.Value" class="form-control" name="group" autocomplete="off" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="panel-footer form-horizontal">
+                    <div class="form-group submit">
+                        <button type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i> Cập nhập</button>
+
+                        <button type="button" class="btn btn-default" id="btnBack" data-dismiss="modal"><i class="fa fa-backward"></i> Hủy</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 30% !important;
+        height: 60% !important;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+
+        .modal-dialog {
+            width: 90% !important;
+            height: 90% !important;
+        }
+    }
+</style>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#txtBirthDay').datetimepicker({
+                pickTime: false,
+                autoclose: true
+            });
+            $("button.close").click(function () {
+                $(this).parent().css("display", "none");
+            });
+            $('#defaultForm').bootstrapValidator({
+                message: 'This value is not valid',
+                //live: 'submitted',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+
+
+                }
+            })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+            $("#btnReset").click(function () {
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+                $(".alert-danger").css("display", "none");
+                $(".alert-success").css("display", "none");
+            });
+            //Save Data
+            function SaveData() {
+                var param = {
+                    'Id': '@Model.Id',
+                    'Key': $("#txtKey").val(),
+                    'Value': $("#txtValue").val(),
+
+                }
+
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("DictionarySaveData")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+
+                            $('.modal ').modal('hide');
+                            location.reload();
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+            };
+        });
+
+
+
+</script>
+

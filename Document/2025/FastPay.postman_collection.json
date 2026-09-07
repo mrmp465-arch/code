@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "b3351027-7075-46fd-85df-4c433d8b6b9b",
+		"name": "FastPay",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "849035"
+	},
+	"item": [
+		{
+			"name": "Bank- GetListBank",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"partnerCode\":\"xxx\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.coroach.xyz/bankin/info.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"coroach",
+						"xyz"
+					],
+					"path": [
+						"bankin",
+						"info.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bank-Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"PartnerCode\":\"fasttransfer\",\"Amount\":10000,\"RefCode\":\"1223\",\"CallbackUrl\":\"xxx\",\"BankCode\":\"random\",\"Signature\":\"c5d228fe61f622890463f6334b335c92\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.fasttransfer.pro/bankin/Order.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"fasttransfer",
+						"pro"
+					],
+					"path": [
+						"bankin",
+						"Order.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Momo - Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"jxxxm\",\"Amount\":\"50000\",\"RefCode\":\"jackson-1754489669-jx1mobile\",\"CallbackUrl\":\"https:\\/\\/id.jx1m.net\\/CallGetBank3.php\",\"Signature\":\"a65a8babf5c490753338a53699d24318\",\"BankCode\":\"MOMO\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.fasttransfer.pro/bankin/Order.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"fasttransfer",
+						"pro"
+					],
+					"path": [
+						"bankin",
+						"Order.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Momo Cash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"Amount\":10000,\"AccountNumber\":\"12233\",\"AccountName\":\"Nguyen Van A\",\"BankCode\":\"MOMO\",\"CallbackUrl\":\"xxx\",\"RefCode\":\"123\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.coroach.xyz/bankout/cash.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"coroach",
+						"xyz"
+					],
+					"path": [
+						"bankout",
+						"cash.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BankCash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"Amount\":10000,\"AccountNumber\":\"12233\",\"AccountName\":\"Nguyen Van A\",\"BankCode\":\"ACB\",\"CallbackUrl\":\"xxx\",\"RefCode\":\"123\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.fasttransfer.pro/bankout/cash.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"fasttransfer",
+						"pro"
+					],
+					"path": [
+						"bankout",
+						"cash.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Card -UserCard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"partnerCode\":\"xxx\",\"CardSerial\":\"xxx\",\"CardCode\":\"xxxx\",\"CardType\":\"xxxx\",\"Amount\":50000,\"RefCode\":\"1708185637\",\"CallbackUrl\":\"xxx\",\"signature\":\"2d684522e32c28dacd6f1a5a8fffb4b2\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apicard.coroach.xyz/usecard.ashx",
+					"protocol": "https",
+					"host": [
+						"apicard",
+						"coroach",
+						"xyz"
+					],
+					"path": [
+						"usecard.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Card-Buycard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxx\",\"CardType\":\"vnp\",\"Amount\":50000,\"signature\":\"2d684522e32c28dacd6f1a5a8fffb4b2\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apicard.fasttransfer.pro/buycard.ashx",
+					"protocol": "https",
+					"host": [
+						"apicard",
+						"fasttransfer",
+						"pro"
+					],
+					"path": [
+						"buycard.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

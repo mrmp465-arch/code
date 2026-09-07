@@ -1,0 +1,46 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="HomePage.Master.cs" Inherits="BankGateV2.Controls.HomaPage" %>
+
+<%@ Register Src="~/Controls/Header.ascx" TagName="HeaderControl" TagPrefix="uc" %>
+<%@ Register Src="~/Controls/Footer.ascx" TagName="FooterControl" TagPrefix="uc" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="application/vnd.wap.xhtml+xml" http-equiv="Content-Type" />
+    <meta content="max-age=2000" http-equiv="Cache-Control" />
+    <meta content="Bank" name="description" />
+    <meta content="Bank" name="keywords" />
+    <meta content="Bank" name="content" />
+    <meta content="width" name="MobileOptimized" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>Bank</title>
+    <link rel="stylesheet" href="/Resources/css/css.css" />
+    <link rel="stylesheet" type="text/css" href="/Resources/css/hover.css" />
+    <link rel="stylesheet" type="text/css" media="only screen and (max-width: 1024px), only screen and (max-device-width: 1024px)" href="/Resources/css/style_1024.css" />
+    <link rel="stylesheet" type="text/css" media="only screen and (max-width: 768px), only screen and (max-device-width: 768px)" href="/Resources/css/style_768.css" />
+    <link rel="stylesheet" type="text/css" media="only screen and (max-width: 640px), only screen and (max-device-width: 640px)" href="/Resources/css/style_640.css" />
+    <link rel="stylesheet" type="text/css" media="only screen and (max-width: 480px), only screen and (max-device-width: 480px)" href="/Resources/css/style_480.css" />
+    <link rel="stylesheet" type="text/css" media="only screen and (max-width: 414px), only screen and (max-device-width: 414px)" href="/Resources/css/style_414.css" />
+    <link rel="stylesheet" type="text/css" media="only screen and (max-width: 375px), only screen and (max-device-width: 375px)" href="/Resources/css/style_375.css" />
+    <link rel="stylesheet" type="text/css" media="only screen and (max-width: 320px), only screen and (max-device-width: 320px)" href="/Resources/css/style_320.css" />
+    <script src="/Resources/js/jquery-1.8.1.min.js"></script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <uc:HeaderControl runat="server" ID="HeaderControl" />
+    <form id="form1" runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+    <uc:FooterControl runat="server" ID="FooterControl" />
+</body>
+</html>

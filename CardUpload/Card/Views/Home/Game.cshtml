@@ -1,0 +1,48 @@
+﻿@model Card.Data.DTO.Users
+@{ViewBag.Title = "Home"; }
+@if (ViewBag.Order && Model.Type > 2)
+{
+    <div class="row">
+        <div class="col-md-4 nopadding FormOrder" style="padding-right:5px !important;">
+            @{ Html.RenderAction("FormOrderGame", "Home", new { user = Model });}
+        </div>
+
+        <div class="col-md-8 nopadding">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Danh sách giao dịch</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                                    <i class="fa fa-history"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="box-body maxheight01">
+                            @{ Html.RenderAction("ListTransactionOrder", "Home");}
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Content/js/jquery.matchHeight.js"></script>
+    <script>
+        $('.maxheight01').matchHeight();
+    </script>
+    <style>
+        .content-wrapper {
+            background-color: #ecf0f5;
+        }
+    </style>
+}
+else
+{
+    <script>
+        location.href='/Report'
+    </script>
+}
+

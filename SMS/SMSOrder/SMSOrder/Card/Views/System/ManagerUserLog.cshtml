@@ -1,0 +1,144 @@
+﻿@using SMS.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header">Quản lý log người dùng</div>
+            <div class="box-body">
+                <div class="row" id="form">
+                    <form id="defaultForm" method="post" class="form-horizontal">
+                        <div class="col-md-12">
+                            <div class="form-group col-md-3 col-xs-12 col-sm-6" @if (ListUser.Count == 1) { @Html.Raw("style='display:none'") ; }>
+                                <label class="control-label">Tài khoản</label>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                    <select class="form-control" id="ddlUser">
+                                        @if (ListUser != null && ListUser.Count > 0)
+                                        {
+                                            foreach (var obj in ListUser)
+                                            {
+                                                <option value="@obj.UserID">@obj.Username</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                                <label for="txtEmail" class="control-label"><i class="fa fa-pencil"></i>Từ Khóa</label>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                    <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3 col-xs-12 col-sm-6" id="datetimepicker_FromDate">
+                                <label class="control-label text-info" style="min-width:80px;"><i class="fa fa-calendar"></i>Từ Ngày</label>
+                                <div class="col-xs-8 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="date" id="datetimeFromDate">
+                                        <input type="text" data-date-format="DD/MM/YYYY HH:mm:ss" id="fromDate" class="form-control" name="datetimeFromDate" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3 col-xs-12 col-sm-6" id="datetimepicker_ToDate">
+                                <label class="control-label text-info" style="min-width:80px;"><i class="fa fa-calendar"></i>Đến Ngày</label>
+                                <div class="col-xs-8 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="date" id="datetimeToDate">
+                                        <input type="text" data-date-format="DD/MM/YYYY HH:mm:ss" id="toDate" class="form-control" name="datetimeToDate" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group submit" style="text-align:center">
+                                <input type="button" id="btnSearch" class="btn btn-primary" value="Tìm Kiếm">
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="ListUserLog">
+                            @*@Html.Action("ListUserLog", "System")*@
+                        </div>
+
+                        <div class="dataTables_paginate" id="pager">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datetimeFromDate').datetimepicker();
+        $('#datetimeToDate').datetimepicker();
+        var fromdate = '@string.Format("{0:dd/MM/yyyy HH:mm:ss}", ViewBag.fromDate)';
+        var todate = '@string.Format("{0:dd/MM/yyyy HH:mm:ss}", ViewBag.toDate)';
+        $('#datetimeFromDate').data("DateTimePicker").setDate(fromdate);
+        $('#datetimeToDate').data("DateTimePicker").setDate(todate);
+
+        $("#datetimeFromDate").on("dp.change dp.show", function (e) {
+            $('#datetimeToDate').data("DateTimePicker").setMinDate(e.date);
+        });
+        $("#datetimeToDate").on("dp.change dp.show", function (e) {
+            $('#datetimeFromDate').data("DateTimePicker").setMaxDate(e.date);
+        });
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlUser").click(function () {
+            GetList(1);
+        });
+        $("#btnClear").click(function () {
+            deleteData();
+        });
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        function GetList(currentPage) {
+            parameters = {
+                'FromDate': $("#fromDate").val(),
+                'keyword': $("#txtEmail").val(),
+                'ToDate': $("#toDate").val(),
+                'UserId': $("#ddlUser").val(),
+                'currentPage': currentPage
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+            Utils.Loading();
+            var urlRequestAns =  "@Url.Action("ListUserLog")";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#ListUserLog").html(data);
+                    Utils.UnLoading();
+                },
+                error: function () {
+                    Utils.UnLoading();
+                }
+            });
+        }
+        GetList(1);
+    });
+
+</script>

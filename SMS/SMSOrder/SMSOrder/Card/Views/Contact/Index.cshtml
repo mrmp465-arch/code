@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+}
+@using SMS.Data.DTO
+@{
+
+    List<Groups> ListGroup = ViewBag.GroupList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><i class="fa fa-wrench"></i>@ViewBag.Title</div>
+            <div class="box-body">
+                <div class="row" id="form">
+
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <select class="form-control" id="ddlGroup">
+                            @if (ListGroup != null && ListGroup.Count > 0)
+                            {
+                                foreach (var obj in ListGroup)
+                                {
+                                    <option value="@obj.GroupID">@obj.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label for="txtEmail" class="control-label"><i class="fa fa-pencil"></i>Từ Khóa</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6 submit" style="text-align:center">
+                        <button type="button" id="btnSearch" class="btn btn-primary"><i class="fa fa-search"></i> Tìm Kiếm</button>
+
+                        <a href="javascript:;" onclick="Upload()" class="btn btn-primary"><i class="fa fa-upload"></i> Upload từ excel</a>
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <div class="mailbox-controls">
+
+
+                        <button class="btn btn-default" onclick="DeleteContact()"><i class="fa fa-trash-o" ></i> Xóa</button>
+                        <button class="btn btn-default" onclick="DeleteAllContact()"><i class="fa fa-remove"></i> Xóa tất</button>
+                        <button class="btn btn-default" title="Thêm contact mới" onclick="AddContact()"><i class="fa fa-plus"></i> Thêm mới</button>
+                        <button class="btn btn-default btn-sm hidden-xs ng-binding"  onclick="ReportExcel()" title="Xuất ra file excel"><i class="fa fa-download"></i> Xuất excel</button>
+
+                        <div class="pull-right ng-binding">
+                            <h5 id="lbtotal" style="font-weight: bold"></h5>
+
+                        </div>
+                    </div>
+
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+
+                        <div id="ListContact">
+                            @Html.Action("ListContact")
+                        </div>
+                        <div class="dataTables_paginate" id="pager">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .pagination {
+        margin-bottom: 0;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlGroup").change(function () {
+            GetList(1);
+        });
+
+        function GetList(currentPage) {
+            parameters = {
+                group: $('#ddlGroup :selected').val(),
+                email: $("#txtEmail").val(),
+                currentPage: currentPage
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/Contact/ListContact";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#ListContact").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+
+    });
+    function ReportExcel()
+    {
+            window.location.href = "/Contact/ReportExcel?Group=" + $('#ddlGroup :selected').val() + "&Email=" + $("#txtEmail").val();;
+    }
+    function DeleteContact() {
+        var arr_checked_items = [];
+        $('input[type="checkbox"][name="chk_item"]:checked').each(function (i, e) {
+            arr_checked_items.push($(e).val());
+        });
+
+        if (arr_checked_items.length > 0) {
+            bootbox.confirm("Bạn muốn xóa khách hàng", function (conf) {
+                if (conf == 1) {
+                    var urlUpstatus = "/Contact/DeleteMuti";
+                    Utils.Loading();
+                    $.ajax({
+                        type: 'POST',
+                        url: urlUpstatus,
+                        data: addAntiForgeryToken({ arrId: arr_checked_items }),
+                        success: function (data) {
+                            Utils.UnLoading();
+                            if (data.ResponseCode >= 0) {
+                                //bootbox.alert(data.Description);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                bootbox.alert(data.Description);
+                                return;
+                            }
+                        },
+                        error: function () {
+                            Utils.UnLoading();
+                        }
+                    });
+                }
+
+                return;
+            });
+        }
+        else {
+            bootbox.alert("Bạn phải chọn ít nhất 1 tài khoản");
+        }
+    }
+    function DeleteAllContact() {
+
+
+        bootbox.confirm("Bạn muốn xóa tất cả khách hàng", function (conf) {
+            if (conf == 1) {
+                var urlUpstatus = "/Contact/DeleteByGroup";
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: urlUpstatus,
+                    data: addAntiForgeryToken({ Id: $('#ddlGroup :selected').val() }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            //bootbox.alert(data.Description);
+                            $("#btnSearch").click();
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            }
+
+            return;
+        });
+
+    }
+    function Upload() {
+        var pageurl = "/Contact/Upload/";
+        $.ajax({
+            type: 'GET',
+            url: pageurl,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    title: "Upload danh bạ",
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Đóng",
+                            className: "btn-success",
+                            callback: function () {
+
+                                $("#btnSearch").click();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+    }
+</script>

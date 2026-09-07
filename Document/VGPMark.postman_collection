@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "2f437f0e-9574-4422-bc4a-223465d093c7",
+		"name": "VGP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Momo - Lay vi nhan tien",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"partnerCode\": \"mark1\",\r\n  \"serviceCode\": \"bankdirect\",\r\n  \"commandCode\": \"getbanksv2\",\r\n  \"requestContent\": \"{\\\"Type\\\":\\\"momov2\\\"}\",\r\n  \"signature\": \"25c32e1b16efea3773d31cf034ccef9b\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.moquito.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"moquito",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bank- GetListBank",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"partnerCode\":\"mark1\",\"serviceCode\":\"bankdirect\",\"commandCode\":\"getbanks\",\"requestContent\":\"{\\\"Type\\\":\\\"banktranfer\\\"}\",\"signature\":\"1cf50d66531db1d5855a66582884a5d5\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.moquito.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"moquito",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bank-Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"PartnerCode\":\"xxx\",\"ServiceCode\":\"bankdirect\",\"CommandCode\":\"order\",\"RequestContent\":\"{\\\"Type\\\":\\\"banktranfer\\\",\\\"AccountName\\\":\\\"xxx\\\",\\\"BankName\\\":\\\"ACB\\\",\\\"AppCode\\\":\\\"\\\",\\\"RefCode\\\":123xxx,\\\"Amount\\\":20000,\\\"CallbackUrl\\\":\\\"xxxx\\\"}\",\"Signature\":\"4f5e4f74eacd57eb2530bab71a23dc43\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.moquito.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"moquito",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Momo Cash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"ServiceCode\":\"bankcash\",\"CommandCode\":\"cash\",\"RequestContent\":\"{\\\"Type\\\":\\\"momocash\\\",\\\"AccountName\\\":\\\"xxx\\\",\\\"BankName\\\":\\\"momo\\\",\\\"BankAccountName\\\":\\\"nguyen bach cam tien\\\",\\\"BankAccountNumber\\\":\\\"xxxxx\\\",\\\"AppCode\\\":\\\"\\\",\\\"RefCode\\\":\\\"5d63a691659c8a6eb0bae06f638057c8\\\",\\\"Amount\\\":20000,\\\"Note\\\":\\\"xxx\\\",\\\"CallbackUrl\\\":\\\"xxxx\\\"}\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.moquito.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"moquito",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BankCash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"ServiceCode\":\"bankcash\",\"CommandCode\":\"cash\",\"RequestContent\":\"{\\\"Type\\\":\\\"bankcash\\\",\\\"AccountName\\\":\\\"xxx\\\",\\\"BankName\\\":\\\"ACB\\\",\\\"BankAccountName\\\":\\\"nguyen bach cam tien\\\",\\\"BankAccountNumber\\\":\\\"xxxxx\\\",\\\"AppCode\\\":\\\"\\\",\\\"RefCode\\\":\\\"5d63a691659c8a6eb0bae06f638057c8\\\",\\\"Amount\\\":20000,\\\"Note\\\":\\\"xxx\\\",\\\"CallbackUrl\\\":\\\"xxxx\\\"}\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.moquito.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"moquito",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Card -UserCard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxx\",\"CardCode\":\"xxxx\",\"CardSerial\":\"xxx\",\"Amount\":20000,\"CardType\":\"viettel\",\"AccountName\":\"xxx\",\"CallbackUrl\":\"xxx\",\"RefCode\":\"20231110150550\",\"Signature\":\"34978a945e9e45a0485f2139d4905b57\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apicard.moquito.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"apicard",
+						"moquito",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

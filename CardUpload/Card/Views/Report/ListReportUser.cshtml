@@ -1,0 +1,177 @@
+﻿@using Card.CMS.Models
+@using Card.CMS.Helper
+@using Card.Utility
+@model List<Card.Data.Api.OrderReportHistoryItem>
+@{
+    List<string> LstDate = ViewBag.lstCate;
+    List<string> LstName = ViewBag.lstUserName;
+}
+@if (ViewBag.IsAdmin)
+{
+    <div class="table-responsive">
+        <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+            @if (Model != null && Model.Count > 0)
+            {
+
+                <table class="table  table-bordered  dataTable no-footer" id="dataTables">
+                    <thead>
+                        <tr class="rowsao">
+                            <th colspan="2">Ngày</th>
+
+                            <th>Doanh số </th>
+                            <th>Tổng</th>
+
+
+                        </tr>
+
+
+                    </thead>
+                    @for (int i = LstDate.Count - 1; i >= 0; i--)
+                    {
+                        var obj = LstDate[i];
+                        var count = Model.Where(x => x.Data == obj).GroupBy(x => x.UserName).Select(a => a.Key).ToList().Count + 1;
+                        <tr>
+                            <td rowspan="@count"><b>@obj</b></td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td rowspan="@count">  <b>@StringUtils.InsertCommaNoStyle(Model.Where(x => x.Data == obj).Sum(a => a.TotalAmount).ToString())</b></td>
+
+
+                        </tr>
+                        foreach (var item in LstName)
+                        {
+
+                            if (Model.Exists(x => x.Data == obj && x.UserName == item))
+                            {
+                                <tr>
+
+                                    <td>@item</td>
+                                    <td>
+                                        @StringUtils.InsertCommaNoStyle(
+                                       (Model.FirstOrDefault(x => x.Data == obj && x.UserName == item).TotalAmount).ToString())
+                                    </td>
+
+                                </tr>
+                            }
+
+
+                        }
+
+                    }
+                    <tr>
+                        <td colspan="3"><b>Tổng</b></td>
+
+                        <td>
+                            <b>@StringUtils.InsertCommaNoStyle(Model.Sum(a => a.TotalAmount).ToString())</b>
+                        </td>
+                    </tr>
+
+                </table>
+            }
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="table-responsive">
+        <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+            @if (Model != null && Model.Count > 0)
+            {
+
+                <table class="table  table-bordered  dataTable no-footer" id="dataTables">
+                    <thead>
+                        <tr class="rowsao">
+                            <th colspan="2">Ngày</th>
+
+                            <th>Doanh số </th>
+                            <th>Tổng</th>
+
+
+                        </tr>
+
+
+                    </thead>
+                    @for (int i = LstDate.Count - 1; i >= 0; i--)
+                    {
+                        var obj = LstDate[i];
+                        var count = Model.Where(x => x.Data == obj).GroupBy(x => x.UserName).Select(a => a.Key).ToList().Count + 1;
+                        <tr>
+                            <td rowspan="@count"><b>@obj</b></td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td rowspan="@count">  <b>@StringUtils.InsertCommaNoStyle(Model.Where(x => x.Data == obj).Sum(a => a.TotalRevenue + a.TotalBidFee).ToString())</b></td>
+
+
+                        </tr>
+
+                        foreach (var item in Model.Where(x => x.Data == obj).OrderByDescending(a => a.AmountRevenueParrent).ToList())
+                        {
+
+                            <tr>
+
+                                <td>@item.UserName</td>
+                                <td>
+                                    @StringUtils.InsertCommaNoStyle(
+                                   (item.AmountRevenueParrent + item.TotalBidFee).ToString())
+                                </td>
+
+                            </tr>
+
+
+                        }
+
+                    }
+                    <tr>
+                        <td colspan="3"><b>Tổng</b></td>
+
+                        <td>
+                            <b>@StringUtils.InsertCommaNoStyle(Model.Sum(a => a.AmountRevenueParrent + a.TotalBidFee).ToString())</b>
+                        </td>
+                    </tr>
+
+                </table>
+            }
+        </div>
+    </div>
+}
+
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+<script>
+    Highcharts.chart('container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Báo cáo doanh thu đại lý'
+        },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Đại lý',
+            colorByPoint: true,
+            data: [@Html.Raw(ViewBag.DataLine)]
+        }]
+    });
+</script>

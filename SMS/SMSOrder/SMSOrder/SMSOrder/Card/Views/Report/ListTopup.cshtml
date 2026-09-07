@@ -1,0 +1,51 @@
+﻿@using SMS.Data.DTO
+@using SMS.CMS.Helper
+@using SMS.Utility
+@model List<SMSReport>
+@{
+    List<string> LstDate = ViewBag.lstCate;
+
+}
+<div class="table-responsive">
+    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+        @if (Model != null && Model.Count > 0)
+        {
+
+            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                <thead>
+                    <tr class="rowsao">
+                        <th>Ngày</th>
+
+                        <th>Số tiền</th>
+
+
+                    </tr>
+
+
+                </thead>
+                @for (int i = LstDate.Count - 1; i >= 0; i--)
+                {
+                    var obj = LstDate[i];
+                    <tr>
+                        <td>@obj</td>
+
+                        <td>
+                            <b>@(StringUtils.InsertCommaNoStyle(Model.Where(x => x.Data == obj).Sum(a => a.Total).ToString()))</b>
+                        </td>
+                    </tr>
+
+                }
+                <tr>
+                    <td><b>Tổng</b></td>
+
+                    <td>
+                        <b>@(StringUtils.InsertCommaNoStyle(Model.Sum(a => a.Total).ToString()))</b>
+                    </td>
+                </tr>
+
+            </table>
+        }
+    </div>
+</div>
+
+

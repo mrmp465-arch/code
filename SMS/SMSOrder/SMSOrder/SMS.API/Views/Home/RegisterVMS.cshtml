@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "Đăng ký gói cước VMS";
+}
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("VNP", "RegisterVNP", "Home", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("VMS", "RegisterVMS", "Home", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("VTT", "RegisterVTT", "Home", new { area = "" }, null)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<header class="help-page">
+    <div class="content-wrapper">
+        <div class="float-left">
+            <h1>VMS</h1>
+        </div>
+    </div>
+</header>
+<form id="defaultForm" method="post" class="form-horizontal">
+    <div class="form-horizontal">
+        <br />
+        <div class="form-group">
+            <label for="txtNumber" class="control-label col-md-3">Tổng đài :<span class="required">*</span></label>
+            <div class="col-md-9">
+                <div class="input-icon right">
+                    <input type="number" id="txtNumber" maxlength="10" name="number" value="999" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="txtNumber" class="control-label col-md-3">Nội dung :<span class="required">*</span></label>
+            <div class="col-md-9">
+                <div class="input-icon right">
+                    <input type="text" id="txtContent" maxlength="100" name="content" value="S30P" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="txtNumber" class="control-label col-md-3">Port :<span class="required">*</span></label>
+            <div class="col-md-9">
+                <div class="input-icon right">
+                    <input type="text" id="txtPort" maxlength="100" name="content" value="" class="form-control" style="max-width:400px;" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="panel-footer form-horizontal">
+        <div class="form-group submit">
+            <button type="button" class="btn btn-primary" id="btnSave" onclick="Send()"><i class="fa fa-save"></i> Gửi</button>
+
+
+        </div>
+    </div>
+</form>
+
+<script>
+     function Send() {
+         var param = {
+             'Number': $("#txtNumber").val(),
+             'Content': $("#txtContent").val(),
+             'Port': $("#txtPort").val(),
+         };
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SendVMS")",
+                    data: param,
+                    async: true,
+                    success: function (data) {
+                        if (data.ResponseCode >= 0) {
+                            alert('Thành công');
+                        }
+                        else {
+
+                            alert('Thất bại');
+                        }
+                    }
+                });
+            }
+</script>

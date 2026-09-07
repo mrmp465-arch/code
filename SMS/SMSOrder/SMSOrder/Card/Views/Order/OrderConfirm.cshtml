@@ -1,0 +1,147 @@
+﻿@using SMS.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <span class="glyphicon glyphicon-user"></span>
+                @ViewBag.Title
+            </div>
+            <div class="box-body">
+                <div class="row" id="form">
+                    <div class="col-md-12">
+                        <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                            <label class="control-label">Bản ghi</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <select class="form-control" id="ddlTop">
+
+                                    <option value="10">10</option>
+                                    <option value="100">100</option>
+                                    <option value="10000" selected>10000</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2 col-xs-12 col-sm-6" @if (ListUser.Count == 1) { @Html.Raw("style='display:none'") ; }>
+                            
+                           
+                                <select class="form-control" id="ddlUser">
+                                    @if (ListUser != null && ListUser.Count > 0)
+                                    {
+                                        foreach (var obj in ListUser)
+                                        {
+                                            <option value="@obj.UserID">@obj.Username</option>
+                                        }
+                                    }
+                                </select>
+                           
+                        </div>
+                        <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                            <label class="control-label">Telco</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <select class="form-control" id="ddlTelco">
+                                    <option value="">Tất cả</option>
+                                    <option value="VTT">VTT</option>
+                                    <option value="VNP">VNP</option>
+                                    <option value="VMS">VMS</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                            <label class="control-label">Mã đơn</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" id="txtEmail" class="form-control" placeholder="Mã đơn">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                            <button type="button" id="btnSearch" class="btn btn-primary">Tìm Kiếm</button>
+
+                            @*<button type="button" id="btn_export" class="btn btn-primary">Download</button>*@
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                                <div id="ListOrderConfirm">
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btn_export").click(function () {
+            $("#dataTables").table2excel({
+                exclude: ".noExl",
+                name: "OrderConfirm",
+                filename: "OrderConfirm",
+                fileext: ".xls",
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true
+            });
+        });
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlTelco").change(function () {
+            GetList(1);
+        });
+        $("#ddlTop").change(function () {
+            GetList(1);
+        });
+        $("#ddlUser").change(function () {
+            GetList(1);
+        });
+
+        function GetList(currentPage) {
+            parameters = {
+                telco: $('#ddlTelco').val(),
+                keyword: $("#txtEmail").val(),
+                userId: $("#ddlUser").val(),
+                top: $("#ddlTop").val(),
+
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/Order/ListOrderConfirm";
+            Utils.Loading();
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    Utils.UnLoading();
+                    $("#ListOrderConfirm").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+        GetList(1);
+
+    });
+</script>

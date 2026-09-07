@@ -1,0 +1,268 @@
+﻿
+@{
+    ViewBag.Title = "CardOrder";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Upload đơn topup</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                        <i class="fa fa-history"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body maxheight02">
+
+                <div class="form-body">
+                    <div class="panel-group" id="steps">
+
+                        <div class="panel">
+                            <div class="row" style="font-weight:bold;font-size:14px;">
+                                <div class="col-sm-3 col-xs-3">
+                                    Chiết khấu:
+                                </div>
+                                <div class="col-sm-9 col-xs-9">
+                                    <div style="margin-bottom:6px">
+
+
+                                        <span style="width: 140px; display: inline-block;">Viettel(TT-TS-MY) :</span>&nbsp; <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVTTTT </b></span>
+                                        &nbsp;-&nbsp;<span class="label label-success" style="padding:2px 2px;font-size: 15px;"><b>@ViewBag.PercentVTTTS </b></span>
+                                        &nbsp;-&nbsp;<span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVTTMY </b></span>
+                                    </div>
+                                    <div style="margin-bottom:6px">
+                                        <span style="width: 140px; display: inline-block; ">Vina (TT-TS-MY):</span>&nbsp; <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVNPTT </b></span>
+                                        &nbsp;-&nbsp;<span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVNPTS </b></span>
+                                        &nbsp;-&nbsp; <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVNPMY </b></span>
+                                    </div>
+                                    <div style="margin-bottom:6px">
+                                        <span style="width: 140px; display: inline-block; ">Mobil(NH-MY):</span>&nbsp; <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVMSNH </b></span>
+                                        &nbsp;-&nbsp; <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVMSMY </b></span>
+                                    </div>
+                                    <div>
+                                        <span style="width: 140px; display: inline-block; ">VietNamMobi(MY):</span>&nbsp; <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVNMNH </b></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="fileName" class="text-info ng-binding">Chọn file</label>
+                                <input type="file" id="excelfile2" uploader="uploader" name="fileName">
+
+                            </div>
+                            <div class="form-group" style="font-size:120%;font-weight:bold">
+
+                                <br />Tải file mẫu tại <a href="~/Content/TopupOrder.xlsx" target="_blank">đây</a>
+
+                            </div>
+                            <div class="form-group">
+
+                                <img src="~/Content/TopupOrder.PNG?vs=?vs=2023" style="width:100%" />
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="groupName" class="text-info ng-binding">Tên file(Tiếng Việt không dấu có thể trống):</label>
+
+                                <input type="text" class="form-control" placeholder="Nhập tên file(sẽ thêm vào cuối mã đơn)" id="txtOrderNo2" maxlength="20">
+
+                            </div>
+
+                            <div class="form-group submit">
+                                <button type="button" class="btn btn-primary" onclick="validateData2()" id="btnSave2"><i class="fa fa-save"></i> Tạo đơn</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<script>
+
+    function validateData2() {
+
+
+        ExportToTable2();
+    }
+    function ExportToTable2() {
+        var regex = /^(.*?)+(.xlsx|.xls)$/;
+        /*Checks whether the file is a valid excel file*/
+        if (regex.test($("#excelfile2").val().toLowerCase())) {
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
+            if ($("#excelfile2").val().toLowerCase().indexOf(".xlsx") > 0) {
+                xlsxflag = true;
+            }
+            /*Checks whether the browser supports HTML5*/
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    /*Converts the excel data in to object*/
+                    if (xlsxflag) {
+                        var workbook = XLSX.read(data, { type: 'binary' });
+                    }
+                    else {
+                        var workbook = XLS.read(data, { type: 'binary' });
+                    }
+                    /*Gets all the sheetnames of excel in to a variable*/
+                    var sheet_name_list = workbook.SheetNames;
+
+                    var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/
+                    sheet_name_list.forEach(function (y) { /*Iterate through all sheets*/
+                        /*Convert the cell value to Json*/
+                        if (xlsxflag) {
+                            var exceljson = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+                        }
+                        else {
+                            var exceljson = XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]);
+                        }
+                        if (exceljson.length > 0 && cnt == 0) {
+                            var jsonResult = BindTable2(exceljson);
+                            SaveData2(jsonResult);
+                            cnt++;
+
+
+
+                        }
+                    });
+                    $('#exceltable').show();
+                }
+                if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                    reader.readAsArrayBuffer($("#excelfile2")[0].files[0]);
+                }
+                else {
+                    reader.readAsBinaryString($("#excelfile2")[0].files[0]);
+                }
+            }
+            else {
+                alert("Sorry! Your browser does not support HTML5!");
+            }
+        }
+        else {
+            alert("Please upload a valid Excel file!");
+        }
+    }
+    function SaveData2(jsonResult)
+    {
+        let TotalAmount = 0;
+        for (var i = 0; i < jsonResult.length; i++) {
+            if (isNaN(jsonResult[i].Amount)) {
+                continue;
+            }
+            TotalAmount += parseInt(jsonResult[i].Amount);
+        }
+
+        var datatemp = "<br><br><b>Dữ liệu mẫu</b> Nhà mạng: " + jsonResult[0].Telco;
+
+        datatemp += "| SDT:" + jsonResult[0].Account;
+
+        datatemp += "| Số tiền:" + jsonResult[0].Amount;
+        datatemp += "| Loại đơn:" + jsonResult[0].TopupType;
+        datatemp += "| Mệnh giá nạp:" + jsonResult[0].CardValue;
+        datatemp += "| Ưu tiên:" + jsonResult[0].Priority;
+        datatemp += "<br><b>Tổng số tiền :" + TotalAmount +"</b> ";
+          //datatemp += "| 199:" + jsonResult[0].Ussd;
+        bootbox.confirm("<b>Bạn chắc chắn tạo đơn ???</b> " + datatemp, function (result) {
+            //console.log(JSON.stringify(jsonResult));
+            //return;
+            if (!result) {
+                return;
+            }
+             $.ajax({
+                type: 'POST',
+                url: "@Url.Action("TopupOrder")",
+                 data: JSON.stringify(jsonResult),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: true,
+                success: function (data) {
+                    Utils.UnLoading();
+                    if (data.ResponseCode >= 0) {
+
+                        $('.modal ').modal('hide');
+
+                        location.reload();
+                    }
+                    else {
+
+                        showmess(data.Description, "error", "btn-danger");
+                    }
+                }
+            });
+        });
+
+    }
+    function BindTable2(jsondata) {/*Function used to convert the JSON array to Html Table*/
+        var columns = BindTableHeader2(jsondata); /*Gets all the column headings of Excel*/
+        var jsonResult = [];
+        var columnTelco = 0;
+        var columnAccount = 1;
+        var columnTopupType = 3;
+        var columnAmount = 2;
+        var columnCardvl = 4;
+
+        var columnPriority = 6;
+        var columnPassword= 7;
+        console.log(jsondata);
+        for (var i = 0; i < jsondata.length; i++) {
+
+            var param = {
+                'CardValue': jsondata[i][columns[columnCardvl]] ,
+                'Account': jsondata[i][columns[columnAccount]] != undefined ? jsondata[i][columns[columnAccount]] : '',
+                'Telco': jsondata[i][columns[columnTelco]] != undefined ? jsondata[i][columns[columnTelco]] : '',
+                'TopupType': jsondata[i][columns[columnTopupType]] != undefined ? jsondata[i][columns[columnTopupType]] : '',
+                'Amount': jsondata[i][columns[columnAmount]]  != undefined ?  jsondata[i][columns[columnAmount]] : '0',
+                'Priority': jsondata[i][columns[columnPriority]] != undefined ? jsondata[i][columns[columnPriority]] : '0',
+                'Password': jsondata[i][columns[columnPassword]] != undefined ? jsondata[i][columns[columnPassword]] : '',
+                'OrderNo': $("#txtOrderNo2").val(),
+            };
+
+            //console.log(jsondata[i][columns[columnAmountMin]]);
+            //console.log(param);
+            if (param.Mobile != '') {
+                jsonResult.push(param);
+            }
+            //var row$ = $('<tr/>');
+            //for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+            //    var cellValue = jsondata[i][columns[colIndex]];
+            //    //if (cellValue == null)
+            //    //    cellValue = "";
+            //    row$.append($('<td/>').html(cellValue));
+            //}
+            //$(tableid).append(row$);
+        }
+        return jsonResult;
+    }
+    function BindTableHeader2(jsondata) {/*Function used to get all column names from JSON and bind the html table header*/
+        var columnSet = [];
+        //var headerTr$ = $('<tr/>');
+        for (var i = 0; i < jsondata.length; i++) {
+            var rowHash = jsondata[i];
+            for (var key in rowHash) {
+                if (rowHash.hasOwnProperty(key)) {
+                    if ($.inArray(key, columnSet) == -1) {/*Adding each unique column names to a variable array*/
+                        columnSet.push(key);
+                        //headerTr$.append($('<th/>').html(key));
+                    }
+                }
+            }
+        }
+        //$(tableid).append(headerTr$);
+        return columnSet;
+    }
+
+</script>

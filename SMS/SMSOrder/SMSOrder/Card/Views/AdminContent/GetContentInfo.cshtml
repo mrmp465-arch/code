@@ -1,0 +1,305 @@
+﻿@using SMS.Data.DTO
+@model Contents
+@{List<SMSDictionary> LstDictionary = ViewBag.Dictionary; }
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                @if (Model.Id > 0)
+                {
+                    <i class="fa fa-fw fa-user-md"></i><span>Cập Nhật thư viện mẫu</span>
+                }
+                else
+                {
+                    <i class="fa fa-fw fa-user-plus"></i><span>Thêm mới thư viện mẫu</span>
+                }
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="panel-group" id="steps">
+                    <div class="messager-body">
+                        <div class="alert alert-success display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <label>Đã lưu dữ liệu thành công !!!</label>
+                        </div>
+                        <div class="alert alert-danger display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                        </div>
+                    </div>
+                    <div class="panel">
+
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label for="txtUserName" class="control-label col-md-4">Tên :<span class="required">*</span></label>
+                                <div class="col-md-6">
+                                    <div class="input-icon right">
+                                        <input type="text" id="txtTitle" maxlength="150" name="title" value="@Model.Title" class="form-control" placeholder="Nhập tên" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4"></label>
+
+                                <div class="col-md-6">
+                                    <div class="pull-right">
+
+                                        <div class="btn-group">
+                                            <a class="btn btn-default btn-sm" onclick="addPhoneNumber()" href="javascript:;"><i class="fa fa-mobile"></i> Thêm sdt</a>
+                                            <a class="btn btn-default btn-sm" onclick="addName()" href="javascript:;"><i class="ion ion-ios-person-outline"></i>Thêm tên</a>
+                                            @*<a class="btn btn-default btn-sm" onclick="addEmail()" href="javascript:;"><i class="ion ion-email"></i> Thêm email</a>*@
+                                            @*<a class="btn btn-default btn-sm" onclick="addBirthday()" href="javascript:;"><i class="ion ion-calendar"></i> Thêm ngày sinh</a>*@
+                                            <a class="btn btn-default btn-sm" onclick="addOther()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn</a>
+                                            <a class="btn btn-default btn-sm" onclick="addOther2()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 2</a>
+                                            <a class="btn btn-default btn-sm" onclick="addOther3()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 3</a>
+                                            @*<a class="btn btn-default btn-sm" onclick="addOther4()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 4</a>
+                                                <a class="btn btn-default btn-sm" onclick="addOther5()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 5</a>*@
+                                            <div class="dropdown">
+                                                <a class="btn btn-default btn-sm dropbtn" href="javascript:;" data-toggle="dropdown" data-hover="dropdown"><i class="ion ion-plus"></i> Thêm từ điển</a>
+                                                <div class="dropdown-content">
+                                                    @foreach (var item in LstDictionary)
+                                                    {
+                                                        <a href="javascript:;" onclick="addDic('@item.Value')">
+                                                            <i class="fa fa-text-width" aria-hidden="true"></i>   @item.Key
+                                                        </a>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label class="control-label col-md-4"></label>
+                                <div class="col-md-6">
+                                    <div class="input-icon right">
+                                        <textarea id="txtDescription" style="height: 100px;" cols="20" name="description" class="form-control">@Model.Description</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="display:none">
+                                <label for="txtPublicTime" class="control-label col-md-4">Thời gian xuất bản :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="text" id="txtPublishDate" data-format="DD/MM/YYYY HH:mm" value="@Model.PublishDate.ToString("dd/MM/yyyy HH:mm")" name="publictime" class="form-control" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display:none">
+                                <label class="control-label col-md-4" for="cbxIsActive">Trạng thái :</label>
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="cbxIsActive" class="cbxIsDisplay" @(Model.Status == 1 ? "checked=\"checked\"" : "") />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display:none">
+                                <label class="control-label col-md-4" for="cbxIsHot">Ghim đầu trang :</label>
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="cbxIsHot" class="cbxIsDisplay" @(Model.IsHot == 1 ? "checked=\"checked\"" : "") />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer form-horizontal">
+                            <div class="form-group submit">
+                                <button type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i> Lưu lại</button>
+                                <button type="button" class="btn btn-primary" id="btnReset"><i class="fa fa-refresh"></i> Làm mới</button>
+                                <button type="button" class="btn btn-default" id="btnBack" onclick="GotoListpage();"><i class="fa fa-backward"></i> Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function addPhoneNumber() {
+        insertAtCaret('txtDescription', '[Number]');
+    }
+    function addName() {
+        insertAtCaret('txtDescription', '[Name]');
+    }
+    function addEmail() {
+        insertAtCaret('txtDescription', '[Email]');
+    }
+    function addBirthday() {
+        insertAtCaret('txtDescription', '[Birthday]');
+    }
+    function addOther() {
+        insertAtCaret('txtDescription', '[Option1]');
+    }
+    function addOther2() {
+        insertAtCaret('txtDescription', '[Option2]');
+    }
+    function addOther3() {
+        insertAtCaret('txtDescription', '[Option3]');
+    }
+    function addOther4() {
+        insertAtCaret('txtDescription', '[Option4]');
+    }
+    function addOther5() {
+        insertAtCaret('txtDescription', '[Option5]');
+    }
+    function addDic(text) {
+        insertAtCaret('txtDescription', '{' + text + '}');
+    }
+    function insertAtCaret(areaId, text) {
+        var txtarea = document.getElementById(areaId);
+        if (!txtarea) {
+            return;
+        }
+
+        var scrollPos = txtarea.scrollTop;
+        var strPos = 0;
+        var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ?
+            "ff" : (document.selection ? "ie" : false));
+        if (br == "ie") {
+            txtarea.focus();
+            var range = document.selection.createRange();
+            range.moveStart('character', -txtarea.value.length);
+            strPos = range.text.length;
+        } else if (br == "ff") {
+            strPos = txtarea.selectionStart;
+        }
+
+        var front = (txtarea.value).substring(0, strPos);
+        var back = (txtarea.value).substring(strPos, txtarea.value.length);
+        txtarea.value = front + text + back;
+        strPos = strPos + text.length;
+        if (br == "ie") {
+            txtarea.focus();
+            var ieRange = document.selection.createRange();
+            ieRange.moveStart('character', -txtarea.value.length);
+            ieRange.moveStart('character', strPos);
+            ieRange.moveEnd('character', 0);
+            ieRange.select();
+        } else if (br == "ff") {
+            txtarea.selectionStart = strPos;
+            txtarea.selectionEnd = strPos;
+            txtarea.focus();
+        }
+
+        txtarea.scrollTop = scrollPos;
+        //countChar();
+    }
+    function GotoListpage() {
+        window.location = "@Url.Action("Index")";
+    }
+    $(document).ready(function () {
+             $('#txtPublicTime').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm',
+                inline: true,
+                sideBySide: true,
+                showTodayButton: true
+            });
+
+            $("button.close").click(function () {
+                $(this).parent().css("display", "none");
+            });
+            $('#defaultForm').bootstrapValidator({
+                message: 'This value is not valid',
+                //live: 'submitted',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+
+                    title: {
+                        message: 'The name is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'tên không được bỏ trống'
+                            },
+
+                            stringLength: {
+                                min: 3,
+                                max: 30,
+                                message: 'tên nhỏ nhất 3 ký tự và nhiều nhất 150 ký tự'
+                            },
+
+                        }
+                    },
+
+                }
+            })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+            $("#btnReset").click(function () {
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+                $(".alert-danger").css("display", "none");
+                $(".alert-success").css("display", "none");
+            });
+            //Save Data
+            function SaveData() {
+                var param = {
+                    'Id': '@Model.Id',
+                    'Title': $("#txtTitle").val(),
+                    'Description': $("#txtDescription").val(),
+                    'SPublishDate': $("#txtPublishDate").val(),
+                    'IsHot': $("#cbxIsHot").is(":checked") ? 1 : 0,
+                    'Status': $("#cbxIsActive").is(":checked") ? 1 : 0
+                }
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SaveData")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+                            setTimeout(function () { $(".alert-success").hide("slow"); GotoListpage(); }, 2000);
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+            };
+        });
+
+        @*var activemenu = $('.sidebar-menu #menu_@(permission.FunctionID)');
+        activemenu.addClass("active");*@
+
+</script>

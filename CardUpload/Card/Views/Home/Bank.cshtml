@@ -1,0 +1,72 @@
+﻿@model Card.Data.DTO.Users
+@{ViewBag.Title = "Home"; }
+
+<div class="row">
+    <div class="col-md-5 nopadding FormOrder" style="padding-right:5px !important;">
+        @{ Html.RenderAction("BankOrder", "Home");}
+    </div>
+
+    <div class="col-md-7 nopadding">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Danh sách nạp tiền</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                                <i class="fa fa-history"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="box-body maxheight01">
+                        @{ Html.RenderAction("ListBankGate", "Home");}
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5 nopadding FormOrder" style="padding-right:5px !important;">
+        @{ Html.RenderAction("BankCashOrder", "Home");}
+    </div>
+
+    <div class="col-md-7 nopadding">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Danh sách rút tiền</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                                <i class="fa fa-history"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="box-body maxheight02">
+                        @{ Html.RenderAction("ListBankCash", "Home");}
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/js/jquery.matchHeight.js"></script>
+<script>
+    $('.maxheight01').matchHeight();
+    $('.maxheight02').matchHeight();
+</script>
+<style>
+    .content-wrapper {
+        background-color: #ecf0f5;
+    }
+</style>
+<script>
+    var activemenu = $('#menu_bank');
+    activemenu.addClass("active");
+
+</script>

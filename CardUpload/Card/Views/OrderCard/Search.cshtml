@@ -1,0 +1,136 @@
+﻿@using Card.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <span class="glyphicon glyphicon-user"></span>
+                @ViewBag.Title
+            </div>
+            <div class="box-body">
+                <div class="row" id="form">
+
+
+
+
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label class="control-label">Nhà mạng</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <select class="form-control dlUser" id="ddlUser">
+                                <option value="">Nhà mạng</option>
+                                <option value="VIETTEL">VIETTEL</option>
+                                <option value="VINA">VINA</option>
+                                <option value="MOBI">MOBI</option>
+                                <option value="GARENA">GARENA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label class="control-label">Mệnh giá</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <select class="form-control dlUser" id="ddlAmount">
+                                <option value="-1">Mệnh giá</option>
+                                <option value="20000">20k</option>
+                                <option value="50000">50k</option>
+                                <option value="100000">100k</option>
+                                <option value="200000">200k</option>
+                                <option value="300000">300k</option>
+                                <option value="500000">500k</option>
+                                <option value="1000000">1000k</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label class="control-label">Mã kho</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtEmail" class="form-control" placeholder="Mã kho">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label class="control-label">Mã thẻ, seri</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtSeri" class="form-control" placeholder="Mã thẻ, seri">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <button type="button" id="btnSearch" class="btn btn-primary">Tìm Kiếm</button>
+
+
+                    </div>
+
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                                <div id="ListOrderActive">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+
+        //$("#ddlAmount").change(function () {
+        //    GetList(1);
+        //});
+        //$("#ddlUser").change(function () {
+        //    GetList(1);
+        //});
+
+        function GetList(currentPage) {
+            parameters = {
+
+                orderNo: $("#txtEmail").val(),
+                telco: $("#ddlUser").val(),
+                amount: $("#ddlAmount").val(),
+                seri: $("#txtSeri").val(),
+
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/OrderCard/ListCardOrder";
+            Utils.Loading();
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    Utils.UnLoading();
+                    $("#ListOrderActive").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+        //GetList(1);
+
+    });
+</script>

@@ -1,0 +1,150 @@
+﻿@using SMS.Data.Api
+@using SMS.Utility
+@using SMS.CMS.Helper
+@model List<OrderGroup>
+@if (Model != null && Model.Count > 0)
+{
+
+    <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+        <thead>
+            <tr class="rowsao">
+
+                <th>OrderNo</th>
+
+
+                <th>Telco</th>
+
+                <th style="text-align:left">Trans/Total</th>
+                <th style="text-align:left">Amount/Total/Hold</th>
+                <th>Queue</th>
+                <th>Ignore</th>
+                <th>Success</th>
+                <th>Disable</th>
+                <th>Khóa</th>
+                <th>Ngày cập nhật</th>
+                <th class="noExl">Tác vụ</th>
+            </tr>
+        </thead>
+        @if (Model.Count > 0)
+        {
+            foreach (var obj in Model)
+            {
+                <tr>
+
+                    <td><a href="@Url.Action("TransactionOrder", new { OrderNo = obj.OrderNo })">@obj.OrderNo</a></td>
+
+
+                    <td>@obj.Telco.ToUpper()</td>
+
+                    <td style="text-align:left">  @obj.TotalTranSuccess / @obj.TotalTrans</td>
+                    <td style="text-align:left"> @StringUtils.InsertCommaNoStyle(obj.TotalAmountSuccess.ToString()) /@StringUtils.InsertCommaNoStyle(obj.TotalAmount.ToString())</td>
+                    <td>@obj.Queue</td>
+                    <td>@obj.Ignore</td>
+                    <td>@obj.Success</td>
+                    <td>@obj.Disable</td>
+                    <td>@obj.Lock</td>
+                    <td>@string.Format("{0:dd/MM/yyyy HH:mm}", obj.LastTime)</td>
+                    <td class="noExl">
+                        @if (obj.OrderNo.Contains(ViewBag.Config))
+                        {
+                            <a onclick="Lock('@obj.OrderNo')" href="javascript:;">Khóa</a>
+                            <text>&nbsp;</text> <a onclick="ConfirmOrder('@obj.OrderNo')" href="javascript:;">Chốt</a>
+
+                        }
+                        <text>&nbsp;</text><a target="_blank" href='@Url.Action("ReportTransactionOrder",new {orderNo=obj.OrderNo })'>Excel</a>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+}
+<script>
+    function GetList(currentPage) {
+        parameters = {
+            telco: $('#ddlTelco').val(),
+            keyword: $("#txtEmail").val(),
+            userId: $("#ddlUser").val(),
+            top: $("#ddlTop").val(),
+
+        };
+        var urlRequestAns = "/Order/ListOrderActive";
+        Utils.Loading();
+        $.ajax({
+            type: 'GET',
+            url: urlRequestAns,
+            data: parameters,
+            success: function (data) {
+                Utils.UnLoading();
+                $("#ListOrderActive").html(data);
+
+            },
+            error: function () {
+
+            }
+        });
+    };
+    function Lock(OrderNo) {
+
+        bootbox.confirm("Bạn chắc chắn muốn khóa telco  ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/LockOrder",
+                    data: addAntiForgeryToken({ order: OrderNo }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            showmess(data.Description, "success", "btn-success");
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function ConfirmOrder(OrderNo) {
+
+        bootbox.confirm("Bạn chắc chắn muốn chốt  ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/ConfirmOrder",
+                    data: addAntiForgeryToken({ order: OrderNo }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            showmess(data.Description, "success", "btn-success");
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function showmess(mess, type, ButtonClass) {
+        swal({
+            title: '',
+            text: mess,
+            type: type,
+            confirmButtonClass: ButtonClass,
+            closeOnConfirm: false,
+            allowOutsideClick: true
+        },
+            function (isConfirm) {
+                swal.close();
+                setTimeout(function () { GetList(1);; }, 5000);
+
+            });
+    }
+</script>

@@ -1,0 +1,245 @@
+﻿@model Card.Data.DTO.Users
+@{ViewBag.Title = "Upload tài khoản My Viettel"; }
+
+    <div class="row">
+        <div class="col-md-12 FormOrder">
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="font-size:150%;font-weight:bold">@ViewBag.Title</h3>
+                    
+
+                </div>
+                <div class="box-body maxheight01">
+                   
+                    <div style="border-bottom:1px solid #ccc">
+
+                    </div>
+                    <div class="form-body">
+                        <div class="panel-group" id="steps">
+
+                            <div class="panel">
+                                <div class="form-group">
+                                    <label for="fileName" class="text-info ng-binding">Chọn file</label>
+                                    <input type="file" id="excelfile" uploader="uploader" name="fileName">
+                                    <div style="font-weight:bold;margin-top:10px">
+                                       
+                                        <span style="color:red">
+                                            <br />-Thuê bao : 1(trả sau), 2(trả trước)
+                                           
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="font-size:150%;font-weight:bold">
+
+                                    <br />Tải file mẫu tại <a href="~/Content/VTT.xlsx?vs=20200601" target="_blank">đây</a>
+
+                                </div>
+                                <div class="form-group">
+
+                                    <img src="~/Content/VTT.PNG?vs=?vs=20200601" style="width:365px" />
+
+                                </div>
+                                
+                                <div class="form-group submit">
+                                    <button type="button" class="btn btn-primary" onclick="validateData()" id="btnSave"><i class="fa fa-save"></i> Cập nhập</button>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /.box -->
+
+        </div>
+       
+    </div>
+    <script src="~/Content/js/jquery.matchHeight.js"></script>
+    <script>
+        $('.maxheight01').matchHeight();
+    </script>
+    <style>
+        .content-wrapper {
+            background-color: #ecf0f5;
+        }
+    </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
+<script src="~/Content/js/jquery.matchHeight.js"></script>
+<script>
+    $('.maxheight01').matchHeight();
+    Number.prototype.formatMoney = function (c, d, t) {
+        var n = this,
+            c = isNaN(c = Math.abs(c)) ? 2 : c,
+            d = d == undefined ? "." : d,
+            t = t == undefined ? "," : t,
+            s = n < 0 ? "-" : "",
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };
+    function validateData() {
+
+       
+        ExportToTable();
+    }
+    function ExportToTable() {
+        var regex = /^(.*?)+(.xlsx|.xls)$/;
+        /*Checks whether the file is a valid excel file*/
+        if (regex.test($("#excelfile").val().toLowerCase())) {
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
+            if ($("#excelfile").val().toLowerCase().indexOf(".xlsx") > 0) {
+                xlsxflag = true;
+            }
+            /*Checks whether the browser supports HTML5*/
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    /*Converts the excel data in to object*/
+                    if (xlsxflag) {
+                        var workbook = XLSX.read(data, { type: 'binary' });
+                    }
+                    else {
+                        var workbook = XLS.read(data, { type: 'binary' });
+                    }
+                    /*Gets all the sheetnames of excel in to a variable*/
+                    var sheet_name_list = workbook.SheetNames;
+
+                    var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/
+                    sheet_name_list.forEach(function (y) { /*Iterate through all sheets*/
+                        /*Convert the cell value to Json*/
+                        if (xlsxflag) {
+                            var exceljson = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+                        }
+                        else {
+                            var exceljson = XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]);
+                        }
+                        if (exceljson.length > 0 && cnt == 0) {
+                            var jsonResult = BindTable(exceljson);
+                            SaveData(jsonResult);
+                            cnt++;
+
+
+
+                        }
+                    });
+                    $('#exceltable').show();
+                }
+                if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                    reader.readAsArrayBuffer($("#excelfile")[0].files[0]);
+                }
+                else {
+                    reader.readAsBinaryString($("#excelfile")[0].files[0]);
+                }
+            }
+            else {
+                alert("Sorry! Your browser does not support HTML5!");
+            }
+        }
+        else {
+            alert("Please upload a valid Excel file!");
+        }
+    }
+    function SaveData(jsonResult)
+    {
+       
+
+       
+          //datatemp += "| 199:" + jsonResult[0].Ussd;
+        bootbox.confirm("<b>Bạn chắc chắn upload tài khoản my VTT ???</b> " , function (result) {
+            if (!result) {
+                return;
+            }
+             $.ajax({
+                type: 'POST',
+                url: "@Url.Action("UploadVTT")",
+                 data: JSON.stringify(jsonResult),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: true,
+                success: function (data) {
+                    Utils.UnLoading();
+                    if (data.ResponseCode >= 0) {
+
+                        $('.modal ').modal('hide');
+                        showmess("Thao tác thành công", "error", "btn-success");
+                        //location.reload();
+                    }
+                    else {
+
+                        showmess(data.Description, "error", "btn-danger");
+                    }
+                }
+            });
+        });
+
+    }
+    function BindTable(jsondata) {/*Function used to convert the JSON array to Html Table*/
+        var columns = BindTableHeader(jsondata); /*Gets all the column headings of Excel*/
+        var jsonResult = [];
+        var columnMobile = 0;
+        var columnTopupType = 2;
+      
+          var columnPassword = 1;
+        console.log(jsondata);
+        for (var i = 0; i < jsondata.length; i++) {
+
+            var param = {
+                'AccountName': jsondata[i][columns[columnMobile]] ,
+                
+                'Type': jsondata[i][columns[columnTopupType]] != undefined ? jsondata[i][columns[columnTopupType]] : '1',
+                'Password':jsondata[i][columns[columnPassword]]  != undefined ? jsondata[i][columns[columnPassword]]  : '',
+                
+            };
+
+
+            //console.log(jsondata[i][columns[columnAmountMin]]);
+            //console.log(param);
+            jsonResult.push(param);
+            //var row$ = $('<tr/>');
+            //for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+            //    var cellValue = jsondata[i][columns[colIndex]];
+            //    //if (cellValue == null)
+            //    //    cellValue = "";
+            //    row$.append($('<td/>').html(cellValue));
+            //}
+            //$(tableid).append(row$);
+        }
+        return jsonResult;
+    }
+    function BindTableHeader(jsondata) {/*Function used to get all column names from JSON and bind the html table header*/
+        var columnSet = [];
+        //var headerTr$ = $('<tr/>');
+        for (var i = 0; i < jsondata.length; i++) {
+            var rowHash = jsondata[i];
+            for (var key in rowHash) {
+                if (rowHash.hasOwnProperty(key)) {
+                    if ($.inArray(key, columnSet) == -1) {/*Adding each unique column names to a variable array*/
+                        columnSet.push(key);
+                        //headerTr$.append($('<th/>').html(key));
+                    }
+                }
+            }
+        }
+        //$(tableid).append(headerTr$);
+        return columnSet;
+    }
+    function showmess(mess, type, ButtonClass) {
+        swal({
+            title: '',
+            text: mess,
+            type: type,
+            confirmButtonClass: ButtonClass,
+            closeOnConfirm: false,
+            allowOutsideClick: true
+        },
+            function (isConfirm) {
+                location.reload();
+            });
+    }
+</script>

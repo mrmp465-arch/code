@@ -1,0 +1,281 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model  List<Card.Data.Api.BankAccount>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Tạo giao dịch nạp tiền</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                        <i class="fa fa-history"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body maxheight01">
+
+                <form id="defaultForm2" method="post" class="form-horizontal formcard">
+                    <div class="wr-crf-tb1" id="pnMain">
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <select class="form-control" id="ddlLoaiThe">
+
+                                    <option value="">Chọn ngân hàng</option>
+                                    @if (Model != null && Model.Count > 0)
+                                    {
+                                        foreach (var obj in Model)
+                                        {
+                                            <option value="@obj.BankCode"> @obj.BankCode</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                           
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" placeholder="Số tiền cần nạp" id="txtAmount">
+                            </div>
+                        </div>
+                        <div class="form-group" style="height:275px">
+                            <div id="dvBankInfo" style="display:none">
+                                <dl class="dl-horizontal">
+                                    <dt>Số tài khoản</dt>
+                                    <dd>
+                                        <span id="lbAccountNumber"></span>
+                                    </dd>
+                                    <dt>Tên tài khoản</dt>
+                                    <dd>
+                                        <span id="lbAccountName"></span>
+                                    </dd>
+                                    <dt>Nội dung chuyển tiền</dt>
+                                    <dd>
+                                        <span id="lbOrderNo"></span>
+                                    </dd>
+
+
+                                </dl>
+                                <div style="width:200px; margin:-30px auto">
+                                    <img id="qr" width="200" />
+                                </div>
+                            </div>
+                        </div>
+                        
+
+
+
+                        <p id="msgBox" class="wr-crf-err"></p>
+                        <ul class="wr-crf-btn">
+                            <li><a href="javascript:;" class="wrf-btn-left wrf-btn-del" onclick="javascript:location.reload()">Hủy</a></li>
+                            <li><a href="javascript:;" onclick="validateData()" class="wrf-btn-right wrf-btn-ss">Thêm giao dịch</a></li>
+                        </ul>
+
+                    </div>
+
+                </form>
+
+                <!-- /.row -->
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<script src="~/Content/js/formvalidate.js"></script>
+<script>
+    function formatPrice(price) {
+        var fixedToSix = (Math.round(price * 1000000) / 1000000);
+        return (Math.round(fixedToSix) == fixedToSix + 0.000001 ? fixedToSix + 0.000001 : fixedToSix);
+    }
+    Number.prototype.formatMoney = function (c, d, t) {
+        var n = this,
+            c = isNaN(c = Math.abs(c)) ? 2 : c,
+            d = d == undefined ? "." : d,
+            t = t == undefined ? "," : t,
+            s = n < 0 ? "-" : "",
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };
+    var unformat = function (value, decimal) {
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        // Recursively unformat arrays:
+        //            if (isArray(value)) {
+        //                return map(value, function (val) {
+        //                    return unformat(val, decimal);
+        //                });
+        //            }
+        // Fails silently (need decent errors):
+        value = value || 0;
+        // Return the value as-is if it's already a number:
+        if (typeof value === "number") return value;
+        // Default decimal point is "." but could be set to eg. "," in opts:
+        decimal = decimal || ",";
+        // Build regex to strip out everything except digits, decimal point and minus sign:
+        var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
+            unformatted = parseFloat(
+                ("" + value)
+                    .replace(/\((.*)\)/, "-$1") // replace bracketed values with negatives
+                    .replace(regex, '') // strip out any cruft
+                    .replace(decimal, ',') // make sure decimal point is standard
+            );
+        // This will fail silently which may cause trouble, let's wait and see:
+        return !isNaN(unformatted) ? unformatted : 0;
+    };
+
+    $(".amount_type li a").click(function () {
+
+        selectAmount(this);
+    });
+    function selectAmount(obj) {
+
+        var o = $(obj).find("input");
+        $(".ratio_amount").prop("checked", false);
+
+        o.prop('checked', true);
+        var value = o.val();
+        $("#txtAmount").val(value);
+
+        $(".amount_type li").removeClass("active");
+        $(obj).parent().addClass("active");
+    }
+    
+</script>
+<script>
+
+
+
+    function validateData() {
+        $("#msgBox").html("");
+        $("#dvBankInfo").hide();
+        if (!ValidateControls("Vui lòng chọn ngân hàng", "#ddlLoaiThe")) {
+            return false;
+        }
+        if (!ValidateControls("Vui lòng nhập số tiền cần nạp", "#txtAmount")) {
+            return false;
+        }
+        
+
+        var amount = $('#txtAmount').val();
+        amount = amount.replace('.', '').replace('.', '').replace('.', '');
+        if (amount < 10000) {
+            $("#msgBox").html("Số tiền nhỏ hơn 10.000").show();
+
+            $('#txtAmount').focus();
+        }
+
+
+
+        var param = {
+            'Amount': amount,
+            'BankCode': $("#ddlLoaiThe").val(),
+
+            //'Ussd': $("#cbxUssd").is(":checked") ? 2 : 0
+        };
+        Utils.Loading();
+        $.ajax({
+            type: 'POST',
+            url: "/Home/BankOrder",
+            data: addAntiForgeryToken(param),
+            async: true,
+            success: function (data) {
+                Utils.UnLoading();
+
+                if (data.ResponseCode > 0) {
+
+                    const obj = JSON.parse(data.Extended);
+                    $("#lbAccountNumber").html(obj.BankAccountNumber);
+                    $("#lbAccountName").html(obj.BankAccountName);
+                    $("#lbOrderNo").html(obj.OrderNo);
+                    $('#qr').attr('src', obj.Url);
+                    $("#dvBankInfo").show();
+                    
+                }
+                else {
+                    showmess(data.Description, "error", "btn-danger");
+
+
+                }
+            }
+        });
+    }
+
+
+
+
+    $("#txtAmount").keyup(function () {
+        var val = $(this).val();
+        if (val) {
+
+            val = val.replace('.', '').replace('.', '').replace('.', '');
+            val = unformat(val, 0);
+            //$(this).val(val);
+
+            var price = parseInt(val);
+
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.');
+            $(this).val(formatMoneyVNDVal);
+        }
+    }).blur(function () {
+        var val = $(this).val();
+        if (val) {
+            //console.log(val);
+            val = val.replace('.', '').replace('.', '').replace('.', '');
+            var rate = 10000;
+            var min = 10000;
+            //console.log(val);
+            if (val < min)
+                val = min;
+            val = Math.round(val / rate) * rate;
+            val = unformat(val, 0);
+            //$(this).val(val);
+
+            var price = parseInt(val);
+
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.');
+            $(this).val(formatMoneyVNDVal);
+        }
+    });
+</script>
+<script>
+
+
+    function showmess(mess, type, ButtonClass) {
+        swal({
+            title: '',
+            text: mess,
+            type: type,
+            confirmButtonClass: ButtonClass,
+            closeOnConfirm: false,
+            allowOutsideClick: true
+        },
+            function (isConfirm) {
+                location.reload();
+            });
+    }
+    //showmess("Lỗi nhập sai OTP!", "error", "btn-danger");
+    //showmess("Giao dịch thành công!", "success", "btn-success");
+</script>
+<style>
+
+    dd, dt {
+        line-height: 30px;
+        font-weight:bold
+    }
+    .wr-crf-tul, .wr-crf-btn {
+        padding-left: 0px !important;
+    }
+</style>
+

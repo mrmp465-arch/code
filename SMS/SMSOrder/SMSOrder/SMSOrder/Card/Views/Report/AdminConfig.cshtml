@@ -1,0 +1,218 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                Danh sách cổng tạm khóa
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+
+
+                    <div class="form-group" style="display:none">
+                        <label for="txtNumber" class="control-label col-md-3">Danh sách cổng tạm khóa :<span class="required">*</span></label>
+                        <div class="col-md-9">
+                            <div class="input-icon right">
+                                <input type="text" id="txtTestPort" maxlength="100" name="content" value="@ViewBag.TestPort" class="form-control" style="max-width:400px;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:15px;padding-bottom:15px;">
+                        <div class="col-md-12" id="dvPort">
+                            <div style="padding-left:5px;">
+                                @for (int i = 0; i <= 31; i++)
+                                {
+
+                                    <div style="float:left;width:6.25%">
+                                        <input type="checkbox" value="@i" name="chkPort_@(i)" class="chkPort" @if (ViewBag.TestPort.Contains("," + i + ",")) { @Html.Raw("checked") ; } /> <b>@i</b>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="box box-primary">
+            <div class="box-header">
+                Danh sách cổng ưu tiên
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+
+
+
+                    <div class="form-group" style="margin-bottom:15px;padding-bottom:15px;">
+                        <div class="col-md-12" id="dvPPort">
+                            <div style="padding-left:5px;">
+                                @for (int i = 0; i <= 4; i++)
+                                {
+
+                                    <div style="float:left;width:6.25%">
+                                        <input type="checkbox" value="@i" name="chkPort_@(i)" class="chkPort" @if (ViewBag.PriorityPort.Contains("," + i + ",")) { @Html.Raw("checked") ; } /> <b>@i</b>
+                                    </div>
+                                }
+                                @for (int i = 5; i <= 31; i++)
+                                {
+
+                                    <div style="float:left;width:6.25%">
+                                        <input type="checkbox" value="@i" name="chkPort_@(i)" class="chkPort" @if (ViewBag.PriorityPort.Contains("," + i + ",")) { @Html.Raw("checked") ; } /> <b>@i</b>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="box box-primary" id="dvVMS" style="display:none">
+            <div class="box-header">
+                Danh sách cổng VMS
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+
+
+
+                    <div class="form-group" style="margin-bottom:15px;padding-bottom:15px;">
+                        <div class="col-md-12" id="dvVMSPort">
+                            <div style="padding-left:5px;">
+
+                                @for (int i = 24; i <= 31; i++)
+                                {
+
+                                    <div style="float:left;width:6.25%">
+                                        <input type="checkbox" value="@i" name="chkPort_@(i)" class="chkPort" @if (ViewBag.VMSPort.Contains("," + i + ",")) { @Html.Raw("checked") ; } /> <b>@i</b>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="box box-primary"  id="dvStatus">
+            <div class="box-header">
+                Trạng thái hệ thống
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+
+
+
+                    <div class="form-group" style="margin-bottom:15px;padding-bottom:15px;">
+                        <label class="control-label col-md-4" for="cbxIsActive">Trạng thái hệ thống SMS :</label>
+                        <div class="col-md-4">
+                            <div class="checkbox">
+                                <select class="form-control" id="ddlStatus">
+                                    <option @if (ViewBag.SystemStatus == "0") { @Html.Raw("selected='selected'") ; } value="0">Khóa đầu SMS</option>
+                                    <option @if (ViewBag.SystemStatus == "1") { @Html.Raw("selected='selected'") ; } value="1">Mở đầu SMS</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:15px;padding-bottom:15px; ">
+                        <label class="control-label col-md-4" for="cbxIsActive">Bắn VMS :</label>
+                        <div class="col-md-4">
+                            <div class="checkbox">
+                                <select class="form-control" id="ddlVMSStatus">
+                                    <option @if (ViewBag.VMSStatus == "0") { @Html.Raw("selected='selected'") ; } value="0">Dùng Text</option>
+                                    <option @if (ViewBag.VMSStatus == "1") { @Html.Raw("selected='selected'") ; } value="1">Dùng Voice</option>
+                             
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="panel-footer form-horizontal">
+            <div class="form-group submit">
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="Save()"><i class="fa fa-save"></i> Cập nhật</button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function Save() {
+        if ($("#ddlStatus").val() == '0') {
+             bootbox.confirm("Bạn chắc chắn muốn khóa hệ thống ??? ", function (result) {
+                 if (result == true) {
+                     Send();
+                 }
+                 });
+        }
+        else {
+            Send();
+        }
+    }
+        function Send() {
+        var result = ',';
+        var inputa = $('#dvPort').find("input");
+            $.each($(inputa), function (ix, answer) {
+            if ($(answer).is(":checked")) {
+                //alert($(answer).val());
+                result += $(answer).val() + ',';
+            }
+
+        });
+       
+        var result2 = ',';
+        var inputa = $('#dvPPort').find("input");
+            $.each($(inputa), function (ix, answer) {
+            if ($(answer).is(":checked")) {
+                //alert($(answer).val());
+                result2 += $(answer).val() + ',';
+            }
+
+        });
+
+        var result3 = ',';
+        var inputa = $('#dvVMSPort').find("input");
+            $.each($(inputa), function (ix, answer) {
+            if ($(answer).is(":checked")) {
+                result3 += $(answer).val() + ',';
+            }
+
+        });
+        var param = {
+             'TestPort': result,
+            'PriorityPort': result2,
+             'VMSPort': result3,
+            'Status': $("#ddlStatus").val(),
+             'VMSStatus': $("#ddlVMSStatus").val(),
+         };
+         $.ajax({
+               type: 'POST',
+                    url: "@Url.Action("SaveConfig")",
+                    data: param,
+                    async: true,
+                    success: function (data) {
+            if (data.ResponseCode >= 0) {
+                alert('Thành công');
+                location.reload();
+            }
+            else {
+
+                alert('Thất bại');
+            }
+        }
+    });
+}
+</script>

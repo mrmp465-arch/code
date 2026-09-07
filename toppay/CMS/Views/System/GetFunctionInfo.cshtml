@@ -1,0 +1,292 @@
+﻿@using CMS.Data.DTO;
+@using CMS.Models;
+@model ModelFunctionDetail
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Subheader-->
+    <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
+        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+            <!--begin::Info-->
+            <div class="d-flex align-items-center flex-wrap mr-1">
+                <!--begin::Page Heading-->
+                <div class="d-flex align-items-baseline flex-wrap mr-5">
+                    <!--begin::Page Title-->
+                    <!--end::Page Title-->
+                    <!--begin::Breadcrumb-->
+                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
+                        <li class="breadcrumb-item text-muted">
+                            <a href="#" class="text-muted">Quản trị hệ thống</a>
+                        </li>
+
+                        <li class="breadcrumb-item text-muted">
+                            <a href="#" class="text-muted">@ViewBag.Title</a>
+                        </li>
+                    </ul>
+                    <!--end::Breadcrumb-->
+                </div>
+                <!--end::Page Heading-->
+            </div>
+            <!--end::Info-->
+
+        </div>
+    </div>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!--begin::Card-->
+                    <div class="card card-custom gutter-b example example-compact">
+                        <form id="defaultForm" method="post" class="form-horizontal">
+                            <div class="panel-group" id="steps">
+                                <div class="messager-body">
+                                    <div class="alert alert-success display-hide alert-dismissable">
+                                        <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                        <label id="SuccessMessage">Đã lưu dữ liệu thành công !!!</label>
+                                    </div>
+                                    <div class="alert alert-danger display-hide alert-dismissable">
+                                        <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                                        <span class="glyphicon glyphicon-warning-sign"></span>
+                                        <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                                    </div>
+                                </div>
+
+
+                                <div class="card-body">
+                                    <!-- dành cho UpdateFunction -->
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            Tên chức năng :<span class="text-danger">*</span>
+                                        </label>
+                                        <div >
+                                            <input id="txtFunctionName" maxlength="50" name="FunctionName" class="form-control" value="@Model.FunctionDetail.FunctionName" placeholder="Nhập tên chức năng" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            Mã chức năng :<span class="text-danger">*</span>
+                                        </label>
+                                        <div >
+                                            <input id="txtFunctionCode" @(Model.FunctionDetail.FunctionID > 0 ? "readonly=\"readonly\"" : "") maxlength="50" name="FunctionCode" class="form-control" value="@Model.FunctionDetail.FunctionCode" placeholder="Nhập mã chức năng" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            Chọn chức năng cha :
+                                        </label>
+                                        <div >
+                                            <select class="form-control" id="ddlFather" name="FatherFunction">
+                                                <option value="0">Chọn chức năng</option>
+                                                @if (Model.ListFunction != null && Model.ListFunction.Count > 0)
+                                                {
+                                                    foreach (var obj in Model.ListFunction.Where(x => x.FatherID == 0))
+                                                    {
+                                                        if (obj.FunctionID == Model.FunctionDetail.FatherID)
+                                                        {
+                                                            <option value="@obj.FunctionID" selected="selected">@obj.FunctionName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@obj.FunctionID">@obj.FunctionName</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="txtFunctionUrl">
+                                            Đường Dẫn
+                                        </label>
+                                        <div >
+                                            <input type="text" id="txtFunctionUrl" maxlength="250" name="ControlUrl" class="form-control" placeholder="Enter Function Url" value="@Model.FunctionDetail.Url" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="txtIconId">
+                                            Mã Icon
+                                        </label>
+                                        <div >
+                                            <input type="text" id="txtIconId" maxlength="250" name="txtIconId" class="form-control" placeholder="nhập mã icon" value="@Model.FunctionDetail.IconId" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label" for="cbxIsActive">
+                                            Trạng thái hoạt động :
+                                        </label>
+
+                                        <input type="checkbox" id="cbxIsActive" class="cbxIsDisplay" @(Model.FunctionDetail.IsActive ? "checked=\"checked\"" : "") />
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="cbxIsDisplay">
+                                            Trạng thái hiển thị :
+                                        </label>
+
+                                        <input type="checkbox" id="cbxIsDisplay" class="cbxIsDisplay" @(Model.FunctionDetail.IsDisplay ? "checked=\"checked\"" : "") />
+
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary" id="btnSave">Lưu lại</button>
+                                    <button type="button" class="btn btn-secondary" id="btnBack" onclick="GotoListpage();">Quay lại</button>
+
+                                </div>
+
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <!--end::Card-->
+
+                </div>
+
+            </div>
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+
+
+
+<script type="text/javascript">
+     function GotoListpage() {
+        window.location = "@Url.Action("ManagerFunction")";
+    }
+    $(document).ready(function () {
+
+        $("button.close").click(function () {
+            $(this).parent().css("display", "none");
+        });
+        $('#defaultForm').bootstrapValidator({
+            message: 'This value is not valid',
+            excluded: ':disabled',
+            //live: 'submitted',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                FunctionName: {
+
+                    message: 'Bạn chưa nhập tên chức năng.',
+                    validators: {
+                        notEmpty: {
+                            message: 'Bạn chưa nhập tên chức năng'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: 'Tên chức năng dài từ 6 đến 30 ký tự'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửựýỳỷỹỵÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỰÝỲỶỸỴ\.\-\_\s]+$/,
+                            message: 'Tên chức năng không được nhập các ký tự đặc biệt'
+                        },
+                    }
+                },
+                FunctionCode: {
+
+                    message: 'Bạn chưa nhập mã chức năng.',
+                    validators: {
+                        notEmpty: {
+                            message: 'Bạn chưa nhập mã chức năng'
+                        },
+                        stringLength: {
+                            min: 3,
+                            max: 30,
+                            message: 'Mã chức năng dài từ 3 đến 30 ký tự'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửựýỳỷỹỵÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỰÝỲỶỸỴ\.\-\_\s]+$/,
+                            message: 'Mã chức năng không được nhập các ký tự đặc biệt'
+                        },
+                    }
+                },
+                FatherFunction: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Bạn chưa chọn Chức năng cha'
+                        }
+                    }
+                }
+            }
+        })
+        .on('error.form.bv', function (e) {
+            // Active the panel element containing the first invalid element
+            e.preventDefault();
+            var $form = $(e.target),
+            validator = $form.data('bootstrapValidator');
+            $invalidField = validator.getInvalidFields().eq(0),
+            $(".alert-danger").css("display", "block");
+            $(".close").click(function () {
+                $(".alert-danger").css("display", "none");
+                $(".alert-success").css("display", "none");
+            });
+        })
+        .on('success.form.bv', function (e) {
+            // Prevent submit form
+            e.preventDefault();
+            var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+            SaveData();
+            $(".close").click(function () {
+                $(".alert-success").css("display", "none");
+            });
+        });
+
+
+        $("#btnReset").click(function () {
+            $('#defaultForm').data('bootstrapValidator').resetForm(true);
+            $(".alert-danger").css("display", "none");
+            $(".alert-success").css("display", "none");
+        });
+        //Save Data
+        function SaveData() {
+            var param = {
+                FunctionID: '@Model.FunctionDetail.FunctionID',
+                FunctionName: $("#txtFunctionName").val(),
+                FunctionCode: $("#txtFunctionCode").val(),
+                FatherID: $("#ddlFather").val(),
+                Url: $("#txtFunctionUrl").val(),
+                IsActive: $("#cbxIsActive").is(":checked") ? true : false,
+                IsDisplay: $("#cbxIsDisplay").is(":checked") ? true : false,
+                IconId: $("#txtIconId").val()
+            }
+            Utils.Loading();
+            $.ajax({
+                type: 'POST',
+                 url: "@Url.Action("SaveDataFunction")",
+                data: addAntiForgeryToken(param),
+                async: true,
+                success: function (ReturnData) {
+                    Utils.UnLoading();
+                    if (ReturnData.ResponseCode >= 0) {
+
+                        $(".alert-success").show("slow");
+                        $(".alert-danger").hide("slow");
+                        setTimeout(function () { $(".alert-success").hide("slow"); GotoListpage(); }, 2000);
+                    }
+                    else {
+
+                        $("#ErrorMessage").text(ReturnData.Description);
+                        $(".alert-danger").show("slow");
+                        $(".alert-success").hide("slow");
+                        setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                    }
+                }
+            });
+        };
+    });
+</script>

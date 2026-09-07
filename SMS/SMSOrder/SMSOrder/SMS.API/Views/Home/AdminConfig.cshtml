@@ -1,0 +1,54 @@
+﻿
+    <form id="defaultForm" method="post" class="form-horizontal">
+        <div class="form-horizontal">
+            <br />
+
+            <div class="form-group" style="margin-bottom:10px;">
+                <label for="txtVTTMax" class="control-label col-md-3">VTT Time :<span class="required">*</span></label>
+                <div class="col-md-9">
+                    <div class="input-icon right">
+                        <input type="text" id="txtVTTMax" maxlength="100" name="content" value="@ViewBag.VTTMax" class="form-control" style="max-width:400px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="txtVMSMax" class="control-label col-md-3">VMS Time :<span class="required">*</span></label>
+                <div class="col-md-9">
+                    <div class="input-icon right">
+                        <input type="text" id="txtVMSMax" maxlength="100" name="content" value="@ViewBag.VMSMax" class="form-control" style="max-width:400px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-footer form-horizontal">
+            <div class="form-group submit">
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="Send()"><i class="fa fa-save"></i> Gửi</button>
+
+
+            </div>
+        </div>
+    </form>
+    <script>
+     function Send() {
+         var param = {
+             'VMSMax': $("#txtVMSMax").val(),
+             'VTTMax': $("#txtVTTMax").val()
+         };
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SaveConfig")",
+                    data: param,
+                    async: true,
+                    success: function (data) {
+                        if (data.ResponseCode >= 0) {
+                            alert('Thành công');
+                        }
+                        else {
+
+                            alert('Thất bại');
+                        }
+                    }
+                });
+            }
+    </script>

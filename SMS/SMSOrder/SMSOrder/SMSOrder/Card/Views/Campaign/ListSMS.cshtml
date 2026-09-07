@@ -1,0 +1,126 @@
+﻿@using SMS.Data.DTO
+@model List<SMSLogs>
+@using SMS.Utility
+@using SMS.CMS.Helper
+@{ var idx = 0; }
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+            <th>STT</th>
+            @*<th>ID</th>*@
+            <th>Telco</th>
+            @if (ViewBag.IsAdmin || ViewBag.IsSupport)
+            {
+                <th>Port</th>
+            }
+
+            <th>Trạng thái gửi</th>
+
+            <th>Sdt</th>
+
+            <th>Nội dung</th>
+            @*<th>Số SMS</th>*@
+
+            <th>Thời gian</th>
+            @*<th>Trạng thái</th>*@
+            @*<th>Thời gian phản hồi</th>*@
+
+            @if (ViewBag.IsAdmin || ViewBag.IsSupport)
+            {
+                <th>Sender</th>
+                <th>User</th>
+            }
+
+            @*<th>Chốt</th>*@
+        </tr>
+    </thead>
+    @if (Model != null)
+    {
+        if (Model.Count > 0)
+        {
+            foreach (var obj in Model)
+            {
+                { idx++; }
+<tr>
+
+    <td style="text-align:left;">@(idx + (ViewBag.CurrentPage - 1) * ViewBag.PageSize)</td>
+    @*<td style="text-align:left;">@obj.Id</td>*@
+    <td>@(StringUtils.GetTelCoName(StringUtils.GetTelCo(obj.Number)))</td>
+    @if (ViewBag.IsAdmin || ViewBag.IsSupport)
+    {
+        <td style="text-align:left;">@obj.Port</td>
+    }
+
+    <td><div style="width:142px;">@Html.Raw(HtmlHelpers.GetResponeStatus(obj.ResponseStatus)) @obj.ResponseMessage </div></td>
+
+    <td style="text-align:left;">@obj.Number</td>
+    @if (ViewBag.IsAdmin)
+    {
+        <td style="text-align:left;"><div style="width:368px;">@obj.Contents</div></td>
+    }
+    else
+    {
+        <td>@StringUtils.Between(obj.Contents,"<",">")</td>
+    }
+    <td>
+            <div style="width:90px;">@string.Format("{0:dd/MM HH:mm:ss}", obj.CreatedTime)</div>
+        </td>
+        @*<td style="text-align:left!important">@obj.CountSMS</td>*@
+        @*<td>@string.Format("{0:dd/MM/yyyy HH:mm:ss}", obj.StartTime)</td>*@
+        @*<td>@Html.Raw(HtmlHelpers.GetCamStatus(obj.Status))</td>*@
+
+
+        @if (ViewBag.IsAdmin || ViewBag.IsSupport)
+        {
+            <td style="text-align:left;">@obj.Sender</td>
+            <td style="text-align:left;">@obj.CreatedUser</td>
+        }
+
+        @*<td>@(obj.Confirm == 0 ? " Chưa chốt" : " Đã chốt")</td>*@
+    </tr>
+
+            }
+        }
+    }
+
+</table>
+<script type="text/javascript">
+        var PageOnSize = '@ViewBag.PageSize';
+    var CurrentPage = '@ViewBag.CurrentPage';
+     $(document).ready(function () {
+
+        $("#pager2").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest(page); }
+        });
+
+
+    });
+    function BindDataRequest(currentPage) {
+                var params = {
+                     userId: $("#ddlUser").val(),
+                   id:"@ViewBag.id",
+                     keyword: $("#txtEmail2").val(),
+                    'pageSize': PageOnSize,
+                      port: $("#txtPort").val(),
+                telco: $('#ddlTelco').val(),
+                 status: $('#ddlStatus2').val(),
+                };
+                params.currentPage = currentPage;
+                var urlRequestAns = "@Url.Action("ListSMS")";
+                Utils.Loading();
+                $.ajax({
+                    type: 'GET',
+                    url: urlRequestAns,
+                    data: params,
+                    success: function (data) {
+                        $("#ListSMS").html(data);
+                        Utils.UnLoading();
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            };
+</script>

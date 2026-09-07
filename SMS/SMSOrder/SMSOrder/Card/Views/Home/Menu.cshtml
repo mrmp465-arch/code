@@ -1,0 +1,57 @@
+﻿@using SMS.Data.DTO;
+@model List<Functions>
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+        <!-- Sidebar user panel -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        @if (Model != null && Model.Count > 0)
+        {
+            var fathers = Model.FindAll(f => f.FatherID == 0);
+            fathers.Sort((f1, f2) => f1.Order.CompareTo(f2.Order));
+            <ul class="sidebar-menu" data-widget="tree">
+                <li>
+                    <a href="/">
+                        <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+
+                    </a>
+
+                </li>
+                @foreach (var father in fathers)
+                {
+                    var listChirl = Model.FindAll(f => f.FatherID == father.FunctionID && f.IsDisplay);
+                    listChirl.Sort((f1, f2) => f1.Order.CompareTo(f2.Order));
+                    if (listChirl.Count > 0)
+                    {
+                        <li class="treeview treeview-parrent" id="menu_@(father.FunctionID)">
+                            <a href="#">
+                                <i class="@(father.IconId)"></i> <span>@(father.FunctionName)</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu" style="display:block">
+                                @foreach (var function in listChirl)
+                                {
+                                    <li id="menu_@(function.FunctionCode)">
+                                        <a href="@function.Url">
+                                            <i class="fa fa-circle-o"></i>
+                                            @function.FunctionName
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+                }
+            </ul>
+        }
+
+    </section>
+    <!-- /.sidebar -->
+    @*<div style="position:absolute;bottom:0px;">
+        <img src="~/Content/img/logobmc.png" style="width:100%" />
+    </div>*@
+</aside>

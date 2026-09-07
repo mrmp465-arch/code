@@ -1,0 +1,238 @@
+﻿
+@{
+    ViewBag.Title = "CardOrder";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Mua  thẻ</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" onclick="javascript:location.reload()" title="làm mới">
+                        <i class="fa fa-history"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body maxheight01">
+
+                <div class="form-body">
+                    <div class="panel-group" id="steps">
+
+                        <div class="panel">
+                            <div class="row" style="font-weight:bold;font-size:14px;">
+                                <div class="col-sm-4 col-xs-4">
+                                    Chiết khấu:
+                                </div>
+                                <div class="col-sm-8 col-xs-8">
+                                    Viettel : <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVTT </b></span>
+                                    &nbsp;
+                                    Vina : <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVNP </b></span>
+                                    &nbsp;
+                                    Mobi: <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentVMS </b></span>
+                                    &nbsp; Garena: <span class="label label-success" style="padding: 2px 2px; font-size: 15px;"><b>@ViewBag.PercentGarena </b></span>
+                                </div>
+
+                            </div>
+
+                            <h5>B1. Chọn loại thẻ</h5>
+                            <ul class="wr-crf-tul clearfix card_type">
+                                <li class="">
+                                    <a href="javascript:;">
+                                        <img src="/Content/img/vt.png" alt="">
+                                        <input type="radio" name="rdoCardType" class="ratio_deposite" value="VIETTEL" />
+                                    </a>
+
+
+                                </li>
+                                <li class="">
+                                    <a href="javascript:;">
+                                        <img src="/Content/img/vn.png" alt="">
+                                        <input type="radio" name="rdoCardType" class="ratio_deposite" value="VINA" />
+                                    </a>
+                                </li>
+
+                                <li class="">
+                                    <a href="javascript:;">
+                                        <img src="/Content/img/mb.png" alt="">
+                                        <input type="radio" name="rdoCardType" class="ratio_deposite" value="MOBI" />
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="javascript:;">
+                                        <img src="/Content/img/Garena.png" alt="" height="40" />
+                                        <input type="radio" name="rdoCardType" class="ratio_deposite" value="GARENA" />
+                                    </a>
+
+
+                                </li>
+
+
+                            </ul>
+                            <br />
+                            <h5>B2. Chọn mệnh giá </h5>
+                            <ul class="wr-crf-tul wr-crf-tul2 clearfix amount_min">
+
+                                <li>
+                                    <a href="javascript:;">
+                                        20.000
+                                        <input type="radio" name="rdoAmountMin" class="ratio_amountmin" value="20000" />
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="javascript:;">
+                                        50.000
+                                        <input type="radio" name="rdoAmountMin" class="ratio_amountmin" value="50000" />
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="javascript:;">
+                                        100.000
+                                        <input type="radio" name="rdoAmountMin" class="ratio_amountmin" value="100000" />
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="javascript:;">
+                                        200.000
+                                        <input type="radio" name="rdoAmountMin" class="ratio_amountmin" value="200000" />
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="javascript:;">
+                                        500.000
+                                        <input type="radio" name="rdoAmountMin" class="ratio_amountmin" value="500000" />
+                                    </a>
+                                </li>
+                            </ul>
+                            <br />
+                            <h5>B3. Số lượng</h5>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <input type="number" value="1" step="1" class="form-control" placeholder="Số lượng" id="txtAmount">
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div style="clear:both"></div>
+                            <p id="msgBox" class="wr-crf-err"></p>
+                            <div class="form-group submit">
+                                <input type="hidden" id="ddlLoaiThe" name="ddlLoaiThe" />
+                                <input type="hidden" id="dlMinAll" value="" name="ddlAmount" />
+                                <button type="button" class="btn btn-primary" onclick="validateData()" id="btnSave"><i class="fa fa-save"></i> Mua thẻ</button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<script src="~/Content/js/formvalidate.js"></script>
+<script>
+    
+    $(".card_type li a").click(function () {
+
+        selectCard(this);
+    });
+    function selectCard(obj) {
+
+        var o = $(obj).find("input");
+        $(".ratio_deposite").prop("checked", false);
+
+        o.prop('checked', true);
+        var value = o.val();
+        $("#ddlLoaiThe").val(value);
+
+        $(".card_type li").removeClass("active");
+        $(obj).parent().addClass("active");
+
+     
+    }
+    $(".amount_min li a").click(function () {
+
+        selectAmountMin(this);
+    });
+    function selectAmountMin(obj) {
+
+        var o = $(obj).find("input");
+        $(".ratio_amountmin").prop("checked", false);
+
+        o.prop('checked', true);
+        var value = o.val();
+        $("#dlMinAll").val(value);
+
+        $(".amount_min li").removeClass("active");
+        $(obj).parent().addClass("active");
+    }
+    function validateData() {
+       
+
+        if (!ValidateControls("Vui lòng chọn mạng", "#ddlLoaiThe")) {
+            return false;
+        }
+        if (!ValidateControls("Vui lòng chọn mệnh giá", "#dlMinAll")) {
+            return false;
+        }
+        if (!ValidateControls("Vui lòng nhập số lượng", "#txtAmount")) {
+            return false;
+        }
+      
+
+        var amount = $('#txtAmount').val();
+       
+        if (amount > 100) {
+            $("#msgBox").html("Số lượng nhỏ hơn 100.").show();
+
+            $('#txtAmount').focus();
+            return false;
+        }
+        if (amount < 0) {
+            $("#msgBox").html("Số lượng lớn hơn 0.").show();
+
+            $('#txtAmount').focus();
+            return false;
+        }
+        var param = {
+            'cardNumber': amount,
+            'telco': $("#ddlLoaiThe").val(),
+            'cardValue': $("#dlMinAll").val(),
+           
+            //'Ussd': $("#cbxUssd").is(":checked") ? 2 : 0
+        };
+        Utils.Loading();
+        $.ajax({
+            type: 'POST',
+            url: "/Home/BuyCard",
+            data: addAntiForgeryToken(param),
+            async: true,
+            success: function (data) {
+                Utils.UnLoading();
+
+                if (data.ResponseCode > 0) {
+
+
+                    showmess(data.Description, "success", "btn-success");
+                }
+                else {
+                    showmess(data.Description, "error", "btn-danger");
+
+
+                }
+            }
+        });
+    }
+    
+</script>

@@ -1,0 +1,56 @@
+@media only screen and (max-width: 320px), only screen and (max-device-width: 320px) {
+.step_block ul li {
+    display: inline-block;
+    margin: 0 .5%;
+    width: 31%;
+    height: 50px;
+    background: #dcdcdc;
+    border-radius: 5px;
+}	
+.step_block ul li p {
+    display: block;
+    font-family: 'Conv_UTM Alter Gothic', Tahoma, Geneva, sans-serif;
+    color: #4a4a4a;
+    line-height: 45px;
+    font-size: .5rem;
+    text-transform: uppercase;
+}
+.step_block ul li p strong{
+	font-size: .6rem;
+}
+li.col_box1{
+	width:40%;
+	color:#4a4a4a;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:40px;
+	margin-right: 5%;
+	text-align: right;
+	}
+li.col_box2{
+	width:55%;
+	color:#FF0004;
+	font-size:14px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:40px;
+	}
+p.text_cpn {
+    display: block;
+    color: #4a4a4a;
+    font-size: 12px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+.form_2 h2 {
+    display: block;
+    margin-bottom: 10px;
+    color: #1f1f1f;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-family: 'Conv_UTM Alter Gothic', Tahoma, Geneva, sans-serif;
+    font-weight: normal;
+}
+}

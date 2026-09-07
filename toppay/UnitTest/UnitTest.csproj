@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB183B9A-573B-40EB-A8FF-CCDDA8EC2666}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitTest</RootNamespace>
+    <AssemblyName>UnitTest</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942" />
+    <Reference Include="Encryption">
+      <HintPath>..\DLL\Encryption.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.8.12.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.8.12\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharedCache.WinServiceCommon, Version=3.0.5.1, Culture=neutral, PublicKeyToken=19f944f08f2af8b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\SharedCache.WinServiceCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebDriver, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.WebDriver.3.141.0\lib\net45\WebDriver.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="Anticaptcha\AnticaptchaServiceTests.cs" />
+    <Compile Include="AsynTest.cs" />
+    <Compile Include="AutoBuyCardServiceTests.cs" />
+    <Compile Include="CaptchaComVnServiceTests.cs" />
+    <Compile Include="CardServiceTest.cs" />
+    <Compile Include="BuyCardTest.cs" />
+    <Compile Include="C2CTest.cs" />
+    <Compile Include="CardAPILogTests.cs" />
+    <Compile Include="BanksTest.cs" />
+    <Compile Include="DzoServiceTests.cs" />
+    <Compile Include="EncryptsTests.cs" />
+    <Compile Include="GameBizTests.cs" />
+    <Compile Include="GarenaServiceTests.cs" />
+    <Compile Include="GateServiceTests.cs" />
+    <Compile Include="GosuServiceTests.cs" />
+    <Compile Include="MobiNextTest.cs" />
+    <Compile Include="MomoServiceTests.cs" />
+    <Compile Include="MoneyConvertTest.cs" />
+    <Compile Include="MyMobiServiceTests.cs" />
+    <Compile Include="MyViettelServiceTests.cs" />
+    <Compile Include="MyViettelTest.cs" />
+    <Compile Include="RedisTest.cs" />
+    <Compile Include="RetrieveEmailServiceTests.cs" />
+    <Compile Include="ShopOneServiceTests.cs" />
+    <Compile Include="TcVncdcServiceTests.cs" />
+    <Compile Include="TelegramClientTests.cs" />
+    <Compile Include="MyVNTPTest.cs" />
+    <Compile Include="TopupMobileLogTests.cs" />
+    <Compile Include="UtilsGppTests.cs" />
+    <Compile Include="UtilsSmasTests.cs" />
+    <Compile Include="VTCServiceTests.cs" />
+    <Compile Include="WebServiceTests.cs" />
+    <Compile Include="WebVinaTest.cs" />
+    <Compile Include="MailServiceTest.cs" />
+    <Compile Include="SMSServiceLibTests.cs" />
+    <Compile Include="DBTests.cs" />
+    <Compile Include="XBomTest.cs" />
+    <Compile Include="CodeTest.cs" />
+    <Compile Include="CardTelcoTest.cs" />
+    <Compile Include="Service\VPGService.cs" />
+    <Compile Include="GateKHDTest.cs" />
+    <Compile Include="PayDirectTest.cs" />
+    <Compile Include="VNTPEpayTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ZingServiceTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="XMLFile1.xml" />
+    <None Include="App.config" />
+    <Content Include="NLog.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\APIMyMomo\APIMomo.csproj">
+      <Project>{45B399F2-30CF-4BF9-B5A1-1C1F134BDE46}</Project>
+      <Name>APIMomo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EmailService\EmailService.csproj">
+      <Project>{0393D960-2FCD-403D-90B8-E77F1F617D5A}</Project>
+      <Name>EmailService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib.Captcha\Lib.Captcha.csproj">
+      <Project>{D5C41BC1-6EDD-4327-A547-AC3B8DF757D8}</Project>
+      <Name>Lib.Captcha</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.API\Libs.API.csproj">
+      <Project>{0e785cfd-cd05-4698-8c7e-12ef0157a26c}</Project>
+      <Name>Libs.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.BankDirect\Libs.BankDirect.csproj">
+      <Project>{4ae007ce-0465-461b-8dc8-ef7056295ef1}</Project>
+      <Name>Libs.BankDirect</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.Report\Libs.Report.csproj">
+      <Project>{E4AE91AB-1916-4553-A54F-DCB413DBCE81}</Project>
+      <Name>Libs.Report</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.SMS\Libs.SMS.csproj">
+      <Project>{0E1408E8-2418-4544-BB3F-4756B2532946}</Project>
+      <Name>Libs.SMS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.Utils\Libs.Utils.csproj">
+      <Project>{1982A64A-B7D2-4AC2-94E0-3FA176B5D9A7}</Project>
+      <Name>Libs.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsService\WService.csproj">
+      <Project>{B73F78A8-C8CB-4519-8166-FA8840FC6CAA}</Project>
+      <Name>WService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.72.0.3626.69\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.72.0.3626.69\build\Selenium.WebDriver.ChromeDriver.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.72.0.3626.69\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.72.0.3626.69\build\Selenium.WebDriver.ChromeDriver.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

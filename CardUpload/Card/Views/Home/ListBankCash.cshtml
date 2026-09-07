@@ -1,0 +1,47 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model List<Card.Data.DTO.BankCashAPI>
+
+<div class="table-responsive">
+    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+        @if (Model != null && Model.Count > 0)
+        {
+
+            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                <thead>
+                    <tr class="rowsao">
+
+                        <th>TransID</th>
+                        <th>Số tiền</th>
+                        <th>BankCode</th>
+                        <th>Tài khoản nhận</th>
+                        <th>Thời gian</th>
+                        @*<th>Thời gian phản hồi</th>*@
+                        <th>Trạng thái</th>
+
+                    </tr>
+                </thead>
+                @if (Model.Count > 0)
+                {
+                    foreach (var obj in Model)
+                    {
+            <tr>
+                <td>@obj.TransactionID</td>
+
+                <td>@StringUtils.InsertCommaNoStyle(obj.TotalAmount.ToString())/@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())</td>
+
+                <td>@obj.BankCode</td>
+                <td>@obj.BankAccountNumber- @obj.BankAccountName</td>
+                <td>@string.Format("{0:dd/MM/yyyy HH:mm}", obj.CreatedTime) </td>
+                @*<td>@string.Format("{0:dd/MM/yyyy HH:mm}", obj.LastTime) </td>*@
+
+                <td>@Html.Raw(HtmlHelpers.GetTranStatus(obj.Status))</td>
+
+            </tr>
+                    }
+                }
+            </table>
+        }
+    </div>
+</div>

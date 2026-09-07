@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Chạy USSD";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <i class="fa fa-fw fa-user-md"></i><span>Gửi USS</span>
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+                   
+                    <div class="form-group">
+                        <label for="txtNumber" class="control-label col-md-2">Port :<span class="required">*</span></label>
+                        <div class="col-md-4">
+                            <div class="input-icon right">
+                                <input type="number" id="txtPort" maxlength="100" name="content" value="31" autocomplete="off" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtContent" class="control-label col-md-2">Câu lệnh :<span class="required">*</span></label>
+                        <div class="col-md-4">
+                            <div class="input-icon right" style="width:40%;float:left">
+                                <input type="text" id="txtContent" maxlength="100" name="content" value="*102#" class="form-control" />
+                            </div>
+                            <div class="input-icon right" style="width:25%;float:left;margin-left:5px">
+                                <button type="button" class="btn btn-primary" id="btnSave" onclick="Send()"><i class="fa fa-save"></i> Gửi</button>
+                            </div>
+                        </div>
+                      
+                    </div>
+                    <div class="form-group">
+                        <label for="txtDescription" class="control-label col-md-2">Kết quả :<span class="required">*</span></label>
+                        <div class="col-md-8">
+                            <div class="input-icon right">
+                                <textarea id="txtResult" style="height: 100px;width:330px;max-width:330px" cols="20" name="description" class="form-control" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+     function Send() {
+         var param = {
+             'Content': $("#txtContent").val(),
+             'Port': $("#txtPort").val(),
+
+         };
+         $("#btnSave").prop('disabled', true);
+         $("#txtResult").val('');
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SendUSSD")",
+                    data: param,
+                    async: true,
+                    success: function (data) {
+                        if (data.ResponseCode >= 0) {
+                            $("#btnSave").prop('disabled', false);
+                            $("#txtResult").val(data.Description)
+                        }
+                        else {
+                             $("#btnSave").prop('disabled', false);
+                            alert('Thất bại');
+                        }
+                    }
+                });
+            }
+</script>

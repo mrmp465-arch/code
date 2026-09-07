@@ -1,0 +1,47 @@
+﻿@using SMS.CMS.Models
+@using SMS.Utility
+@model MetaDataUser
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="ion ion-social-usd"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text ng-binding">Số dư tài khoản</span>
+                    <span class="info-box-number ng-binding">@StringUtils.InsertCommaNoStyle(Model.Balance.ToString()) <small class="ng-binding">đ</small></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text ng-binding">Khách hàng</span>
+                    <span class="info-box-number ng-binding">@Model.NumberContact</span>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-spinner fa-spin"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text ng-binding">Đang gửi</span>
+                    <span class="info-box-number ng-binding">@Model.NumberSMSSend</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="ion ion-android-textsms"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text ng-binding">Đã gửi</span>
+                    <span class="info-box-number ng-binding">@Model.NumberSMSFinish</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}

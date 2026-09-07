@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1B5A902E-2B11-4114-82E5-C242783C6B4D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Card.Data</RootNamespace>
+    <AssemblyName>Card.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\BankAPI.cs" />
+    <Compile Include="Api\OrderDetail.cs" />
+    <Compile Include="Api\OrderGroup.cs" />
+    <Compile Include="Api\OrderInput.cs" />
+    <Compile Include="Api\OrderOutput.cs" />
+    <Compile Include="Api\ServerProcess.cs" />
+    <Compile Include="Api\UserToken.cs" />
+    <Compile Include="Api\Utilities.cs" />
+    <Compile Include="DTO\AccountToken.cs" />
+    <Compile Include="DTO\BankCashAPI.cs" />
+    <Compile Include="DTO\BankGateAPI.cs" />
+    <Compile Include="DTO\BuyCard.cs" />
+    <Compile Include="DTO\TopupOrder.cs" />
+    <Compile Include="DTO\CardOrder.cs" />
+    <Compile Include="DTO\Comments.cs" />
+    <Compile Include="DTO\Contents.cs" />
+    <Compile Include="DTO\Transaction.cs" />
+    <Compile Include="DTO\Groups.cs" />
+    <Compile Include="Factory\AbstractDAOFactory.cs" />
+    <Compile Include="Factory\ADODAOFactory.cs" />
+    <Compile Include="Service\AccountTokenService.cs" />
+    <Compile Include="Service\BankCashService.cs" />
+    <Compile Include="Service\BuyCardService.cs" />
+    <Compile Include="Service\IBuyCardService.cs" />
+    <Compile Include="Service\TopupOrderService.cs" />
+    <Compile Include="Service\CommentsService.cs" />
+    <Compile Include="Service\BankGateService.cs" />
+    <Compile Include="Service\IBankCashService.cs" />
+    <Compile Include="Service\IBankGateService.cs" />
+    <Compile Include="Service\ITopupOrderService.cs" />
+    <Compile Include="Service\IOrderRepotsService.cs" />
+    <Compile Include="Service\ICardOrderService.cs" />
+    <Compile Include="Service\IOrderTempsService.cs" />
+    <Compile Include="Service\IBidHistoryService .cs" />
+    <Compile Include="Service\OrderReportsService .cs" />
+    <Compile Include="Service\CardOrderService.cs" />
+    <Compile Include="Service\OrderTempsService.cs" />
+    <Compile Include="Service\ContentsService.cs" />
+    <Compile Include="Service\IAccountTokenService.cs" />
+    <Compile Include="Service\ICommenttsService.cs" />
+    <Compile Include="Service\IContentsService.cs" />
+    <Compile Include="Service\TransactionsService.cs" />
+    <Compile Include="Service\GroupsService.cs" />
+    <Compile Include="Service\FunctionsService.cs" />
+    <Compile Include="Service\ITransactionsService.cs" />
+    <Compile Include="Service\IGroupsService y.cs" />
+    <Compile Include="Service\UserRoleService.cs" />
+    <Compile Include="Service\BidHistoryService.cs" />
+    <Compile Include="Service\UsersService.cs" />
+    <Compile Include="Service\UsersLogService.cs" />
+    <Compile Include="Service\IFucntionsService.cs" />
+    <Compile Include="Service\IUserRoleService.cs" />
+    <Compile Include="Service\IUsersService.cs" />
+    <Compile Include="Service\IUsersLogService.cs" />
+    <Compile Include="DBHelper.cs" />
+    <Compile Include="DTO\Functions.cs" />
+    <Compile Include="DTO\Users.cs" />
+    <Compile Include="DTO\UsersLog.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Card.Utility\Card.Utility.csproj">
+      <Project>{7bef7c1f-dce6-4bb6-8e65-5859a3d90575}</Project>
+      <Name>Card.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

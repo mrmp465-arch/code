@@ -1,0 +1,349 @@
+﻿@using SMS.Data.DTO
+@model Users
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                @if (Model.UserID > 0)
+                {
+                    <i class="fa fa-fw fa-user-md"></i><span>Cập Nhật User</span>
+                }
+                else
+                {
+                    <i class="fa fa-fw fa-user-plus"></i><span>Thêm mới User</span>
+                }
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="panel-group" id="steps">
+                    <div class="messager-body">
+                        <div class="alert alert-success display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <label>Đã lưu dữ liệu thành công !!!</label>
+                        </div>
+                        <div class="alert alert-danger display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                        </div>
+                    </div>
+                    <div class="panel">
+
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label for="txtUserName" class="control-label col-md-4">UserName :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        @if (Model.UserID > 0)
+                                        {
+                                            <input type="text" id="txtUserName" readonly="readonly" maxlength="30" name="username" value="@Model.Username" class="form-control" placeholder="Nhập tên Tài Khoản" />
+                                        }
+                                        else
+                                        {
+                                            <input type="text" id="txtUserName" maxlength="30" name="username" value="@Model.Username" class="form-control" placeholder="Nhập tên Tài Khoản" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtFullName" class="control-label col-md-4">FullName :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="text" id="txtFullName" name="fullname" maxlength="50" value="@Model.FullName" class="form-control" placeholder="Nhập họ tên" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label for="txtConfig" class="control-label col-md-4">Chữ ký :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="text" id="txtConfig" name="config" maxlength="50" value="@Model.Config" class="form-control" placeholder="Nhập key config" />
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.UserID == 0)
+                            {
+                                <div class="form-group">
+                                    <label for="txtpassword" class="control-label col-md-4">Mật khẩu :</label>
+                                    <div class="col-md-4">
+                                        <div class="input-icon right">
+                                            <input type="password" id="txtpassword" name="Password" maxlength="20" autocomplete="new-password" value="@Model.Password" class="form-control" placeholder="Nhập mật khẩu" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="display:none">
+                                    <label for="txtpassword2" class="control-label col-md-4">Mật khẩu bán hàng :</label>
+                                    <div class="col-md-4">
+                                        <div class="input-icon right">
+                                            <input type="password" id="txtpassword2" name="Password2" maxlength="20" value="@Model.Password2" class="form-control" placeholder="Nhập mật khẩu" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="cbxType">Độ ưu tiên :</label>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="ddlPiority">
+
+                                        <option @if (Model.Piority == 9) { @Html.Raw("selected='selected'") ; } value="9">P9</option>
+                                        <option @if (Model.Piority == 8) { @Html.Raw("selected='selected'") ; } value="8">P8</option>
+                                        <option @if (Model.Piority == 7) { @Html.Raw("selected='selected'") ; } value="7">P7</option>
+                                        <option @if (Model.Piority == 6) { @Html.Raw("selected='selected'") ; } value="6">P6</option>
+                                        <option @if (Model.Piority == 5) { @Html.Raw("selected='selected'") ; } value="5">P5</option>
+                                        <option @if (Model.Piority == 4) { @Html.Raw("selected='selected'") ; } value="4">P4</option>
+                                        <option @if (Model.Piority == 3) { @Html.Raw("selected='selected'") ; } value="3">P3</option>
+                                        <option @if (Model.Piority == 2) { @Html.Raw("selected='selected'") ; } value="2">P2</option>
+                                        <option @if (Model.Piority == 1) { @Html.Raw("selected='selected'") ; } value="1">P1</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtEmail" class="control-label col-md-4">Giá VTT :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="number" step="10" id="txtPriceVTT" name="VTT" maxlength="150" value="@Model.PercentVTT" class="form-control" placeholder="" data-rule-required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtEmail" class="control-label col-md-4">Giá VMS :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="number" step="10" id="txtPriceVMS" name="VMS" maxlength="150" value="@Model.PercentVMS" class="form-control" placeholder="" data-rule-required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtEmail" class="control-label col-md-4">Giá VNP :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="number" step="10" id="txtPriceVNP" name="VNP" maxlength="150" value="@Model.PercentVNP" class="form-control" placeholder="" data-rule-required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display:none">
+                                <label for="txtEmail" class="control-label col-md-4">Email :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="text" id="txtEmail" name="Email" maxlength="150" value="@Model.Email" class="form-control" placeholder="Nhập địa chỉ Email" data-rule-required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display:none">
+                                <label for="txtMobile" class="control-label col-md-4">Mobile :<span class="required">*</span></label>
+                                <div class="col-md-4">
+                                    <div class="input-icon right">
+                                        <input type="text" id="txtEmail" name="Email" maxlength="150" value="@Model.Mobile" class="form-control" placeholder="Nhập số điệnt haoij" data-rule-required="true" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="form-group" style='display:none'>
+                                <label class="control-label col-md-4" for="cbxType">Loại tài khoản :</label>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="ddlType">
+                                        <option @if (Model.Type == 2) { @Html.Raw("selected='selected'") ; } value="2">Cấp 1</option>
+                                        <option @if (Model.Type == 3) { @Html.Raw("selected='selected'") ; } value="3">Cấp 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @if (ViewBag.IsAdmin)
+                            {
+                                if (Model.Type == 2)//câp 2 mới có cái này
+                                {
+                                    <div class="form-group" style="display:none;">
+                                        <label for="txtUserAPI" class="control-label col-md-4">UserAPI :</label>
+                                        <div class="col-md-4">
+                                            <div class="input-icon right">
+                                                <input type="text" id="txtUserAPI" name="UserAPI" maxlength="50" value="@Model.UserAPI" class="form-control" placeholder="Nhập UserAPI" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="display:none;">
+                                        <label for="txtPasswordAPI" class="control-label col-md-4">PasswordAPI :</label>
+                                        <div class="col-md-4">
+                                            <div class="input-icon right">
+                                                <input type="text" id="txtPasswordAPI" name="UserAPI" maxlength="50" value="@Model.PasswordAPI" class="form-control" placeholder="Nhập PasswordAPI" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+
+                            }
+
+
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="cbxIsActive">Trạng thái :</label>
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="cbxIsActive" class="cbxIsDisplay" @(Model.Status ? "checked=\"checked\"" : "") />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer form-horizontal">
+                            <div class="form-group submit">
+                                <button type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i> Lưu lại</button>
+                                <button type="button" class="btn btn-primary" id="btnReset"><i class="fa fa-refresh"></i> Làm mới</button>
+                                <button type="button" class="btn btn-default" id="btnBack" onclick="GotoListpage();"><i class="fa fa-backward"></i> Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function GotoListpage() {
+        window.location = "@Url.Action("ManagerUser")";
+    }
+        $(document).ready(function () {
+            $("button.close").click(function () {
+                $(this).parent().css("display", "none");
+            });
+            $('#defaultForm').bootstrapValidator({
+                message: 'This value is not valid',
+                //live: 'submitted',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+
+                    username: {
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'Username không được bỏ trống'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9\._]+$/,
+                                message: 'Username gồm ký tự alphabeta hoặc số'
+                            },
+                            stringLength: {
+                                min: 3,
+                                max: 30,
+                                message: 'Tên nhỏ nhất 3 ký tự và nhiều nhất 30 ký tự'
+                            },
+
+                        }
+                    },
+                    fullname: {
+                        message: 'Bạn chưa nhập họ tên.',
+                        validators: {
+                            notEmpty: {
+                                message: 'Bạn chưa nhập họ tên'
+                            },
+                            stringLength: {
+                                min: 3,
+                                max: 50,
+                                message: 'họ tên dài từ 3 đến 50 ký tự'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửựýỳỷỹỵÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỰÝỲỶỸỴ\.\-\_\s]+$/,
+                                message: 'Họ tên không được nhập các ký tự đặc biệt'
+                            },
+                        }
+                    }
+
+
+                }
+            })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+            $("#btnReset").click(function () {
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+                $(".alert-danger").css("display", "none");
+                $(".alert-success").css("display", "none");
+            });
+            //Save Data
+            function SaveData() {
+                var param = {
+                    'UserID': '@Model.UserID',
+                    'Username': $("#txtUserName").val(),
+                    'FullName': $("#txtFullName").val(),
+                    'Config': $("#txtConfig").val(),
+                    'NumberUser': 1000,
+                    'Email': $("#txtEmail").val(),
+                    'Password': $("#txtpassword").val(),
+                    'Password2': $("#txtpassword2").val(),
+                    'Type': $("#ddlType").val(),
+                    'Group': 1,
+                    'PercentVNP': $("#txtPriceVNP").val(), 
+                    'PercentVTT': $("#txtPriceVTT").val(), 
+                    'PercentVMS': $("#txtPriceVMS").val(), 
+                    'Piority': $("#ddlPiority").val(),
+   
+                    'Status': $("#cbxIsActive").is(":checked") ? true : false,
+                    'StatusOrder': true,
+                    'StatusVTT': true,
+                    'StatusVMS': true,
+                    'StatusVNP': true,
+                    'PasswordAPI': $("#txtPasswordAPI").val(),
+                    'UserAPI': $("#txtUserAPI").val(),
+                }
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SaveDataUser")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+                            setTimeout(function () { $(".alert-success").hide("slow"); GotoListpage(); }, 2000);
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+            };
+        });
+
+        @*var activemenu = $('.sidebar-menu #menu_@(permission.FunctionID)');
+        activemenu.addClass("active");*@
+
+</script>

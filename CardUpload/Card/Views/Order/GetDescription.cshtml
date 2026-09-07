@@ -1,0 +1,123 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model OrderReport
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+
+
+            <div class="box-header" style="margin-top:18px;">
+             
+                Lý do khóa
+            </div>
+            <div class="box-body">
+                
+                @Model.Description
+
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 94% !important;
+        height: 86% !important;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+
+        .modal-dialog {
+            width: 90% !important;
+            height: 90% !important;
+        }
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $("#ddlBidRate").change(function () {
+            ListTopBid();
+        });
+        $("#ddlType").change(function () {
+            ListTopBid();
+        });
+         $("#ddlAmountMin").change(function () {
+            ListTopBid();
+        });
+
+        ListGroupBid();
+
+    });
+    function SetCK(ck)
+    {
+        $('#ddlBidRate').val(ck);
+        ListTopBid()
+    }
+    function ListGroupBid() {
+
+        var parameters = {
+
+            'Telco': $('#hdTelco').val(),
+            'BidRate': $('#ddlBidRate').val(),
+            'AmountMin': $('#ddlAmountMin').val(),
+
+
+        };
+
+
+        $.ajax({
+            type: 'GET',
+            url: "/Home/ListGroupBid",
+            data: parameters,
+            success: function (data) {
+                //Utils.UnLoading();
+                $("#ListGroupBid").html(data);
+                $("#ListTopBid").html("");
+            },
+            error: function () {
+
+            }
+        });
+    }
+    function ListTopBid() {
+        var parameters = {
+
+            'Telco': $('#hdTelco').val(),
+            'BidRate': $('#ddlBidRate').val(),
+            'AmountMin': $('#ddlAmountMin').val(),
+
+
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: "/Home/ListTopBid",
+            data: parameters,
+            success: function (data) {
+                //Utils.UnLoading();
+                $("#ListTopBid").html(data);
+
+            },
+            error: function () {
+
+            }
+        });
+
+    };
+    function setBid(telco) {
+        $('#ddlBidRate').val("-1");
+        $('#hdTelco').val(telco);
+
+        $('#tab_telco li').removeClass("active");
+        $('#tab_' + telco).addClass("active");
+        ListGroupBid();
+    }
+</script>
+

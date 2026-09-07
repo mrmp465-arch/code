@@ -1,0 +1,101 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách tin nhắn";
+}
+@using SMS.Data.DTO
+@{
+
+    List<Groups> ListGroup = ViewBag.GroupList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><i class="fa fa-wrench"></i>@ViewBag.Title</div>
+            <div class="box-body">
+                <div class="row" id="form">
+
+
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label for="txtPort" class="control-label"><i class="fa fa-pencil"></i>Port</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtPort" class="form-control" placeholder="Nhập Port">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label for="txtNumber" class="control-label"><i class="fa fa-pencil"></i>Đầu số</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtNumber" class="form-control" placeholder="Nhập đầu số" value="@ViewBag.Number">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6 submit" style="text-align:center">
+                        <button type="button" id="btnSearch" class="btn btn-primary"><i class="fa fa-search"></i> Tìm Kiếm</button>
+
+
+
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+
+
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+
+                        <div id="ListSMSOutbox">
+                            @Html.Action("ListSMSOutbox")
+                        </div>
+                        <div class="dataTables_paginate" id="pager">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .pagination {
+        margin-bottom: 0;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+
+        function GetList(currentPage) {
+            var parameters = {
+
+                port: $('#txtPort').val(),
+                number: $("#txtNumber").val(),
+
+            };
+            var urlRequestAns = "/Sim/ListSMSOutbox";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#ListSMSOutbox").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        };
+
+
+
+    });
+
+
+</script>

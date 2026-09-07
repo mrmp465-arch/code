@@ -1,0 +1,20 @@
+﻿@using Card.Data.DTO
+@model List<Comments>
+@using Card.Utility
+@using Card.CMS.Helper
+<div class="comment" id="box_comment">
+    <div class="title_comment"><span>Bình luận</span></div>
+    <ul id="ul_comment">
+        @foreach (var obj in Model)
+        {
+            <li>
+                <div>
+                    <div class="vitri1"><span class="red">@obj.CreatedUser  </span> <span class="font10">@string.Format("{0:dd/MM/yyyy HH:mm:ss}", obj.PublishDate)</span><br>  </div>
+                    <p>  @obj.Description    </p>
+                </div>
+                <div class="clear"></div>
+            </li>
+
+        }
+    </ul>
+</div>

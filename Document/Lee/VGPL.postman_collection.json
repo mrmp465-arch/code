@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "edd93c8e-e53a-4a40-9c4b-e968984d7589",
+		"name": "VGPL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "849035"
+	},
+	"item": [
+		{
+			"name": "Bank- GetListBank",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"partnerCode\":\"xxx\",\"serviceCode\":\"bankdirect\",\"commandCode\":\"getbanks\",\"requestContent\":\"{\\\"Type\\\":\\\"banktranfer\\\"}\",\"signature\":\"b93563955187e0c83e44c899ae2c0f10\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bank-Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxx\",\"ServiceCode\":\"bankdirect\",\"CommandCode\":\"order\",\"RequestContent\":\"{\\\"Type\\\":\\\"banktranfer\\\",\\\"BankName\\\":\\\"ACB\\\",\\\"RefCode\\\":\\\"1222\\\",\\\"Amount\\\":20000000,\\\"CallbackUrl\\\":\\\"\\\"}\",\"Signature\":\"5482a85d78d38a8241e68b3217be87af\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Momo - Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"PartnerCode\":\"xxx\",\"ServiceCode\":\"bankdirect\",\"CommandCode\":\"order\",\"RequestContent\":\"{\\\"Type\\\":\\\"momov2\\\",\\\"BankName\\\":\\\"momo\\\",\\\"RefCode\\\":\\\"123xxx\\\",\\\"Amount\\\":20000,\\\"CallbackUrl\\\":\\\"xxxx\\\"}\",\"Signature\":\"4f5e4f74eacd57eb2530bab71a23dc43\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Momo Cash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"ServiceCode\":\"bankcash\",\"CommandCode\":\"cash\",\"RequestContent\":\"{\\\"Type\\\":\\\"momocash\\\",\\\"AccountName\\\":\\\"xxx\\\",\\\"BankName\\\":\\\"momo\\\",\\\"BankAccountName\\\":\\\"nguyen bach cam tien\\\",\\\"BankAccountNumber\\\":\\\"xxxxx\\\",\\\"RefCode\\\":\\\"5d63a691659c8a6eb0bae06f638057c8\\\",\\\"Amount\\\":20000,\\\"CallbackUrl\\\":\\\"xxxx\\\"}\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BankCash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"ServiceCode\":\"bankcash\",\"CommandCode\":\"cash\",\"RequestContent\":\"{\\\"Type\\\":\\\"bankcash\\\",\\\"AccountName\\\":\\\"xxx\\\",\\\"BankName\\\":\\\"ACB\\\",\\\"BankAccountName\\\":\\\"nguyen bach cam tien\\\",\\\"BankAccountNumber\\\":\\\"xxxxx\\\",\\\"RefCode\\\":\\\"5d63a691659c8a6eb0bae06f638057c8\\\",\\\"Amount\\\":20000,\\\"CallbackUrl\\\":\\\"xxxx\\\"}\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Card -UserCard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"partnerCode\":\"xxx\",\"serviceCode\":\"cardtelco\",\"commandCode\":\"usecard\",\"requestContent\":\"{\\\"CardSerial\\\":\\\"xxxxx\\\",\\\"CardCode\\\":\\\"xxx\\\",\\\"CardType\\\":\\\"viettel\\\",\\\"AccountName\\\":\\\"xxx\\\",\\\"RefCode\\\":\\\"1708185637\\\",\\\"Amount\\\":0,\\\"AmountUser\\\":200000,\\\"CallbackUrl\\\":\\\"\\\"}\",\"signature\":\"2d684522e32c28dacd6f1a5a8fffb4b2\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/VPGJsonService.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"VPGJsonService.ashx"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

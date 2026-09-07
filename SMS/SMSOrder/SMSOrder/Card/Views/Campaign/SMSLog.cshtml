@@ -1,0 +1,122 @@
+﻿
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+
+            <div class="box-body">
+                <div class="row" id="form">
+
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label for="txtEmail" class="control-label"><i class="fa fa-pencil"></i>Từ Khóa</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtEmail2" class="form-control" placeholder="Nhập từ khóa">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <select class="form-control" id="ddlTelco">
+                            <option value="">Telco</option>
+                            <option value="1">VTT</option>
+                            <option value="3">VNP</option>
+                            <option value="2">VMS</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <select class="form-control" id="ddlStatus2">
+                            <option value="-1">Trạng thái</option>
+                            <option value="1">Thành công</option>
+                            <option value="0">Thất bại</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <label for="txtPort" class="control-label"><i class="fa fa-pencil"></i>Port</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtPort" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6 submit" style="text-align:center">
+                        <button type="button" id="btnSearch2" class="btn btn-primary"><i class="fa fa-search"></i> Tìm Kiếm</button>
+
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="ListSMSLog">
+                          
+                        </div>
+
+                        <div class="dataTables_paginate" id="pager2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 79% !important;
+        height: 90% !important;
+    }
+</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetList2(1);
+        var parameters2 = {
+        };
+        $("#txtEmail2").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch2").click();
+            }
+        });
+        $("#txtPort").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch2").click();
+            }
+        });
+        $("#btnSearch2").click(function () {
+            GetList2(1);
+        });
+         $("#ddlTelco").change(function () {
+            GetList2(1);
+        });
+         $("#ddlStatus2").change(function () {
+            GetList2(1);
+        });
+        function GetList2(currentPage) {
+            parameters2 = {
+                id:"@ViewBag.id",
+                keyword: $("#txtEmail2").val(),
+                port: $("#txtPort").val(),
+                telco: $('#ddlTelco').val(),
+                status: $('#ddlStatus2').val(),
+                currentPage: currentPage
+            };
+            btnSearch2(currentPage);
+        };
+
+        function btnSearch2(currentPage) {
+
+            var urlRequestAns = "/Campaign/ListSMSLog";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters2,
+                success: function (data) {
+                    $("#ListSMSLog").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+    });
+
+
+</script>
+
+

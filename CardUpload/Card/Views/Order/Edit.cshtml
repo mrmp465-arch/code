@@ -1,0 +1,286 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model OrderOutput
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span>Cập nhật đơn </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="messager-body">
+                        <div class="alert alert-success display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <label>Đã lưu dữ liệu thành công !!!</label>
+                        </div>
+                        <div class="alert alert-danger display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtOrderNo" class="control-label col-md-3">OrderNo :</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <input type="text" id="txtOrderNo" name="Order" class="form-control" disabled value="@Model.OrderNo" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="txtMobile" class="control-label col-md-3">Số điện thoại :</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <input type="text" id="txtMobile" name="Mobile" class="form-control" disabled value="@Model.Mobile" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="txtAmount" class="control-label col-md-3">Amount :</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <input type="text" id="txtAmount" name="Amount" class="form-control" disabled value="@Model.Amount" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="txtPassword" class="control-label col-md-3">Mật khẩu my :</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <input type="text" id="txtPasswordPop" name="Password" class="form-control" value="@Model.Password" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="txtAmount" class="control-label col-md-3">Độ ưu tiên :</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <select class="form-control" id="ddlP_" disabled>
+                                    @for (int i = 1; i <= 49; i++)
+                                    {
+                                        <option @if (Model.Priority == i) { @Html.Raw("selected='selected'") ; } value="@(i)">
+                                            P@(i)
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ddlAmountMinAll" class="control-label col-md-3">AmountMinAll:</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <select class="form-control" disabled id="ddlAmountMinAll">
+                                    <option value="=0">0</option>
+                                    <option @if (Model.AmountMinAll == 10000) { @Html.Raw("selected='selected'") ; } value="10000">
+                                        10.000
+                                    </option>
+                                    <option @if (Model.AmountMinAll == 20000) { @Html.Raw("selected='selected'") ; } value="20000">
+                                        20.000
+                                    </option>
+                                    <option @if (Model.AmountMinAll == 50000) { @Html.Raw("selected='selected'") ; } value="50000">
+                                        50.000
+                                    </option>
+                                    <option @if (Model.AmountMinAll == 100000) { @Html.Raw("selected='selected'") ; } value="100000">
+                                        100.000
+                                    </option>
+                                    <option @if (Model.AmountMinAll == 200000) { @Html.Raw("selected='selected'") ; } value="200000">
+                                        200.000
+                                    </option>
+                                    <option @if (Model.AmountMinAll == 500000) { @Html.Raw("selected='selected'") ; } value="500000">
+                                        500.000
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label for="txtAmount" class="control-label col-md-3">AmountMin:</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <select class="form-control" id="ddlAmountMin">
+                                    <option value="=0">0</option>
+                                    <option @if (Model.AmountMin == 10000) { @Html.Raw("selected='selected'") ; } value="10000">
+                                        10.000
+                                    </option>
+                                    <option @if (Model.AmountMin == 20000) { @Html.Raw("selected='selected'") ; } value="20000">
+                                        20.000
+                                    </option>
+                                    <option @if (Model.AmountMin == 50000) { @Html.Raw("selected='selected'") ; } value="50000">
+                                        50.000
+                                    </option>
+                                    <option @if (Model.AmountMin == 100000) { @Html.Raw("selected='selected'") ; } value="100000">
+                                        100.000
+                                    </option>
+                                    <option @if (Model.AmountMin == 200000) { @Html.Raw("selected='selected'") ; } value="200000">
+                                        200.000
+                                    </option>
+                                    <option @if (Model.AmountMin == 500000) { @Html.Raw("selected='selected'") ; } value="500000">
+                                        500.000
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ddlUSSD" class="control-label col-md-3">USD:</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <select class="form-control" id="ddlUSSD" disabled>
+
+                                    <option @if (Model.Ussd == 0) { @Html.Raw("selected='selected'") ; } value="0">
+                                        Không
+                                    </option>
+                                    <option @if (Model.Ussd == 1) { @Html.Raw("selected='selected'") ; } value="1">
+                                        Có
+                                    </option>
+                                    <option @if (Model.Ussd == 2) { @Html.Raw("selected='selected'") ; } value="2">
+                                        Chỉ chạy USSD
+                                    </option>
+
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ddlPopStatus" class="control-label col-md-3">Trạng thái:</label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <select class="form-control" id="ddlPopStatus" >
+
+                                    
+                                    <option value="1">
+                                        Mở khóa
+                                    </option>
+                                    <option @if (Model.Status == -2) { @Html.Raw("selected='selected'") ; } value="-2">
+                                        Telco khóa
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer form-horizontal">
+                        <div class="form-group submit">
+                            <button type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i> Cập nhập</button>
+
+                            <button type="button" class="btn btn-default" id="btnBack" data-dismiss="modal"><i class="fa fa-backward"></i> Hủy</button>
+                        </div>
+                    </div>
+</form>
+        </div>
+    </div>
+</div>
+<script>
+    
+    $(document).ready(function () {
+        function GotoListpage()
+        {
+            BindDataRequest(1);
+            GetBalance();
+            $('.modal ').modal('hide');
+        }
+        $('#defaultForm').bootstrapValidator({
+            message: 'This value is not valid',
+            //live: 'submitted',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+
+                
+            }
+        })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+        function SaveData() {
+
+            var param = {
+                'TransactionID': '@Model.TransactionID',
+                'Password': $("#txtPasswordPop").val(),
+                'Priority': $("#ddlP").val(),
+                'AmountMinAll': $("#ddlAmountMinAll").val(),
+                'AmountMin': $("#ddlAmountMin").val(),
+                'Ussd': $("#ddlUSSD").val(),
+                'Status': $("#ddlPopStatus").val(),
+            };
+              $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("Update")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+                            setTimeout(function () { $(".alert-success").hide("slow"); $("#btnSearch").click(); bootbox.hideAll()}, 2000);
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+
+
+        }
+    });
+
+</script>
+<style type="text/css">
+    .modal-dialog {
+        width: 50% !important;
+        height: 50% !important;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+
+        .modal-dialog {
+            width: 90% !important;
+            height: 90% !important;
+        }
+    }
+</style>
+

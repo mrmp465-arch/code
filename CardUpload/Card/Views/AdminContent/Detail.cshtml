@@ -1,0 +1,46 @@
+﻿@using Card.Data.DTO
+@model Contents
+@using Card.Utility
+@using Card.CMS.Helper
+@if (Model != null)
+{
+    <div class="row" id="ContentPopUp">
+        <div class="col-lg-12">
+            <div class="box box-primary">
+
+                <div class="box-body">
+                    <div class="row" id="form">
+                        <div class="col-md-12" style="min-height:500px;">
+                            <h2>@Model.Title</h2>
+                            <div>@Html.Raw(Model.Description)</div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style type="text/css">
+        .modal-dialog {
+            width: 60% !important;
+            height: 60% !important;
+        }
+
+        .modal-footer {
+            display: none;
+        }
+
+        @@media (max-width: 768px) {
+
+            .modal-dialog {
+                width: 90% !important;
+                height: 90% !important;
+            }
+        }
+    </style>
+
+
+
+
+}

@@ -1,0 +1,20 @@
+﻿.rangeslider,
+input[type='range'] {
+    max-width: 400px;
+}
+
+.rangeslider__ruler {
+    cursor: pointer;
+    font-size: .7em;
+    margin: 20px 3px 0 3px;
+    position: relative;
+    top: 100%;
+    text-align: justify;
+}
+
+
+.rangeslider__ruler:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+}

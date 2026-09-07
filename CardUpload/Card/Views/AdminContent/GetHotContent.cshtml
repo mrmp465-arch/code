@@ -1,0 +1,42 @@
+﻿@using Card.Data.DTO
+@model List<Contents>
+@using Card.Utility
+@using Card.CMS.Helper
+@if (Model != null)
+{
+
+    <li>
+        <div class="hotcontent" style="margin-top:-10px;display:none">
+            <marquee direction="left" width="680px" scrolldelay="250" onMouseOver="this.stop()" onMouseOut="this.start()">
+
+                @foreach (var item in Model.Select((value, i) => new { i, value }))
+                {
+                    <span class="itemhot" onclick="DetailNews(@item.value.Id)">@item.value.Title </span>
+                }
+
+            </marquee>
+        </div>
+    </li>
+
+    <style>
+        @@media (max-width: 768px) {
+
+            .content-wrapper, .main-footer {
+                margin-left: 0;
+                padding-top: 60px;
+            }
+        }
+        .itemhot
+        {
+            cursor:pointer;
+        }
+    </style>
+    <script>
+        function DetailNews(id) {
+            var url = "/AdminContent/Detail/?Id=" + id;
+            var confirmFunc = null;
+            Utils.PopupManager(url, confirmFunc);
+        }
+    </script>
+
+}

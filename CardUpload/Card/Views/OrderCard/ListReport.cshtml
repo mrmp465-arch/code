@@ -1,0 +1,57 @@
+﻿@using Card.CMS.Models
+@using Card.CMS.Helper
+@using Card.Utility
+@{
+    List<String> lstTelco = ViewBag.lstTelco;
+    List<int> listCardAmount = ViewBag.listCardAmount;
+}
+@model List<Card.Data.DTO.CardOrderReport2>
+
+<div class="table-responsive">
+    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+        @if (Model != null && Model.Count > 0)
+        {
+
+        <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+            <thead>
+                <tr class="rowsao">
+                    <th rowspan="2">Nhà mạng</th>
+                    <th style="text-align: center;" colspan="@(listCardAmount.Count())">Mệnh giá (Số thẻ khả dụng/tổng số)</th>
+                    
+                </tr>
+                <tr>
+                    @foreach (var amount in listCardAmount)
+                    {
+                    <th>@StringUtils.InsertCommaNoStyle(amount.ToString())</th>
+                    }
+
+                </tr>
+
+            </thead>
+            @foreach (var t in lstTelco)
+            {
+                <tr>
+                    <td><b>@t</b></td>
+                    @foreach (var amount in listCardAmount)
+                    {
+                        if (Model.Exists(x => x.Telco == t && x.Amount == amount))
+                        {
+                <td>@Model.FirstOrDefault(x => x.Telco == t && x.Amount == amount).TotalQueue/@Model.FirstOrDefault(x => x.Telco == t && x.Amount == amount).TotalTrans</td>
+                        }
+                        else
+                        {
+                            <td>0/0</td>
+                        }
+                    }
+
+                   
+                </tr>
+            }
+
+        </table>
+        }
+    </div>
+</div>
+
+
+

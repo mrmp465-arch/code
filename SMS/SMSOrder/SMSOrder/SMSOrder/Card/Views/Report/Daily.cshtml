@@ -1,0 +1,146 @@
+﻿@using SMS.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <span class="glyphicon glyphicon-user"></span>
+                @ViewBag.Title
+            </div>
+            <div class="box-body">
+                <div class="row" id="form">
+                    <div>
+
+                        <div class="form-group col-md-2 col-xs-12 col-sm-6" @if (ListUser.Count == 1) { @Html.Raw("style='display:none'") ; }>
+
+
+                            <select class="form-control dlUser" id="ddlUser">
+                                @if (ListUser != null && ListUser.Count > 0)
+                                {
+                                    foreach (var obj in ListUser)
+                                    {
+                                        <option value="@obj.UserID">@obj.Username</option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+
+                       
+                      
+
+                        <div class="form-group col-md-3 col-xs-12 col-sm-6" id="datetimepicker_FromDate">
+                            <label class="control-label text-info" style="min-width:60px;"><i class="fa fa-calendar"></i>Từ Ngày</label>
+                            <div class="col-xs-8 col-md-8 col-sm-8 col-xs-12">
+                                <div class="date" id="datetimeFromDate">
+                                    <input type="text" data-date-format="DD/MM/YYYY" id="fromDate" class="form-control" name="datetimeFromDate" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-xs-12 col-sm-6" id="datetimepicker_ToDate">
+                            <label class="control-label text-info" style="min-width:60px;"><i class="fa fa-calendar"></i>Đến Ngày</label>
+                            <div class="col-xs-8 col-md-8 col-sm-8 col-xs-12">
+                                <div class="date" id="datetimeToDate">
+                                    <input type="text" data-date-format="DD/MM/YYYY" id="toDate" class="form-control" name="datetimeToDate" />
+
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="form-group col-md-3 col-xs-12 col-sm-6">
+
+                            <button type="button" id="btnSearch" class="btn btn-primary">Tìm Kiếm</button>
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                            <div id="ListReport">
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datetimeFromDate').datetimepicker({
+            pickTime: false,
+            autoclose: true
+        });
+        $('#datetimeToDate').datetimepicker({
+            pickTime: false,
+            autoclose: true
+        });
+        var fromdate = '@string.Format("{0:dd/MM/yyyy}", ViewBag.fromDate)';
+        var todate = '@string.Format("{0:dd/MM/yyyy}", ViewBag.toDate)';
+        $('#datetimeFromDate').data("DateTimePicker").setDate(fromdate);
+        $('#datetimeToDate').data("DateTimePicker").setDate(todate);
+
+        $("#datetimeFromDate").on("dp.change dp.show", function (e) {
+            $('#datetimeToDate').data("DateTimePicker").setMinDate(e.date);
+        });
+        $("#datetimeToDate").on("dp.change dp.show", function (e) {
+            $('#datetimeFromDate').data("DateTimePicker").setMaxDate(e.date);
+        });
+
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#ddlUser").change(function () {
+            GetList(1);
+        });
+       
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+
+        function GetList(currentPage) {
+            parameters = {
+
+                userId: $("#ddlUser").val(),
+                'FromDate': $("#fromDate").val(),
+                'ToDate': $("#toDate").val(),
+               
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/Report/ListReportDaily";
+            Utils.Loading();
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    Utils.UnLoading();
+                    $("#ListReport").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+        GetList(1);
+
+    });
+</script>

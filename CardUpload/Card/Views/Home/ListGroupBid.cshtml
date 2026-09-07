@@ -1,0 +1,151 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model List<OrderGroupBid>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="table-responsive">
+            <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                @if (Model != null && Model.Count > 0)
+                {
+
+                    if (ViewBag.UserType <= 2)
+                    {
+                        <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                            <thead>
+                                <tr class="rowsao">
+                                    <th>Chiết khấu đua</th>
+                                    <th>Số tiền</th>
+                                    @if (ViewBag.UserType == 1)
+                                    {
+                                        <th>
+                                            Phần trăm
+                                        </th>
+                                    }
+                                    <th>Xem chi tiết</th>
+                                </tr>
+                            </thead>
+                            @if (Model.Count > 0)
+                            {
+                                foreach (var obj in Model)
+                                {
+                                    if (obj.BidRate > 0)
+                                    {
+
+
+                                        <tr>
+                                            <td><a href="javascript:;" onclick="SetCK(@string.Format("{0:F0}", obj.BidRate))">@string.Format("{0:F0}", obj.BidRate)</a>  </td>
+
+                                            <td style="padding:8px 2px">@StringUtils.InsertCommaNoStyle((obj.TotalAmount - obj.TotalAmountSuccess).ToString())</td>
+                                            @if (ViewBag.UserType == 1)
+                                            {
+                                                <td style="padding:8px 2px">
+                                                    @string.Format("{0:N2}", (decimal)(obj.TotalAmount - obj.TotalAmountSuccess) / (long)ViewBag.Total) %
+
+                                                </td>
+                                            }
+                                            <td><a href="javascript:;" onclick="SetCK(@string.Format("{0:F0}", obj.BidRate))">Xem chi tiết</a>  </td>
+                                        </tr>
+                                    }
+                                }
+
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                            <thead>
+                                <tr class="rowsao">
+                                    <th>Chiết khấu đua</th>
+                                    <th>Số tiền</th>
+
+                                    <th>Xem chi tiết</th>
+                                </tr>
+                            </thead>
+                            @if (Model.Count > 0)
+                            {
+                                foreach (var obj in Model)
+                                {
+                                    if (obj.BidRate > 0)
+                                    {
+
+
+                        <tr>
+                            <td><a href="javascript:;" onclick="SetCK(@string.Format("{0:F0}", obj.BidRate))">@string.Format("{0:F0}", obj.BidRate)</a></td>
+
+                            <td style="padding:8px 2px">@StringUtils.InsertCommaNoStyle((obj.TotalAmount - obj.TotalAmountSuccess).ToString())</td>
+                            <td><a href="javascript:;" onclick="SetCK(@string.Format("{0:F0}", obj.BidRate))">Xem chi tiết</a>  </td>
+
+                        </tr>
+                                    }
+                                }
+
+                            }
+                        </table>
+                    }
+                }
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="table-responsive">
+            <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+
+                
+                    <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                        <thead>
+                            <tr class="rowsao">
+                                <th>Loại thẻ</th>
+                                <th>Số giao dịch giờ trước</th>
+
+
+                            </tr>
+
+                        </thead>
+                        <tr>
+                            <td>Viettel</td>
+                            <td>@ViewBag.CountVTT</td>
+                        </tr>
+                        <tr>
+                            <td>Vina</td>
+                            <td>@ViewBag.CountVNP</td>
+                        </tr>
+                        <tr>
+                            <td>Mobi</td>
+                            <td>@ViewBag.CountVMS</td>
+                        </tr>
+                        @*<tr>
+                                <td>Zing</td>
+                                <td>@ViewBag.CountZing</td>
+                            </tr>
+                            <tr>
+                                <td>Garena</td>
+                                <td>@ViewBag.CountGarena</td>
+                            </tr>*@
+                    </table>
+                
+            </div>
+        </div>
+        <div>
+            @if (String.IsNullOrEmpty(ViewBag.Warning))
+            {
+                <p class="text_nd_gt chuviettay">
+                    @ViewBag.Warning
+                </p>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .chuviettay {
+        font-family: 'Chuviettay';
+        font-size: 21px;
+        text-align: left;
+        font-weight: bold;
+    }
+</style>

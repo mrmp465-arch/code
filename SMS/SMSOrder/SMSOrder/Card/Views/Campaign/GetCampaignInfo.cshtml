@@ -1,0 +1,422 @@
+﻿@using SMS.Data.DTO
+@model Campaigns
+@{
+    List<Groups> ListGroup = ViewBag.GroupList;
+    List<SMSDictionary> LstDictionary = ViewBag.Dictionary;
+}
+<link href="~/bower_components/bootstrap/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+<script src="~/bower_components/bootstrap/dist/js/bootstrap-select.min.js"></script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                @if (Model.Id > 0)
+                {
+                    <i class="fa fa-fw fa-user-md"></i><span>Cập Nhật Campaign</span>
+                }
+                else
+                {
+                    <i class="fa fa-fw fa-user-plus"></i><span>Thêm mới Campaign</span>
+                }
+            </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="panel-group" id="steps">
+                    <div class="messager-body">
+                        <div class="alert alert-success display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <label>Đã lưu dữ liệu thành công !!!</label>
+                        </div>
+                        <div class="alert alert-danger display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                        </div>
+                    </div>
+                    <div class="panel">
+
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label for="txtUserName" class="control-label col-md-4">Tên :<span class="required">*</span></label>
+                                <div class="col-md-6">
+                                    <div class="input-icon right">
+                                        <input type="text" id="txtTitle" maxlength="150" name="title" value="@Model.Name" class="form-control" placeholder="Nhập tên" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtUserName" class="control-label col-md-4">Chọn nhóm khách hàng :<span class="required">*</span></label>
+                                <div class="col-md-6">
+                                    <div class="input-icon right">
+                                        <select name="group" multiple class="selectpicker form-control" required id="drlGroup" data-container="body" data-live-search="true" title="Chọn nhóm" data-hihde-disabled="true" data-actions-box="true" data-virtual-scroll="false">
+
+                                            @if (ListGroup != null && ListGroup.Count > 0)
+                                            {
+                                                foreach (var obj in ListGroup)
+                                                {
+                                                    <option value="@obj.GroupID" @if (Model.Group.Contains(obj.GroupID + ",")) { @Html.Raw("selected='selected'") ; }>@obj.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="txtDescription" class="control-label col-md-4">Nội dung :<span class="required">*</span></label>
+                                <div class="col-md-6">
+
+                                    <a class="pull-right ng-binding" style="padding-left:20px;" onclick="Preview()" href="javascript:;"><i class="fa fa-eye" aria-hidden="true"></i> Xem trước</a>&nbsp;&nbsp;
+
+                                    <a href="javascript:;" class="pull-right ng-binding" onclick="PopupManagerContent('txtDescription');">Chọn từ thư viện mẫu</a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4"></label>
+
+                                <div class="col-md-6">
+                                    <div class="pull-right">
+
+                                        <div class="btn-group">
+                                            <a class="btn btn-default btn-sm" onclick="addPhoneNumber()" href="javascript:;"><i class="fa fa-mobile"></i> Thêm sdt</a>
+                                            <a class="btn btn-default btn-sm" onclick="addName()" href="javascript:;"><i class="ion ion-ios-person-outline"></i>Thêm tên</a>
+                                            @*<a class="btn btn-default btn-sm" onclick="addEmail()" href="javascript:;"><i class="ion ion-email"></i> Thêm email</a>*@
+                                            @*<a class="btn btn-default btn-sm" onclick="addBirthday()" href="javascript:;"><i class="ion ion-calendar"></i> Thêm ngày sinh</a>*@
+                                            <a class="btn btn-default btn-sm" onclick="addOther()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn</a>
+                                            <a class="btn btn-default btn-sm" onclick="addOther2()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 2</a>
+                                            <a class="btn btn-default btn-sm" onclick="addOther3()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 3</a>
+                                            <div class="dropdown">
+                                                <a class="btn btn-default btn-sm dropbtn" href="javascript:;" data-toggle="dropdown" data-hover="dropdown"><i class="ion ion-plus"></i> Thêm từ điển</a>
+                                                <div class="dropdown-content">
+                                                    @foreach (var item in LstDictionary)
+                                                    {
+                                                     <a href="javascript:;" onclick="addDic('@item.Value')">
+                                                         <i class="fa fa-text-width" aria-hidden="true"></i>   @item.Key
+                                                        </a>
+                                                    }
+                                                    
+                                                </div>
+                                            </div>
+                                           
+                                            
+                                            @*<a class="btn btn-default btn-sm" onclick="addOther4()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 4</a>
+                                             <a class="btn btn-default btn-sm" onclick="addOther5()" href="javascript:;"><i class="ion ion-plus"></i> Tùy chọn 5</a>*@
+                                            @*<input class="txtdic" id="txtDictionary" placeholder="tùy biến"/>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <label class="control-label col-md-4"></label>
+                                <div class="col-md-6">
+                                    <div class="input-icon right">
+                                        <textarea id="txtDescription" style="height: 100px;" cols="20" name="description" onkeyup="countChar()" class="form-control">@Model.Contents</textarea>
+
+
+
+                                        <p id="numberchac" style="font-size:90%;float:right;font-style:italic">
+
+                                        </p>
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="txtStartTime" class="control-label col-md-4">Thời gian gửi :<span class="required">*</span></label>
+                                    <div class="col-md-6">
+                                        <div class="input-icon right">
+                                            <input type="text" id="txtStartTime" data-format="DD/MM/YYYY HH:mm" value="@Model.StartTime.ToString("dd/MM/yyyy HH:mm")" name="publictime" class="form-control" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    
+                                </div>
+                                <div class="panel-footer form-horizontal">
+                                    <div class="form-group submit">
+                                        <button type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i> Lưu lại</button>
+
+                                        <button type="button" class="btn btn-default" id="btnBack" onclick="GotoListpage();"><i class="fa fa-backward"></i> Back</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function PopupManagerContent(imageChoose) {
+        $.ajax({
+            type: 'GET',
+            url: "/AdminContent/PopupManagerContent",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Lưu Lại",
+                            className: "btn-success",
+                            callback: function () {
+                                var content = $('#hdContent').val();
+                                if (content !== null && content !== '') {
+                                    $("#" + imageChoose).val(content);
+
+                                    countChar();
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    };
+    function countChar() {
+        var len = $("#txtDescription").val().length;
+        $('#numberchac').text("");
+        if (len > 0) {
+            var countSMS = ~~(len / 159) + 1;
+            $('#numberchac').text(len + " ký tự/" + countSMS + " SMS");
+        }
+
+    };
+    countChar();
+</script>
+<script type="text/javascript">
+
+    function addPhoneNumber() {
+        insertAtCaret('txtDescription', '[Number]');
+    }
+    function addName() {
+        insertAtCaret('txtDescription', '[Name]');
+    }
+    function addEmail() {
+        insertAtCaret('txtDescription', '[Email]');
+    }
+    function addBirthday() {
+        insertAtCaret('txtDescription', '[Birthday]');
+    }
+    function addOther() {
+        insertAtCaret('txtDescription', '[Option1]');
+    }
+    function addOther2() {
+        insertAtCaret('txtDescription', '[Option2]');
+    }
+    function addOther3() {
+        insertAtCaret('txtDescription', '[Option3]');
+    }
+    function addOther4() {
+        insertAtCaret('txtDescription', '[Option4]');
+    }
+    function addOther5() {
+        insertAtCaret('txtDescription', '[Option5]');
+    }
+
+    function addDic(text) {
+        insertAtCaret('txtDescription', '{'+text+'}');
+    }
+    function insertAtCaret(areaId, text) {
+        var txtarea = document.getElementById(areaId);
+        if (!txtarea) {
+            return;
+        }
+
+        var scrollPos = txtarea.scrollTop;
+        var strPos = 0;
+        var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ?
+            "ff" : (document.selection ? "ie" : false));
+        if (br == "ie") {
+            txtarea.focus();
+            var range = document.selection.createRange();
+            range.moveStart('character', -txtarea.value.length);
+            strPos = range.text.length;
+        } else if (br == "ff") {
+            strPos = txtarea.selectionStart;
+        }
+
+        var front = (txtarea.value).substring(0, strPos);
+        var back = (txtarea.value).substring(strPos, txtarea.value.length);
+        txtarea.value = front + text + back;
+        strPos = strPos + text.length;
+        if (br == "ie") {
+            txtarea.focus();
+            var ieRange = document.selection.createRange();
+            ieRange.moveStart('character', -txtarea.value.length);
+            ieRange.moveStart('character', strPos);
+            ieRange.moveEnd('character', 0);
+            ieRange.select();
+        } else if (br == "ff") {
+            txtarea.selectionStart = strPos;
+            txtarea.selectionEnd = strPos;
+            txtarea.focus();
+        }
+
+        txtarea.scrollTop = scrollPos;
+        countChar();
+    }
+    function GotoListpage() {
+        window.location = "@Url.Action("Index")";
+    }
+    Date.prototype.addHours = function (h) {
+        this.setHours(this.getHours() + h);
+        return this;
+    }
+    function Preview()
+    {
+        var group = $("#drlGroup").val().toString();
+        if (group.length <= 0) {
+            alert('Chưa chọn nhóm');
+            
+            return;
+        }
+        var content = $("#txtDescription").val()
+        if (content.length <= 2) {
+            alert('Chưa nhập nội dung');
+            return;
+        }
+        var param = {
+
+            'group': group,
+            'content': content,
+
+        };
+        Utils.Loading();
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("Preview")",
+            data: addAntiForgeryToken(param),
+            async: true,
+            success: function (data) {
+                Utils.UnLoading();
+                if (data.ResponseCode >= 0) {
+                    bootbox.alert(data.Description);
+                    return;
+
+                }
+
+            }
+        });
+    }
+    $(document).ready(function () {
+        $('#txtStartTime').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm',
+                autoclose: true,
+            minDate: new Date().addHours(-2),
+                inline: true,
+                sideBySide: true,
+                showTodayButton: true
+            });
+
+            $("button.close").click(function () {
+                $(this).parent().css("display", "none");
+            });
+            $('#defaultForm').bootstrapValidator({
+                message: 'This value is not valid',
+                //live: 'submitted',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+
+                    title: {
+                        message: 'The name is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'tên không được bỏ trống'
+                            },
+
+                            stringLength: {
+                                min: 3,
+                                max: 30,
+                                message: 'tên  nhỏ nhất 3 ký tự và nhiều nhất 150 ký tự'
+                            },
+
+                        }
+                    },
+                    group: {
+                        message: 'The name is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'nhóm không được trống'
+                            },
+
+                        }
+                    },
+                   
+                }
+            })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+            $("#btnReset").click(function () {
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+                $(".alert-danger").css("display", "none");
+                $(".alert-success").css("display", "none");
+            });
+            //Save Data
+        function SaveData() {
+
+
+                var param = {
+                    'Id': '@Model.Id',
+                    'Name': $("#txtTitle").val(),
+                    'Contents': $("#txtDescription").val(),
+                    'StartTime': $("#txtStartTime").val(),
+                    'Group': $("#drlGroup").val().toString(),
+
+                }
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SaveData")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+                            setTimeout(function () { $(".alert-success").hide("slow"); GotoListpage(); }, 2000);
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+            };
+        });
+
+        @*var activemenu = $('.sidebar-menu #menu_@(permission.FunctionID)');
+        activemenu.addClass("active");*@
+
+</script>

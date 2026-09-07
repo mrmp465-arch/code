@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title -  Card</title>
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/Content/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/Content/css/skins/_all-skins.min.css">
+    @*<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/less/buttons.lesss">*@
+
+    <!-- Date Picker -->
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link href="~/Content/css/plugins/datetimepicker/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/validation/bootstrapValidator.css" rel="stylesheet" />
+    @*<link href=" https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />*@
+
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+    <link href="~/Content/css/extend.css?vs=21" rel="stylesheet" />
+    <link rel="shortcut icon" href="~/Content/img/logo.png" />
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- jQuery 3 -->
+    <script src="/bower_components/jquery//dist/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>$.widget.bridge('uibutton', $.ui.button);</script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="/bower_components/bootstrap//dist/js/bootstrap.min.js"></script>
+
+    <!-- daterangepicker -->
+
+    <script src="~/Content/js/plugins/datetimepicker/moment.js"></script>
+    <script src="~/Content/js/plugins/datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script src="~/Content/js/plugins/validation/bootstrapValidator.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/Content/js/adminlte.min.js"></script>
+    <script src="~/Content/js/bootbox.min.js"></script>
+    <script src="~/Content/js/jquery.pager.js"></script>
+    <script src="~/Content/js/utils.js?vs=01"></script>
+
+    <script src="~/Content/sweetalert.min.js"></script>
+    <script src="~/Content/js/jquery.table2excel.js?vs=02"></script>
+    <script src="~/Scripts/formvalidate.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <style>
+
+        .select2-container .select2-selection--single {
+            height: 34px;
+            border-radius: 0px;
+        }
+    </style>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <div class="wrapper">
+        <div id="Header">
+            @{ Html.RenderAction("Header", "Home");}
+        </div>
+
+
+        @{ Html.RenderAction("Menu", "Home");}
+        <div class="content-wrapper">
+            <section class="content">
+                @Html.AntiForgeryToken()
+                @RenderBody()
+            </section>
+        </div>
+    </div>
+    <footer class="main-footer" style="position:sticky;bottom:0px;z-index:999;">
+       
+    </footer>
+    <div id="TB_overlay" class="TB_overlayBG fullscreenFF" style="z-index: 99;">
+        &nbsp;
+
+    </div>
+    @if (ViewBag.FunctionCode != null)
+    {
+        <script>
+        var activemenu = $('.sidebar-menu #menu_@(ViewBag.FunctionCode)');
+        activemenu.addClass("active");
+        activemenu.parent().parent().addClass("active");
+        </script>
+    }
+    <script type="text/javascript">
+
+        var refreshPageInterval = 600;
+
+        setInterval("countDownPageRefresh()", 10000);
+        $(document).mouseover(function () {
+            funcResetRefreshPageInterval();
+        });
+        $(window).scroll(function () {
+            funcResetRefreshPageInterval();
+        });
+        window.onkeypress = funcResetRefreshPageInterval;
+        function funcResetRefreshPageInterval() {
+            refreshPageInterval = 600;
+        }
+        function countDownPageRefresh() {
+            refreshPageInterval = refreshPageInterval - 10;
+
+            if (refreshPageInterval <= 0) {
+                document.location.reload(true);
+            }
+        }
+        function TopBid() {
+            var url = "/Home/TopBid";
+            var confirmFunc = "";
+            Utils.PopupManager(url, confirmFunc);
+        }
+    </script>
+    <script>
+        function GetBalance() {
+
+              $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Header","Home")',
+
+                    async: true,
+                    success: function (data) {
+                        $("#Header").html(data);
+                    }
+                });
+
+
+        }
+        $(document).ready(function () {
+            $('.dlUser').select2({
+
+                });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,344 @@
+﻿
+@using SMS.Data.DTO
+@model List<Campaigns>
+@using SMS.Utility
+@using SMS.CMS.Helper
+@{ var idx = 0; }
+@functions{
+
+    public string GetCamStatus2(int type)
+    {
+        string result = "";
+        switch (type)
+        {
+            case 0:
+                result = "Khởi tạo";
+                break;
+            case 1:
+                result = "Đang xử lý";
+                break;
+            case 2:
+                result = "Đang xử lý";
+                break;
+            case 3:
+                result = "Hoàn thành";
+                break;
+            case 4:
+                result = "Khóa";
+                break;
+            case 5:
+                result = "Đang xử lý";
+                break;
+        }
+        return result;
+    }
+}
+
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+
+            <th style="text-align:left;">Id</th>
+            <th style="text-align:left;">Tên</th>
+
+
+            <th>Thời gian bắt đầu</th>
+            <th>Tổng số lượt gửi (thành công/lỗi)</th>
+            <th>Tổng số tin nhắn</th>
+            <th>Số tiền dự kiến</th>
+            <th>Trạng Thái</th>
+            <th>Chốt</th>
+            <th>Tác vụ</th>
+            <td>Danh sách sms</td>
+
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+
+        foreach (var obj in Model)
+        {
+            //{ idx++; }
+            <tr>
+
+                @*<td style="text-align:left;">@(idx + (ViewBag.CurrentPage - 1) * ViewBag.PageSize )</td>*@
+                <td>@obj.Id</td>
+                <td style="text-align:left;">
+
+                    @if (obj.Status == 0)
+                    {
+                        <a href="@Url.Action("GetCampaignInfo", new { id = obj.Id })">@obj.Name</a>
+                    }
+                    else
+                    {
+                        @obj.Name
+                    }
+
+
+                </td>
+
+                <td>@string.Format("{0:dd/MM/yyyy HH:mm}", obj.StartTime)</td>
+                <td>@obj.Total (@obj.TotalSucces/@obj.TotalFail) </td>
+                <td>@obj.TotalSMS</td>
+                <td>@StringUtils.InsertCommaNoStyle(obj.TotalMoney.ToString())</td>
+                <td>@HtmlHelpers.GetCamStatus(obj.Status)</td>
+
+                <td>@(obj.Confirm == 0 ? " Chưa chốt" : " Đã chốt")</td>
+
+                <td style="text-align:left">
+
+
+                    @if (obj.Status == 0)
+                    {
+
+                        <a href="javascript:;" title="Gửi" onclick="SendData('@(Encrypt.Base64Encode(obj.Id))')"> Chốt gửi</a><text>&nbsp;</text>
+                    }
+                    @if (obj.Status == 1)
+                    {
+                        <a href="javascript:;" title="Khóa" onclick="LockData('@(Encrypt.Base64Encode(obj.Id))')">Khóa</a><text>&nbsp;</text>
+                    }
+                    @if (obj.Status == 4 && obj.Confirm == 0)
+                    {
+                        <a href="javascript:;" title="Mở Khóa" onclick="UnLockData('@(Encrypt.Base64Encode(obj.Id))')">Mở Khóa</a><text>&nbsp;</text>
+                    }
+                    @if (obj.Status != 0 && obj.Confirm == 0)
+                    {
+                        <a href="javascript:;" title="Chốt" onclick="ConfirmData('@(Encrypt.Base64Encode(obj.Id))')"> Chốt</a><text>&nbsp;</text>
+                    }
+                    @if (obj.Type == 1)
+                    {
+                        <a href="javascript:;" title="Copy" onclick="CopyData('@(Encrypt.Base64Encode(obj.Id))')">Copy</a><text>&nbsp;</text>
+                    }
+
+
+                    @if (obj.Status == 0)
+                    {
+                        <a href="javascript:;" title="Delete" onclick="DeleteData('@(Encrypt.Base64Encode(obj.Id))')"> Xóa</a><text>&nbsp;</text>
+                    }
+                </td>
+                <td>
+
+                    <a href="javascript:" onclick="SMSLOG('@(Encrypt.Base64Encode(obj.Id))')" title="Danh sách tin nhắn">
+                        Danh sách SMS
+                    </a>
+                </td>
+            </tr>
+        }
+    }
+</table>
+<style>
+    .btn-sm {
+        width: 73px;
+        padding: 3px 5px;
+    }
+
+    td {
+        vertical-align: central;
+    }
+</style>
+<script type="text/javascript">
+        var PageOnSize = '@ViewBag.PageSize';
+    var CurrentPage = '@ViewBag.CurrentPage';
+     $(document).ready(function () {
+
+        $("#pager").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest(page); }
+        });
+
+
+    });
+
+</script>
+<script type="text/javascript">
+    function toggle(source) {
+        checkboxes = document.getElementsByName('chk_item');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+    function BindDataRequest(currentPage) {
+        var params = {
+            isActive: $('#ddlActive :selected').val(),
+            email: $("#txtEmail").val(),
+
+            currentPage: currentPage,
+            pageSize: PageOnSize
+        };
+        var urlRequestAns = "/Campaign/ListCampaign";
+        Utils.Loading();
+        $.ajax({
+            type: 'GET',
+            url: urlRequestAns,
+            data: params,
+            success: function (data) {
+                $("#ListCampaign").html(data);
+                Utils.UnLoading();
+            },
+            error: function () {
+                Utils.UnLoading();
+            }
+        });
+    }
+    function DeleteData(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn xóa Campaign này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Campaign/Delete",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function CopyData(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn copy Campaign này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Campaign/Copy",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            window.location.href = "/Campaign/GetCampaignInfo/" + data.ResponseCode;
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function LockData(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn khóa Campaign này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Campaign/Lock",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            //bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function UnLockData(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn mở khóa Campaign này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Campaign/UnLock",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            //bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function ConfirmData(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn chốt Campaign này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Campaign/Confirm",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            //bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function SendData(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn gửi tin nhắn??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Campaign/Send",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            //bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function SMSLOG(id) {
+        var url = "/Campaign/SMSLog/" + id;
+        //var confirmFunc = BindDataRequest(1);
+        Utils.PopupManager2(url, "Danh sách tin nhắn");
+    }
+
+
+
+
+
+
+</script>
+

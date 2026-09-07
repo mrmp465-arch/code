@@ -1,0 +1,340 @@
+﻿@using CMS.Data.DTO
+@model Users
+@{
+    List<Groups> ListGroup = ViewBag.GroupList;
+    Users CurrentUser = ViewBag.CurrentUser;
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Subheader-->
+    <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
+        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+            <!--begin::Info-->
+            <div class="d-flex align-items-center flex-wrap mr-1">
+                <!--begin::Page Heading-->
+                <div class="d-flex align-items-baseline flex-wrap mr-5">
+                    <!--begin::Page Title-->
+                    <!--end::Page Title-->
+                    <!--begin::Breadcrumb-->
+                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
+                        <li class="breadcrumb-item text-muted">
+                            <a href="#" class="text-muted">Quản trị hệ thống</a>
+                        </li>
+
+                        <li class="breadcrumb-item text-muted">
+                            <a href="#" class="text-muted">@ViewBag.Title</a>
+                        </li>
+                    </ul>
+                    <!--end::Breadcrumb-->
+                </div>
+                <!--end::Page Heading-->
+            </div>
+            <!--end::Info-->
+
+        </div>
+    </div>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!--begin::Card-->
+                    <div class="card card-custom gutter-b example example-compact">
+
+                        <!--begin::Form-->
+                        <form id="defaultForm" method="post" class="form-horizontal">
+                            <div class="messager-body">
+                                <div class="alert alert-success display-hide alert-dismissable">
+                                    <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    <label>Đã lưu dữ liệu thành công !!!</label>
+                                </div>
+                                <div class="alert alert-danger display-hide alert-dismissable">
+                                    <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                                    <span class="glyphicon glyphicon-warning-sign"></span>
+                                    <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="txtUserName" class="control-label">UserName :<span class="text-danger">*</span></label>
+
+                                    @if (Model.UserID > 0)
+                                    {
+                                        <input type="text" id="txtUserName" readonly="readonly" disabled="disabled" maxlength="30" name="username" value="@Model.Username" class="form-control" placeholder="Nhập tên Tài Khoản" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" id="txtUserName" maxlength="30" name="username" value="@Model.Username" class="form-control" placeholder="Nhập tên Tài Khoản" autocomplete="new-password" />
+                                    }
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="txtFullName" class="control-label">FullName :<span class="text-danger">*</span></label>
+
+                                    <input type="text" id="txtFullName" name="fullname" maxlength="50" value="@Model.FullName" class="form-control" placeholder="Nhập họ tên" />
+
+                                </div>
+                                <div class="form-group" style="display:none">
+                                    <label for="txtEmail" class="control-label">Email :<span class="text-danger">*</span></label>
+
+                                    <input type="text" id="txtEmail" name="Email" maxlength="150" value="@Model.Email" class="form-control" placeholder="Nhập địa chỉ Email" data-rule-required="true" />
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="txtpassword" class="control-label">Password :<span class="text-danger">*</span></label>
+
+                                    <input type="password" id="txtpassword" name="Password" maxlength="50" value="@Model.Password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="new-password" />
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="txtConfirmPass" class="control-label">ConfirmPassword :<span class="text-danger">*</span></label>
+
+                                    <input type="password" id="txtConfirmPass" name="ConfirmPassword" value="@Model.Password" maxlength="50" class="form-control" placeholder="Nhập lại mật khẩu" />
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="ddlGroup">
+                                        Nhóm
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-control" id="ddlGroup">
+                                        @if (ListGroup != null && ListGroup.Count > 0)
+                                        {
+                                            foreach (var obj in ListGroup.Skip(1))
+                                            {
+                                                <option value="@obj.GroupID" @if (obj.GroupID == Model.Group) { @Html.Raw("selected='selected'") ; }>@obj.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="cbxType">Trạng thái :</label>
+                                    <input type="checkbox" id="cbxIsActive" class="cbxIsDisplay" @(Model.Status ? "checked=\"checked\"" : "") />
+
+                                </div>
+
+
+
+
+
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary" id="btnSave">Lưu lại</button>
+                                <button type="button" class="btn btn-secondary" id="btnBack" onclick="GotoListpage();">Quay lại</button>
+
+                            </div>
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Card-->
+
+                </div>
+
+            </div>
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+
+
+
+<script type="text/javascript">
+    function GotoListpage() {
+        window.location = "@Url.Action("ManagerUser")";
+    }
+        $(document).ready(function () {
+            $("button.close").click(function () {
+                $(this).parent().css("display", "none");
+            });
+            $('#defaultForm').bootstrapValidator({
+                message: 'This value is not valid',
+                //live: 'submitted',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+
+                    username: {
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'Username không được bỏ trống'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9\.]+$/,
+                                message: 'Username gồm ký tự alphabeta hoặc số'
+                            },
+                            stringLength: {
+                                min: 3,
+                                max: 30,
+                                message: 'Tên nhỏ nhất 3 ký tự và nhiều nhất 30 ký tự'
+                            },
+                            different: {
+                                field: 'Password',
+                                message: 'Username và password phải khác nhau'
+                            }
+                        }
+                    },
+                    fullname: {
+                        message: 'Bạn chưa nhập họ tên.',
+                        validators: {
+                            notEmpty: {
+                                message: 'Bạn chưa nhập họ tên'
+                            },
+                            stringLength: {
+                                min: 3,
+                                max: 50,
+                                message: 'họ tên dài từ 3 đến 50 ký tự'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửựýỳỷỹỵÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỰÝỲỶỸỴ\.\-\_\s]+$/,
+                                message: 'Họ tên không được nhập các ký tự đặc biệt'
+                            },
+                        }
+                    },
+                    Email: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Email không được bỏ trống'
+                            },
+                            emailAddress: {
+                                message: 'Bạn đã nhập sai định dạng địa chỉ email'
+                            }
+                        }
+                    },
+                    Password: {
+                        validators: {
+                            notEmpty: {
+                                message: 'password là bắt buộc, không thể bỏ trống'
+                            },
+                            stringLength: {
+                                min: 6,
+                                max: 50,
+                                message: 'Password phải từ 6 đến 50 ký tự'
+                            },
+                            identical: {
+                                field: 'ConfirmPassword',
+                                message: 'Password và ConfirmPassword không trùng khớp'
+                            },
+                            different: {
+                                field: 'username',
+                                message: 'Password không thể trùng với Username'
+                            }
+                        }
+                    },
+                    ConfirmPassword: {
+                        validators: {
+                            notEmpty: {
+                                message: 'confirm password là bắt buộc, không thể bỏ trống'
+                            },
+                            identical: {
+                                field: 'Password',
+                                message: 'Password và ConfirmPassword không trùng khớp'
+                            },
+                            different: {
+                                field: 'username',
+                                message: 'Password không thể trùng với Username'
+                            }
+                        }
+                    }
+                }
+            })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+            $("#btnReset").click(function () {
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+                $(".alert-danger").css("display", "none");
+                $(".alert-success").css("display", "none");
+            });
+            //Save Data
+            function SaveData() {
+               var param = {
+                    'UserID': '@Model.UserID',
+                    'Username': $("#txtUserName").val(),
+                    'FullName': $("#txtFullName").val(),
+                    'Config': "test",
+                    'NumberUser': 0,
+                    'Email': $("#txtEmail").val(),
+                    'Password': $("#txtpassword").val(),
+                   'Password2': $("#txtpassword").val(),
+                    'Type': $("#ddlGroup").val(),
+                    'Group': $("#ddlGroup").val(),
+                    'PercentVNP': 0,
+                    'PercentVTT': 0,
+                    'PercentVNPQ': 0,
+                    'PercentVTTQ': 0,
+                    'PercentVMS': 0,
+                    'PercentZing': 0,
+                    'PercentGarena': 0,
+                    'PercentVTC': 0,
+                    'Piority': 0,
+                    'Status': $("#cbxIsActive").is(":checked") ? true : false,
+                    'StatusOrder':  false,
+                    'StatusVTT': false,
+                    'StatusVMS': false,
+                    'StatusVNP': false,
+                    'StatusGarena': false,
+                    'StatusZing': false,
+                    'StatusVTC': false,
+                    'PasswordAPI': 'admin',
+                    'UserAPI': 'admin',
+                    'MaxDay': 0,
+                }
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("SaveDataUser")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+                            setTimeout(function () { $(".alert-success").hide("slow"); GotoListpage(); }, 2000);
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+            };
+        });
+
+        @*var activemenu = $('.sidebar-menu #menu_@(permission.FunctionID)');
+        activemenu.addClass("active");*@
+
+</script>

@@ -1,0 +1,6 @@
+﻿@using Card.Utility
+@using Card.CMS.Helper
+
+    <div style="font-weight:bold">
+        Tổng số dư: @StringUtils.InsertCommaNoStyle((ViewBag.Total).ToString()) (@StringUtils.InsertCommaNoStyle(ViewBag.TotalHold.ToString()))
+    </div>

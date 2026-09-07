@@ -1,0 +1,88 @@
+﻿@*<script type="text/javascript">
+        $(function () {
+            SSO_SERVER.init({
+                'test': false,
+                'static_root': '/',
+                'language': 'vi',
+                'country': 'VN',
+                'mode': 'oauth_login',
+                'app_id': 10017,
+                'app_name': 'Payment Center',
+                'app_icon': 'https://cdngarenanow\u002Da.akamaihd.net/gop/app/0000/010/017/icon.png',
+                'login': false,
+                'session_cookie_name': 'sso_key',
+                'session_cookie_domain': 'garena.com',
+                'platform': 1,
+                'show_platforms': 0,
+                'line_client_id': '0',
+                'line_state': '',
+                'vk_client_id': 6615502,
+                'google_client_id': '0',
+                'huawei_app_id': '',
+                'fb_app_id': 701380926584428,
+                'fb_scope': 'public_profile,email,user_friends',
+                'gas_download': false,
+                '': ''
+            });
+
+        });
+</script>*@
+<script>
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        }
+</script>
+<div id="encryptedPassword"></div>
+<script>
+   
+    function getPassword(password, v1, v2)
+    {
+        //var password = getUrlParameter('password');
+        //console.log(password);
+
+     
+
+        //var v1 = getUrlParameter('v1');
+        //console.log(v1);
+
+        //var v2 = getUrlParameter('v2');
+        //console.log(v2);
+
+        var passwordMd5 = CryptoJS.MD5(password);
+        var passwordKey = CryptoJS.SHA256(CryptoJS.SHA256(passwordMd5 + v1) + v2);
+        var encryptedPassword = CryptoJS.AES.encrypt(passwordMd5, passwordKey, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.NoPadding });
+        encryptedPassword = CryptoJS.enc.Base64.parse(encryptedPassword.toString()).toString(CryptoJS.enc.Hex);
+
+        console.log(encryptedPassword);
+        $("#encryptedPassword").html(encryptedPassword);
+        //document.body=encryptedPassword
+        document.title = encryptedPassword;
+    }
+
+
+    function PasswordInit() {
+        var password = getUrlParameter('password');
+        var v1 = getUrlParameter('v1');
+        var v2 = getUrlParameter('v2');
+
+        getPassword(password, v1, v2);
+    }
+    $(document).ready(function () {
+        PasswordInit();
+        setTimeout(function () { window.close(); }, 5000);
+        //setTimeout(function () { open(location, '_self').close(); }, 5000);
+        
+    });
+</script>
+

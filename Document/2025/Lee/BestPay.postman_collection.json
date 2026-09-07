@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "079f0bd4-d5ec-41fd-9dbf-4ea1667d5768",
+		"name": "BestPay",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "849035"
+	},
+	"item": [
+		{
+			"name": "Bank- GetListBank",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"partnerCode\":\"xxx\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/bankin/info.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"bankin",
+						"info.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bank-Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"PartnerCode\":\"xxxx\",\"Amount\":10000,\"RefCode\":\"1223\",\"CallbackUrl\":\"xxx\",\"BankCode\":\"ACB\",\"Signature\":\"c5d228fe61f622890463f6334b335c92\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/bankin/Order.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"bankin",
+						"Order.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Momo - Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\"PartnerCode\":\"xxxx\",\"Amount\":10000,\"RefCode\":\"1223\",\"CallbackUrl\":\"xxx\",\"BankCode\":\"ACB\",\"Signature\":\"c5d228fe61f622890463f6334b335c92\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/bankin/Order.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"bankin",
+						"Order.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Momo Cash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"AccountNumber\":\"12233\",\"AccountName\":\"Nguyen Van A\",\"BankCode\":\"MOMO\",\"CallbackUrl\":\"xxx\",\"RefCode\":\"123\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/bankout/cash.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"bankout",
+						"cash.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BankCash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxxx\",\"AccountNumber\":\"12233\",\"AccountName\":\"Nguyen Van A\",\"BankCode\":\"ACB\",\"CallbackUrl\":\"xxx\",\"RefCode\":\"123\",\"Signature\":\"2ff822936658f5f2deb8ae038144143a\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bankgate.gloworm.xyz/bankout/cash.ashx",
+					"protocol": "https",
+					"host": [
+						"bankgate",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"bankout",
+						"cash.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Card -UserCard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"partnerCode\":\"xxx\",\"CardSerial\":\"xxx\",\"CardCode\":\"xxxx\",\"CardType\":\"xxxx\",\"Amount\":50000,\"RefCode\":\"1708185637\",\"CallbackUrl\":\"xxx\",\"signature\":\"2d684522e32c28dacd6f1a5a8fffb4b2\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apicard.gloworm.xyz/usecard.ashx",
+					"protocol": "https",
+					"host": [
+						"apicard",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"usecard.ashx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Card-Buycard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"PartnerCode\":\"xxx\",\"CardType\":\"vnp\",\"Amount\":50000,\"signature\":\"2d684522e32c28dacd6f1a5a8fffb4b2\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apicard.gloworm.xyz/usecard.ashx",
+					"protocol": "https",
+					"host": [
+						"apicard",
+						"gloworm",
+						"xyz"
+					],
+					"path": [
+						"usecard.ashx"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

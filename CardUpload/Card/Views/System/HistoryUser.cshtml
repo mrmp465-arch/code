@@ -1,0 +1,150 @@
+﻿
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span>Lịch sử giao dịch : @ViewBag.UserName </div>
+            <div class="box-body">
+                <div class="row form2" id="form">
+
+
+                    <div class="form-group col-md-4 col-xs-12 col-sm-6" style="display:none">
+                        <label class="control-label">Loại giao dịch</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">
+                            <select class="form-control" id="ddlActionType">
+                                <option value="-1">Tất cả</option>
+                                <option value="1">Chuyển tiền tài khoản</option>
+                                <option value="2">Đơn</option>
+                                <option value="3">Hoa hồng</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 col-xs-12 col-sm-6">
+                        <label for="txtEmail" class="control-label"><i class="fa fa-pencil"></i>Từ Khóa</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" id="txtKeyword" class="form-control" placeholder="Nhập từ khóa">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6" id="datetimepicker_FromDate">
+                        <label class="control-label text-info" style="min-width:60px;"><i class="fa fa-calendar"></i>Từ Ngày</label>
+                        <div class="col-xs-8 col-md-8 col-sm-8 col-xs-12">
+                            <div class="date" id="datetimeFromDate">
+                                <input type="text" data-date-format="DD/MM/YYYY" id="fromDate" class="form-control" name="datetimeFromDate" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6" id="datetimepicker_ToDate">
+                        <label class="control-label text-info" style="min-width:60px;"><i class="fa fa-calendar"></i>Đến Ngày</label>
+                        <div class="col-xs-8 col-md-8 col-sm-8 col-xs-12">
+                            <div class="date" id="datetimeToDate">
+                                <input type="text" data-date-format="DD/MM/YYYY" id="toDate" class="form-control" name="datetimeToDate" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 col-xs-12 col-sm-6">
+                        <input type="button" id="btnSearch2" class="btn btn-warning" value="Tìm Kiếm">
+                        <button type="button" id="btn_export" class="btn btn-warning">Download</button>
+                    </div>
+
+
+
+                </div>
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="ListTransaction">
+                            @*@Html.Action("ListTransaction", "System", new { username = ViewBag.UserName })*@
+                        </div>
+
+                        <div class="dataTables_paginate" id="pager2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 70% !important;
+        height: 98% !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datetimeFromDate').datetimepicker({
+            pickTime: false,
+            autoclose: true
+        });
+        $('#datetimeToDate').datetimepicker({
+            pickTime: false,
+            autoclose: true
+        });
+        var fromdate = '@string.Format("{0:dd/MM/yyyy}", ViewBag.fromDate)';
+        var todate = '@string.Format("{0:dd/MM/yyyy}", ViewBag.toDate)';
+        $('#datetimeFromDate').data("DateTimePicker").setDate(fromdate);
+        $('#datetimeToDate').data("DateTimePicker").setDate(todate);
+
+        $("#datetimeFromDate").on("dp.change dp.show", function (e) {
+            $('#datetimeToDate').data("DateTimePicker").setMinDate(e.date);
+        });
+        $("#datetimeToDate").on("dp.change dp.show", function (e) {
+            $('#datetimeFromDate').data("DateTimePicker").setMaxDate(e.date);
+        });
+     $(".form2").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch2").click();
+            }
+        });
+        $("#btnSearch2").click(function () {
+            GetList(1);
+        });
+        $("#ddlActionType").change(function () {
+            GetList(1);
+        });
+        GetList(1);
+        function GetList(currentPage) {
+            parameters = {
+                ActionType: $('#ddlActionType').val(),
+                'FromDate': $("#fromDate").val(),
+                'ToDate': $("#toDate").val(),
+                username: '@ViewBag.UserName',
+                 'keyword': $("#txtKeyword").val(),
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/System/ListTransaction";
+            Utils.Loading();
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    Utils.UnLoading();
+                    $("#ListTransaction").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+        $("#btn_export").click(function () {
+
+                var urlRequestAns = "/System/ReportTransaction?username=" + '@ViewBag.UserName' + "&FromDate=" + $("#fromDate").val() + "&ToDate=" + $("#toDate").val() + "&keyword=" + $("#txtKeyword").val() + "&ActionType=" + $("#ddlActionType").val();
+
+                window.location = urlRequestAns;
+
+            });
+    });
+</script>
+
+
+
+
+

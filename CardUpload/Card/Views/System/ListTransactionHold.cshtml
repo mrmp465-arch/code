@@ -1,0 +1,73 @@
+﻿@using Card.Data.DTO
+@model List<Transactions>
+@using Card.Utility
+@using Card.CMS.Helper
+@{ var idx = 0; }
+<table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+            <th>STT</th>
+            <th>Mô tả</th>
+            <th>Số tiền</th>
+            @*<th>Số tiền đang xử lý</th>*@
+            <th>Ghi chú</th>
+            <th>Thời gian</th>
+            @*<th >ClientIP</th>*@
+        </tr>
+    </thead>
+    @if (Model.Count > 0)
+    {
+        foreach (var obj in Model)
+        {
+            { idx++; }
+            <tr>
+
+                <td style="text-align:left;">@(idx + (ViewBag.CurrentPage - 1) * ViewBag.PageSize )</td>
+                <td style="text-align:left;">@obj.Description.Replace("Trừ tiền", "Trừ tạm tiền")</td>
+                <td style="text-align:left;">@Html.Raw(StringUtils.InsertCommaMark(obj.Amount.ToString(), obj.Type))</td>
+                @*<td style="text-align:left;">@StringUtils.InsertCommaNoStyle(obj.Balance.ToString())</td>*@
+                <td style="text-align:left!important">@obj.Note</td>
+                <td>@string.Format("{0:dd/MM/yyyy HH:mm:ss}", obj.Time)</td>
+                @*<td>@obj.ClientIP</td>*@
+            </tr>
+
+        }
+    }
+</table>
+<script type="text/javascript">
+        var PageOnSize = 15;
+    var CurrentPage = '@ViewBag.CurrentPage';
+     $(document).ready(function () {
+
+         $("#pager2").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest2(page); }
+        });
+
+
+    });
+    function BindDataRequest2(currentPage) {
+                var params = {
+
+                    'username': '@ViewBag.username',
+                    'currentPage': currentPage,
+                    'pageSize': PageOnSize
+                };
+                params.currentPage = currentPage;
+                var urlRequestAns = "@Url.Action("ListTransactionHold")";
+                Utils.Loading();
+                $.ajax({
+                    type: 'GET',
+                    url: urlRequestAns,
+                    data: params,
+                    success: function (data) {
+                        $("#ListTransactionHold").html(data);
+                        Utils.UnLoading();
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            };
+</script>

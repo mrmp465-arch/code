@@ -1,0 +1,69 @@
+﻿@using Card.Data.DTO
+@model List<BidHistory>
+@using Card.Utility
+@using Card.CMS.Helper
+@{ var idx = 0; }
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span><b>Lịch sử Đua giá</b> </div>
+            <div class="box-body">
+
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="ListTransaction">
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                                <thead>
+                                    <tr class="rowsao">
+                                        <th>STT</th>
+                                        <th>Mô tả</th>
+                                        
+                                        <th>Thời gian</th>
+                                        @*<th >ClientIP</th>*@
+                                    </tr>
+                                </thead>
+                                @if (Model.Count > 0)
+                                {
+                                    foreach (var obj in Model)
+                                    {
+                                        { idx++; }
+                                        <tr>
+
+                                            <td style="text-align:left;">@(idx)</td>
+                                            <td style="text-align:left;">@obj.Description</td>
+                                            <td>@string.Format("{0:dd/MM/yyyy HH:mm:ss}", obj.Time)</td>
+                                            @*<td>@obj.ClientIP</td>*@
+                                        </tr>
+
+                                    }
+                                }
+                            </table>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 50% !important;
+        height: 50% !important;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+
+        .modal-dialog {
+            width: 90% !important;
+            height: 90% !important;
+        }
+    }
+</style>
+

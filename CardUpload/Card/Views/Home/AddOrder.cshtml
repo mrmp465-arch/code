@@ -1,0 +1,249 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+
+
+            <div class="box-header" style="margin-top:18px;">
+
+                <span class="glyphicon"></span>Thêm đơn
+            </div>
+            <div class="box-body">
+                <div class="row ">
+
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                                <table class="table table-bordered table-hover dataTable no-footer" id="dataTables">
+                                    <thead>
+                                        <tr class="rowsao">
+
+                                            <th>Số điện thoại</th>
+                                            <th>Thuê bao </th>
+                                            <th>Số tiền</th>
+                                            <th>Mệnh giá thẻ nhỏ nhất</th>
+                                            <th>Mật khẩu nhà mạng</th>
+                                            <th>Nạp hộ</th>
+                                        </tr>
+                                    </thead>
+
+                                    @for (var index = 1; index <= 5; index++)
+                                    {
+
+                                        <tr>
+
+
+                                            <td>
+                                                <input type="text" id="txtMobile_@(index)" class="form-control" />
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control" id="ddlTopupType_@(index)" style=" width: 105px;">
+
+                                                    <option value="1">Trả trước</option>
+                                                    <option value="2">Trả sau</option>
+                                                    <option value="3">Internet</option>
+                                                    <option value="5">ĐT cố định</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" clá id="txtAmount_@(index)" class="form-control txtAmount" />
+                                            </td>
+                                            <td>
+                                                <select class="form-control" id="ddlAmount_@(index)" style="        width: 105px;">
+
+                                                    <option value="20000">20.000</option>
+                                                    <option value="50000">50.000</option>
+                                                    <option value="100000">100.000</option>
+                                                    <option value="200000">200.000</option>
+                                                    <option value="500000">500.000</option>
+                                                    <option value="1000000">1.000.000</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtPassword_@(index)" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="cbxUssd_@(index)" class="cbxIsDisplay" />
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="groupName" class="text-info ng-binding">Mật khẩu bán hàng:</label>
+
+                            <input type="password" class="form-control" placeholder="Nhập mật khẩu bán hàng" id="txtPassword2" value="@ViewBag.MKBH" autocomplete="new-password">
+
+                        </div>
+                        <div class="form-group submit">
+                            <button type="button" class="btn btn-primary" onclick="validateData()" id="btnSave"><i class="fa fa-save"></i> Cập nhập</button>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .modal-dialog {
+        width: 55% !important;
+        height: 86% !important;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+
+        .modal-dialog {
+            width: 90% !important;
+            height: 90% !important;
+        }
+    }
+</style>
+<script>
+    function formatPrice(price) {
+        var fixedToSix = (Math.round(price * 1000000) / 1000000);
+        return (Math.round(fixedToSix) == fixedToSix + 0.000001 ? fixedToSix + 0.000001 : fixedToSix);
+    }
+    Number.prototype.formatMoney = function (c, d, t) {
+        var n = this,
+            c = isNaN(c = Math.abs(c)) ? 2 : c,
+            d = d == undefined ? "." : d,
+            t = t == undefined ? "," : t,
+            s = n < 0 ? "-" : "",
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };
+    var unformat = function (value, decimal) {
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        // Recursively unformat arrays:
+        //            if (isArray(value)) {
+        //                return map(value, function (val) {
+        //                    return unformat(val, decimal);
+        //                });
+        //            }
+        // Fails silently (need decent errors):
+        value = value || 0;
+        // Return the value as-is if it's already a number:
+        if (typeof value === "number") return value;
+        // Default decimal point is "." but could be set to eg. "," in opts:
+        decimal = decimal || ",";
+        // Build regex to strip out everything except digits, decimal point and minus sign:
+        var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
+            unformatted = parseFloat(
+                ("" + value)
+                    .replace(/\((.*)\)/, "-$1") // replace bracketed values with negatives
+                    .replace(regex, '') // strip out any cruft
+                    .replace(decimal, ',') // make sure decimal point is standard
+            );
+        // This will fail silently which may cause trouble, let's wait and see:
+        return !isNaN(unformatted) ? unformatted : 0;
+    };
+    $(".txtAmount").keyup(function () {
+        var val = $(this).val();
+        if (val) {
+
+            val = val.replace('.', '').replace('.', '').replace('.', '');
+            val = unformat(val, 0);
+            //$(this).val(val);
+
+            var price = parseInt(val);
+
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.');
+            $(this).val(formatMoneyVNDVal);
+        }
+    }).blur(function () {
+        var val = $(this).val();
+        if (val) {
+            //console.log(val);
+            val = val.replace('.', '').replace('.', '').replace('.', '');
+            var rate = 10000;
+            var min = 10000;
+            //console.log(val);
+            if (val < min)
+                val = min;
+            val = Math.round(val / rate) * rate;
+            val = unformat(val, 0);
+            //$(this).val(val);
+
+            var price = parseInt(val);
+
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.');
+            $(this).val(formatMoneyVNDVal);
+        }
+    });
+    function validateData() {
+
+        if (!ValidateControls("Vui nhập mật khẩu bán hàng", "#txtPassword2")) {
+            return false;
+        }
+        var jsonResult = [];
+        for (i = 1; i <= 5; i++) {
+            if ($("#txtMobile_" + i).val() != '' && $("#txtAmount_" + i).val() != undefined) {
+                var item = {
+                    'Mobile': $("#txtMobile_" + i).val(),
+                    'FullName': $("#txtMobile_" + i).val(),
+                    'Amount': $("#txtAmount_" + i).val().replace('.', '').replace('.', '').replace('.', ''),
+                    'AmountMinAll': $("#ddlAmount_" + i).val(),
+                    'AmountMin': '0',
+                    'TopupType': $("#ddlTopupType_" + i).val(),
+                    'Ussd': $("#cbxUssd_" + i).is(":checked") ? 2 : 0,
+                    'Password': $("#txtPassword_" + i).val(),
+                    'Password2': $("#txtPassword2").val(),
+                    'OrderNo': '@ViewBag.Order',
+                };
+                jsonResult.push(item);
+            }
+
+        }
+        SaveData(jsonResult);
+    }
+     function SaveData(jsonResult)
+    {
+
+
+
+
+             $.ajax({
+                type: 'POST',
+                url: "/Home/Order"+"@ViewBag.Telco",
+                 data: JSON.stringify(jsonResult),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: true,
+                success: function (data) {
+                    Utils.UnLoading();
+                    if (data.ResponseCode >= 0) {
+
+                        $('.modal ').modal('hide');
+
+                        location.reload();
+                    }
+                    else {
+
+                        showmess(data.Description, "error", "btn-danger");
+                    }
+                }
+
+        });
+
+    }
+</script>

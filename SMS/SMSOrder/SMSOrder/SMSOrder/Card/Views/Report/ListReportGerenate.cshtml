@@ -1,0 +1,69 @@
+﻿@using SMS.Data.DTO
+
+@model List<SMSReport>
+@{
+    List<string> LstDate = ViewBag.lstCate;
+    List<int> LstType = new List<int>() { 1, 2, 3 };
+}
+
+
+
+<div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+
+
+<script>
+    var colors = ['#8aec76', '#7ab4ec', '#ED561B'];
+        Highcharts.chart('container', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Báo cáo tổng hợp'
+            },
+            colors: colors,
+            xAxis: {
+                categories: @(Html.Raw(ViewBag.datacategory)),
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Amount'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                 name: '@ViewBag.FromDate',
+
+                data: @Html.Raw(ViewBag.DataLine)
+
+            },
+            {
+                name: '@ViewBag.ToDate',
+
+                data: @Html.Raw(ViewBag.DataLine2)
+
+            },
+            {
+                name: '@ViewBag.ToDate2',
+
+                data: @Html.Raw(ViewBag.DataLine3)
+
+            }
+
+            ]
+        });
+</script>

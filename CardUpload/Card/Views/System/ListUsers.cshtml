@@ -1,0 +1,381 @@
+﻿@using Card.Data.DTO
+@model List<Users>
+@using Card.Utility
+@using Card.CMS.Helper
+@{ var idx = 0; }
+<table class="table  table-bordered table-hover dataTable no-footer" id="dataTables">
+    <thead>
+        <tr class="rowsao">
+            @*<th><input type="checkbox" id="chk_all" name="chk_all" onClick="toggle(this)" /></th>*@
+            <th style="text-align:left;">STT</th>
+            <th style="text-align:left;">UserName</th>
+            <th>Họ Tên</th>
+            <th>Số dư</th>
+            @*<th>Nhóm</th>*@
+            @if (ViewBag.IsAdmin)
+            {
+                <th>CK Thẻ(Viettel-Vina-Mobi-Garena)</th>
+                <th>CK Viettel(TT-TS-MY)</th>
+                <th>CK Vina(TT-TS-MY)</th>
+                <th>CK Mobi(MY-NH)</th>
+                <th>CK VietnamMobile</th>
+            }
+            else
+            {
+                <th>HH Thẻ</th>
+                <th>HH Đơn</th>
+            }
+
+            @**@
+            @*<th>CK Garena</th>
+                <th>CK Zing</th>*@
+            @*<th>CK VTC</th>*@
+            @*<th>Hạn mức ngày</th>*@
+            <th>Người Tạo</th>
+            @if (ViewBag.IsUpdate)
+            {
+                <th>Trạng Thái</th>
+            }
+            @if (ViewBag.IsUpdate || ViewBag.IsFullControl || ViewBag.IsDelete)
+            {
+                <th style="text-align:left;width:120px;">Chức Năng</th>
+
+            }
+        </tr>
+
+    </thead>
+    @if (Model != null && Model.Count > 0)
+    {
+
+        foreach (var obj in Model.Where(x => x.UserID != 1))
+        {
+            { idx++; }
+<tr>
+    @*<td>
+            @if (obj.Type == 3)
+            {
+                <input type="checkbox" class="chk_item" name="chk_item" value="@(Encrypt.Base64Encode(obj.UserID))" />
+            }
+
+        </td>*@
+    <td style="text-align:left;">@(idx + (ViewBag.CurrentPage - 1) * ViewBag.PageSize)</td>
+    <td style="text-align:left;">
+        @if (ViewBag.UserName == obj.CreatedUser || ViewBag.IsAdmin)
+        {
+            <a href="@Url.Action("GetUserInfo", new { id = obj.UserID })"> @obj.Username</a>
+        }
+        else
+        {
+            <span>
+                @obj.Username
+            </span>
+        }
+
+    </td>
+
+    <td>@obj.FullName</td>
+    <td>@StringUtils.InsertCommaNoStyle((obj.Balance).ToString()) (@StringUtils.InsertCommaNoStyle(obj.BalanceHold.ToString()))</td>
+    @if (ViewBag.IsAdmin)
+    {
+<td>@obj.PercentVTT - @obj.PercentVNP - @obj.PercentVMS - @obj.PercentGarena </td>
+        <td>@obj.PercentVTTTT - @obj.PercentVTTTS - @obj.PercentVTTMY </td>
+        <td>@obj.PercentVNPTT - @obj.PercentVNPTS - @obj.PercentVNPMY </td>
+        <td>@obj.PercentVMSMY - @obj.PercentVMSNH</td>
+        <td>@obj.PercentVNMNH</td>
+    }
+    else
+    {
+        <td>@obj.PercentVTT</td>
+        <td>@obj.PercentVTTTT</td>
+    }
+    @*<td>@HtmlHelpers.GetGroupyName(obj.Group, ViewBag.GroupList)</td>*@
+
+
+    <td>@obj.CreatedUser</td>
+
+
+    @if (ViewBag.IsUpdate)
+    {
+        <td>
+            @if (obj.Status == true)
+            {
+                <a href="javascript:;" title="Kích hoạt trạng thái không hoạt động" onclick="UpdateStatusUser('@(Encrypt.Base64Encode(obj.UserID))', 1);"><i class="fa fa-check"></i></a>
+
+            }
+            else
+            {
+                <a href="javascript:;" title="Kích hoạt trạng thái hoạt động" class="unactive" onclick="UpdateStatusUser('@(Encrypt.Base64Encode(obj.UserID))',0);"><i class="fa fa-ban"></i></a>
+
+            }
+        </td>
+    }
+    @if (ViewBag.IsUpdate || ViewBag.IsFullControl || ViewBag.IsDelete)
+    {
+
+        <td style="text-align:left;width:120px;">
+
+
+            <div class="dropdown">
+                <a href="#" class="btdropdown" data-toggle="dropdown">
+                    <i class="fa fa-fw fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+
+                    <li>
+                        <a href="javascript:" onclick="HistoryUser('@(Encrypt.Base64Encode(obj.UserID))')" title="Lịch sử giao dịch">
+                            <i class="fa fa-history" aria-hidden="true"></i> Lịch sử giao dịch
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="ResetPassword('@(Encrypt.Base64Encode(obj.UserID))')" title="Rest mật khẩu">
+                            <i class="fa fa-refresh" aria-hidden="true"> </i> Reset mật khẩu đăng nhập
+                        </a>
+                    </li>
+                    @*<li>
+            <a href="javascript:" onclick="ResetPassword2('@(Encrypt.Base64Encode(obj.UserID))')" title="Rest mật khẩu bán hàng">
+                <i class="fa fa-refresh" aria-hidden="true"></i> Reset mật khẩu cấp 2
+            </a>
+        </li>*@
+                    <li>
+                        <a href="javascript:;" title="Delete" onclick="DeleteData('@(Encrypt.Base64Encode(obj.UserID))')"><i class="fa fa-trash-o"></i> Xóa tài khoản</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" title="Thêm tài khoản" onclick="TopupUser('@(Encrypt.Base64Encode(obj.UserID))')"><i class="fa fa-plus" aria-hidden="true"></i> Cộng tiền tài khoản</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" title="Trừ tài khoản" onclick="DeductUser('@(Encrypt.Base64Encode(obj.UserID))')"><i class="fa fa-minus" aria-hidden="true"></i> Trừ tiền tài khoản</a>
+                    </li>
+
+                </ul>
+
+
+            </div>
+        </td>
+    }
+</tr>
+        }
+    }
+</table>
+
+<script type="text/javascript">
+        var PageOnSize = '@ViewBag.PageSize';
+    var CurrentPage = '@ViewBag.CurrentPage';
+     $(document).ready(function () {
+
+        $("#pager").pager({
+            pagenumber: CurrentPage,
+           pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+            buttonClickCallback: function (page) { BindDataRequest(page); }
+        });
+
+
+    });
+    //$('#dataTables').DataTable({
+    //    "bPaginate": false,
+    //    "searching": false,
+    //    "ordering": true,
+    //    "info": false
+    //});
+</script>
+<script type="text/javascript">
+    function toggle(source) {
+        checkboxes = document.getElementsByName('chk_item');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+    function BindDataRequest(currentPage) {
+        var params = {
+            isActive: $('#ddlActive :selected').val(),
+            email: $("#txtEmail").val(),
+            createdUser: $("#ddlUser").val(),
+            group: $("#ddlGroup").val(),
+            currentPage: currentPage,
+            pageSize: PageOnSize
+        };
+        var urlRequestAns = "/System/ListUsers";
+        Utils.Loading();
+        $.ajax({
+            type: 'GET',
+            url: urlRequestAns,
+            data: params,
+            success: function (data) {
+                $("#UsersPartial").html(data);
+                Utils.UnLoading();
+            },
+            error: function () {
+                Utils.UnLoading();
+            }
+        });
+    }
+    function DeleteData(id) {
+        var IsDelete = "true"
+        if (IsDelete != "true") {
+            bootbox.alert("Bạn không có quyền xóa chức năng");
+            return;
+        }
+        bootbox.confirm("Bạn chắc chắn muốn xóa tài khoản này ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/System/DeleteUser",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function ResetPassword(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn reset mật khẩu  ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/System/ResetPassword",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function ResetPassword2(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn reset mật khẩu bán hàng ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/System/ResetPassword2",
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function UpdateStatusUser(id, status) {
+        var type = "Vô hiệu hóa";
+        if (status == 0) {
+            type = "Kích hoạt";
+        }
+        bootbox.confirm("Bạn muốn " + type + " Tài khoản này ?", function (conf) {
+            if (conf == 1) {
+                var urlUpstatus = "/System/UpdateActiveUser";
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: urlUpstatus,
+                    data: addAntiForgeryToken({ id: id }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            bootbox.alert(data.Description);
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            }
+            return;
+        });
+    }
+    function UpdateStatusCK(id, status, functions) {
+        var type = "Khóa nạp";
+        if (status == 1) {
+            type = "Mở khóa nạp";
+        }
+        bootbox.confirm("Bạn muốn " + type + " tài khoản này ?", function (conf) {
+            if (conf == 1) {
+                var urlUpstatus = "/System/UpdateStatusCK";
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: urlUpstatus,
+                    data: addAntiForgeryToken({ id: id, status: status, function: functions }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            BindDataRequest(CurrentPage)
+                        }
+                        else {
+                            bootbox.alert(data.Description);
+                            return;
+                        }
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            }
+            return;
+        });
+    }
+
+    function DeductUser(id) {
+        var url = "/System/DeductUser/" + id;
+        var confirmFunc = BindDataRequest(1);
+        Utils.PopupManager(url, confirmFunc);
+    }
+    function TopupUser(id) {
+        var url = "/System/TopupUser/" + id;
+        var confirmFunc = BindDataRequest(1);
+        Utils.PopupManager(url, confirmFunc);
+    }
+    function HistoryUser(id) {
+        var url = "/System/HistoryUser/" + id;
+        var confirmFunc = BindDataRequest(1);
+        Utils.PopupManager(url, confirmFunc);
+    }
+    function HistoryHoldUser(id) {
+        var url = "/System/HistoryHoldUser/" + id;
+        var confirmFunc = BindDataRequest(1);
+        Utils.PopupManager(url, confirmFunc);
+    }
+    function TopupHoldUser(id) {
+        var url = "/System/TopupUserHold/" + id;
+        var confirmFunc = BindDataRequest(1);
+        Utils.PopupManager(url, confirmFunc);
+    }
+</script>
+

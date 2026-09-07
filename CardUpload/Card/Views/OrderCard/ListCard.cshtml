@@ -1,0 +1,121 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model List<Card.Data.DTO.CardOrder>
+
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span>Danh sách thẻ </div>
+            <div class="box-body">
+
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                                <thead>
+                                    <tr class="rowsao">
+
+                                        <th>Trạng thái</th>
+                                        <th>Mã kho</th>
+                                        <th>Mã thẻ</th>
+                                        <th>Seri</th>
+                                        <th>Nhà mạng</th>
+                                        <th>Mệnh giá</th>
+                                        @*<th>Ngày tạo</th>*@
+
+
+
+                                    </tr>
+                                </thead>
+                                @foreach (var obj in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.Raw(HtmlHelpers.GetTranStatus(obj.Status))</td>
+
+                                        <td>@obj.OrderNo</td>
+                                        @if (obj.Status == 0)
+                                        {
+                                            <td>@StringUtils.HidenText(obj.CardCode, 5)</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@obj.CardCode</td>
+                                        }
+                                        <td>@obj.CardSerial</td>
+                                        <td>@obj.Telco</td>
+
+                                        <td>@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())</td>
+
+                                        @*<td>@string.Format("{0:dd/MM}", obj.CreatedDate)</td>*@
+
+
+                                    </tr>
+                                }
+                            </table>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 90% !important;
+        height: 90% !important;
+    }
+
+    .admountHiden {
+        display: none;
+    }
+</style>
+<script>
+    
+
+        var tabv = $('#dataTables').DataTable(
+            {
+                "bPaginate": false,
+                "paging": false,
+                "bInfo": false,
+                "scrollX": false,
+                "searching": true,
+                "language": {
+                    "search": "Tìm kiếm",
+                    "zeroRecords": "Không tìm thấy kết quả"
+                },
+                "ordering": false,
+                "columns": [
+                    { "searchable": false },
+                    { "searchable": false },
+                    { "searchable": true },
+                    { "searchable": true },
+                    { "searchable": false },
+                    { "searchable": false },
+                    
+                ],
+
+            }
+        );
+
+        //tabv.on('order.dt search.dt', function () {
+        //    tabv.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+
+        //  setTimeout(function () {
+
+        //         $("#search_input").html("");
+        //        $("#dataTables_filter").appendTo("#search_input");
+
+        //}, 100);
+    
+</script>
+
+
+
+
+

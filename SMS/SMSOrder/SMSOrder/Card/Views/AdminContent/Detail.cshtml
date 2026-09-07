@@ -1,0 +1,102 @@
+﻿@using SMS.Data.DTO
+@model Contents
+@using SMS.Utility
+@using SMS.CMS.Helper
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="box box-primary">
+
+                <div class="box-body">
+                    <div class="row" id="form">
+                        <div class="col-md-12" style="min-height:500px;">
+                            <h2>@Model.Title</h2>
+                            <div>@Html.Raw(Model.Description)</div>
+                            <div class="comment">
+                                <div class="binhluan">
+                                    <p id="msgBox" style="color: #c82e29; font-weight: bold; font-size: 13px"></p>
+                                   
+                                    <ul>
+
+                                        <li>
+                                            <textarea id="txtcontent" name="message" rows="8" placeholder="Nội dung"></textarea>
+                                        </li>
+
+                                        <li>
+                                            <button onclick="Send();">Gửi bình luận</button>
+                                        </li>
+                                    </ul>
+                                    <div class="clear"></div>
+
+                                </div>
+                                <div id="ListComment">
+                                    @Html.Action("ListComment", "Comment",new { Id=Model.Id})
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Content/js/formvalidate.js"></script>
+    <script>
+        function Send() {
+            if (!ValidateControls("Vui lòng nhập nội dung", "#txtcontent")) {
+                return false;
+            }
+            var postdata = {
+                Description: $('#txtcontent').val(),
+                NewsId: '@Model.Id',
+                
+            };
+             $.ajax({
+                type: "post",
+                dataType: "html",
+                url: '@Url.Action("Send", "Comment")',
+                data: addAntiForgeryToken(postdata),
+                success: function (response) {
+
+                    var data = parseInt(response);
+                    if (data == 1) {
+                       
+                       
+                        $('#txtcontent').val("");
+
+                        ListComment();
+                    }
+
+                    if (data == -99) {
+                        $("#msgBox").html("Lỗi hệ thống").show();
+
+                    }
+                    if (data == -4) {
+                        $("#msgBox").html("Thực hiện quá nhiều lần").show();
+
+                    }
+
+                }
+            });
+        }
+        function ListComment() {
+            parameters = {
+                Id: '@Model.Id',
+            };
+            var urlRequestAns = "/Comment/ListComment";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#ListComment").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+    </script>
+}

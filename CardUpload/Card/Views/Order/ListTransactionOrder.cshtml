@@ -1,0 +1,488 @@
+﻿@using Card.Data.Api
+@using Card.Utility
+@using Card.CMS.Helper
+@model List<OrderOutput>
+
+@if (Model != null && Model.Count > 0)
+{
+
+    <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+        <thead>
+            <tr class="rowsao">
+                <th>Trạng thái</th>
+                <th>TransID</th>
+
+                <th>Mobile</th>
+                <th>Telco</th>
+                <th>USSD</th>
+                <th>AmountSuccess</th>
+
+                <th>AmountMinAll</th>
+                @*@if (ViewBag.UpdateP)
+                    {
+                        <th>Độ ưu tiên</th>
+                    }*@
+
+
+                <th>Giá đua</th>
+                <th>Ck đua</th>
+                <th>Trạng thái</th>
+                <th>Ngày cập nhật</th>
+                <th class="noExl">Tác vụ</th>
+
+                @*<th style="display:none"></th>*@
+
+
+            </tr>
+        </thead>
+        @if (Model.Count > 0)
+        {
+            foreach (var obj in Model)
+            {
+                <tr>
+                    <td>
+                        @if (obj.Status == -2)
+                        {
+                            <div class="label label-md label-danger"><a onclick="GetDescription(@obj.TransactionID)" href="javascript:;">Telco khóa</a></div>
+                        }
+                        else
+                        {
+                            @Html.Raw(HtmlHelpers.GetTranStatus(obj.Status))
+                        }
+
+                    </td>
+                    <td>@obj.TransactionID</td>
+                    <td>
+
+                        @if ((obj.IsConfirm != 1) && (ViewBag.UserName == obj.SubUser || ViewBag.UserType <= 2))
+                        {
+
+                            <a onclick="Update(@obj.TransactionID)" href="javascript:;">@obj.Mobile</a>
+
+                        }
+                        else
+                        {
+                            @obj.Mobile
+                        }
+                    </td>
+
+                    <td>@HtmlHelpers.GetTelcoName(obj.Telco.ToUpper())-@HtmlHelpers.GetTopupType(obj.TopupType, obj.Telco.ToUpper())</td>
+                    <td>@(obj.Ussd == 0 ? "Không" : "Có")</td>
+                    @if (obj.AmountTopupSuccess > obj.Amount)
+                    {
+                        <td>@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())/@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())</td>
+                    }
+                    else
+                    {
+                        <td>@StringUtils.InsertCommaNoStyle(obj.AmountTopupSuccess.ToString())/@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())</td>
+                    }
+
+
+                    <td class="noExl">
+                        @if (obj.Status == 1 || obj.Status == 2)
+                        {
+                            if (obj.OrderNo.Contains(ViewBag.Config) || ViewBag.UserType <= 2)
+                            {
+
+                        <select class="form-control1" id="ddlAmountMinAll_@obj.TransactionID" onchange="UpdateAmount('@obj.TransactionID','@obj.AmountMin','@obj.Password','@obj.Status','@obj.Priority','@obj.IsConfirm','@obj.OrderNo')">
+
+                            <option @if (obj.AmountMinAll == 10000) { @Html.Raw("selected='selected'") ; } value="10000">
+                                10.000
+                            </option>
+                            <option @if (obj.AmountMinAll == 20000) { @Html.Raw("selected='selected'") ; } value="20000">
+                                20.000
+                            </option>
+                            <option @if (obj.AmountMinAll == 50000) { @Html.Raw("selected='selected'") ; } value="50000">
+                                50.000
+                            </option>
+                            <option @if (obj.AmountMinAll == 100000) { @Html.Raw("selected='selected'") ; } value="100000">
+                                100.000
+                            </option>
+                            <option @if (obj.AmountMinAll == 200000) { @Html.Raw("selected='selected'") ; } value="200000">
+                                200.000
+                            </option>
+                            <option @if (obj.AmountMinAll == 500000) { @Html.Raw("selected='selected'") ; } value="500000">
+                                500.000
+                            </option>
+                            <option @if (obj.AmountMinAll == 1000000) { @Html.Raw("selected='selected'") ; } value="1000000">
+                                1.000.000
+                            </option>
+                        </select>
+                            }
+                            else
+                            {
+                                @obj.AmountMinAll
+                            }
+
+                        }
+                        else
+                        {
+                            @obj.AmountMinAll
+                        }
+
+
+                    </td>
+
+
+                    <td> @StringUtils.InsertCommaNoStyle(obj.BidFee.GetValueOrDefault().ToString())</td>
+                    <td>@string.Format("{0:F0}", obj.BidRate.GetValueOrDefault()) </td>
+                    <td>@(obj.IsConfirm == 0 ? " Chưa chốt" : " Đã chốt")</td>
+
+                    <td>@string.Format("{0:dd/MM/yyyy HH:mm}", obj.LastTime) </td>
+
+                    <td class="noExl" style="text-align:right">
+                        @if ((obj.OrderNo.Contains(ViewBag.Config) || ViewBag.UserType <= 2) && (obj.Status == 1 || obj.Status == 2) && obj.IsConfirm == 0 && (obj.Telco.ToUpper() == "ZING" || obj.Telco.ToUpper() == "GARENA"))
+                        {
+
+                            <select class="form-control1" id="ddlP_@obj.TransactionID" onchange="UpdateP('@obj.TransactionID')">
+                                @for (int i = 1; i <= 9; i++)
+                                {
+                                    <option @if (obj.Priority == i + 40) { @Html.Raw("selected='selected'") ; } value="@(i+40)">
+                                        P@(i)
+                                    </option>
+                                }
+                            </select>
+                        }
+                        @if (obj.OrderNo.Contains(ViewBag.Config) || ViewBag.UserType <= 2)
+                        {
+
+                            if (obj.IsConfirm != 1)
+                            {
+                                if ( obj.Status == 1 || obj.Status == -6)
+                                {
+                                    <span class="label label-danger">
+                                        <a onclick="Lock('@obj.TransactionID','@obj.AmountMin','@obj.AmountMinAll','@obj.Password','@obj.Status','@obj.Priority','@obj.IsConfirm','@obj.OrderNo')" href="javascript:;">Dừng nạp</a>
+                                    </span><text>&nbsp;</text>
+                                }
+                                if (obj.Status == -3)
+                                {
+                                    <span class="label label-info">  <a onclick="ResetTran('@obj.TransactionID','@obj.AmountMin','@obj.AmountMinAll','@obj.Password','@obj.Status','@obj.Priority','@obj.IsConfirm','@obj.OrderNo')" href="javascript:;">Mở</a></span>
+                                }
+                            }
+
+                        }
+                        @if (obj.OrderNo.Contains(ViewBag.Config))
+                        {
+
+                            if (( obj.Status == 1) && (obj.IsConfirm != 1) && (ViewBag.Username == obj.SubUser) && (obj.Telco.ToUpper() != "ZING" && obj.Telco.ToUpper() != "GARENA") && obj.AmountTopupSuccess < obj.Amount)
+                            {
+                                <span class="label label-warning">
+                                    <a onclick="BidTran('@obj.TransactionID','@obj.OrderNo')" href="javascript:;">Đua giá</a>
+                                </span>
+                            }
+                        }
+                        @if ((obj.BidRate > 0 || obj.BidFee > 0))
+                        {
+                            <span class="label label-info">
+                                <a onclick="HistoryBid(@obj.TransactionID)" href="javascript:;">LS đua giá </a>
+                            </span>
+                        }
+                        @if (obj.OrderNo.Contains(ViewBag.Config) || ViewBag.UserType <= 2)
+                        {
+
+                            if (obj.IsConfirm != 1 && obj.Status != 2)
+                            {
+                                <span class="label label-success">
+                                    <a onclick="ConfirmOrder('@obj.TransactionID','@obj.AmountMin','@obj.AmountMinAll','@obj.Password','@obj.Status','@obj.Priority','@obj.IsConfirm','@obj.OrderNo')" href="javascript:;">Chốt</a>
+                                </span>
+
+                            }
+                        }
+                        @if (obj.AmountTopupSuccess > 0)
+                        {
+                            <span class="label label-info">
+                                <a onclick="HistoryUser(@obj.TransactionID)" href="javascript:;">Xem </a>
+                            </span>
+                            <span class="label label-success">
+                                <a target="_blank" href='@Url.Action("ReportTransactionHistory",new {orderNo=obj.OrderNo,transId=obj.TransactionID })'>Excel</a>
+                            </span>
+                        }
+
+
+                    </td>
+
+
+                    @*<td style="display:none">
+                            <a href="javascript:;" onclick="copyToClipboard('@Newtonsoft.Json.JsonConvert.SerializeObject(obj)')">CopyToClipboard</a>
+                        </td>*@
+
+
+                </tr>
+            }
+            <tr>
+                <td colspan="5"></td>
+                @if (Model.Sum(x => x.AmountTopupSuccess) > Model.Sum(x => x.Amount))
+                {
+                    <td><b>@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.Amount).ToString())/@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.Amount).ToString())</b></td>
+                }
+                else
+                {
+                    <td><b>@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.AmountTopupSuccess).ToString())/@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.Amount).ToString())</b></td>
+                }
+                <td colspan="5"></td>
+            </tr>
+        }
+
+    </table>
+}
+<script>
+    function formatPrice(price) {
+        var fixedToSix = (Math.round(price * 1000000) / 1000000);
+        return (Math.round(fixedToSix) == fixedToSix + 0.000001 ? fixedToSix + 0.000001 : fixedToSix);
+    }
+    Number.prototype.formatMoney = function (c, d, t) {
+        var n = this,
+            c = isNaN(c = Math.abs(c)) ? 2 : c,
+            d = d == undefined ? "." : d,
+            t = t == undefined ? "," : t,
+            s = n < 0 ? "-" : "",
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };
+    var unformat = function (value, decimal) {
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        //value = value.replace('.', '');
+        // Recursively unformat arrays:
+        //            if (isArray(value)) {
+        //                return map(value, function (val) {
+        //                    return unformat(val, decimal);
+        //                });
+        //            }
+        // Fails silently (need decent errors):
+        value = value || 0;
+        // Return the value as-is if it's already a number:
+        if (typeof value === "number") return value;
+        // Default decimal point is "." but could be set to eg. "," in opts:
+        decimal = decimal || ",";
+        // Build regex to strip out everything except digits, decimal point and minus sign:
+        var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
+            unformatted = parseFloat(
+                ("" + value)
+                    .replace(/\((.*)\)/, "-$1") // replace bracketed values with negatives
+                    .replace(regex, '') // strip out any cruft
+                    .replace(decimal, ',') // make sure decimal point is standard
+            );
+        // This will fail silently which may cause trouble, let's wait and see:
+        return !isNaN(unformatted) ? unformatted : 0;
+    };
+</script>
+<script>
+    function GetDescription(id) {
+        var url = "/Order/GetDescription/" + id;
+        var confirmFunc = null;
+        Utils.PopupManager(url, confirmFunc);
+    }
+     function Update(id) {
+        var url = "/Order/Edit/" + id;
+        var confirmFunc = null;
+        Utils.PopupManager(url, confirmFunc);
+    }
+     function HistoryBid(id) {
+        var url = "/Home/BidHistory/" + id;
+        var confirmFunc = null;
+        Utils.PopupManager(url, confirmFunc);
+    }
+    function BidTran(id) {
+        var url = "/Home/OrderBid/" + id;
+        var confirmFunc = null;
+        Utils.PopupManager(url, confirmFunc);
+    }
+    function copyToClipboard(text) {
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+    }
+     function GetList(currentPage) {
+            parameters = {
+                telco: $('#ddlTelco').val(),
+                orderNo: '@ViewBag.OrderNo',
+                status: $("#ddlStatus").val(),
+                confirm: $("#ddlConfirm").val(),
+                top: $("#ddlTop").val(),
+
+            };
+         var urlRequestAns = "/Order/ListTransactionOrder";
+         $.ajax({
+             type: 'GET',
+             url: urlRequestAns,
+             data: parameters,
+             success: function (data) {
+                 Utils.UnLoading();
+                 $("#ListTransactionOrder").html(data);
+
+             },
+             error: function () {
+
+             }
+         });
+    };
+    function ResetTran(id, AmountMin, AmountMinAll, Password, Status, Priority, IsConfirm, OrderNo) {
+
+        bootbox.confirm("Bạn chắc chắn muốn mở đơn  ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/ResetTran",
+                    data: addAntiForgeryToken({ TransactionID: id, AmountMin: AmountMin, AmountMinAll: AmountMinAll, Password, Status: Status, Priority: Priority, IsConfirm: IsConfirm, OrderNo: OrderNo }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            location.reload();
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function Lock(id, AmountMin, AmountMinAll, Password, Status, Priority, IsConfirm, OrderNo) {
+
+        bootbox.confirm("Bạn chắc chắn muốn tạm dừng  ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/LockTran",
+                    data: addAntiForgeryToken({ TransactionID: id, AmountMin: AmountMin, AmountMinAll: AmountMinAll, Password, Status: Status, Priority: Priority, IsConfirm: IsConfirm, OrderNo: OrderNo }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            location.reload();
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+     function UpdateAmountMin(id, AmountMinAll, Password, Status, Priority, IsConfirm, OrderNo) {
+
+        bootbox.confirm("Bạn chắc chắn muốn cập nhật mệnh giá thẻ nhỏ nhất cho lần nạp đầu??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/UpdateAmountTran",
+                    data: addAntiForgeryToken({ TransactionID: id, AmountMinAll: AmountMinAll, AmountMin: $('#ddlAmountMin_' + id).val(), Password, Status: Status, Priority: Priority, IsConfirm: IsConfirm, OrderNo: OrderNo }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            //location.reload();
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function UpdateAmount(id, AmountMin, Password, Status, Priority, IsConfirm, OrderNo) {
+
+        bootbox.confirm("Bạn chắc chắn muốn cập nhật mệnh giá thẻ nhỏ nhất ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/UpdateAmountTran",
+                    data: addAntiForgeryToken({ TransactionID: id, AmountMin: AmountMin, AmountMinAll: $('#ddlAmountMinAll_' + id).val(), Password, Status: Status, Priority: Priority, IsConfirm: IsConfirm, OrderNo: OrderNo }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            //location.reload();
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function UpdateP(id) {
+
+        bootbox.confirm("Bạn chắc chắn muốn cập nhật  độ ưu tiên đơn ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/UpdatePriorityTran",
+                    data: addAntiForgeryToken({ TransactionID: id,Priority: $('#ddlP_' + id).val()}),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            //location.reload();
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function ConfirmOrder(id, AmountMin, AmountMinAll, Password, Status, Priority, IsConfirm, OrderNo) {
+
+        bootbox.confirm("Bạn chắc chắn muốn chốt  ??? ", function (result) {
+            if (result == true) {
+                Utils.Loading();
+                $.ajax({
+                    type: 'POST',
+                    url: "/Order/ConfirmTran",
+                    data: addAntiForgeryToken({ TransactionID: id, AmountMin: AmountMin, AmountMinAll: AmountMinAll, Password, Status: Status, Priority: Priority, IsConfirm: IsConfirm, OrderNo: OrderNo }),
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+                            location.reload();
+                        }
+                        else {
+                            showmess(data.Description, "error", "btn-danger");
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    function showmess(mess, type, ButtonClass) {
+        swal({
+            title: '',
+            text: mess,
+            type: type,
+            confirmButtonClass: ButtonClass,
+            closeOnConfirm: false,
+            allowOutsideClick: true
+        },
+            function (isConfirm) {
+                swal.close();
+                setTimeout(function () { GetList(1);; }, 5000);
+
+            });
+    }
+    function HistoryUser(id) {
+        var url = "/Order/ListTransactionHistory/?transId=" + id;
+        var confirmFunc ="";
+        Utils.PopupManager(url, confirmFunc);
+    }
+</script>

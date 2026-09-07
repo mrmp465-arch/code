@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách thư viện mẫu";
+}
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><i class="fa fa-wrench"></i>Danh Sách Từ Điển</div>
+            <div class="box-body">
+                <div class="row" id="form">
+                    <div class="col-md-12">
+
+
+                        <div class="form-group submit" style="text-align:center">
+
+                            <a href="javascript:;" onclick="AddDictionary()" class="btn btn-primary">Thêm mới</a>
+
+                        </div>
+                    </div>
+                </div>
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="ListDictionary">
+                            @Html.Action("ListDictionary")
+                        </div>
+
+                        <div class="dataTables_paginate" id="pager">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlActive").change(function () {
+            GetList(1);
+        });
+
+        function GetList(currentPage) {
+            parameters = {
+                
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/AdminContent/ListDictionary";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#ListDictionary").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+
+    });
+
+    function AddDictionary() {
+        var pageurl = "/AdminContent/AddDictionaryInfo/";
+        $.ajax({
+            type: 'GET',
+            url: pageurl,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    title: "Thêm mới từ điển",
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Đóng",
+                            className: "btn-success",
+                            callback: function () {
+
+                                location.reload();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+    }
+    function EditDictionary(id) {
+        var pageurl = "/AdminContent/GetDictionaryInfo/" + id;
+        $.ajax({
+            type: 'GET',
+            url: pageurl,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                bootbox.dialog({
+                    title: "Cập nhật từ điển",
+                    message: data,
+                    buttons: {
+                        success: {
+                            label: "Đóng",
+                            className: "btn-success",
+                            callback: function () {
+
+                                location.reload();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+    }
+</script>

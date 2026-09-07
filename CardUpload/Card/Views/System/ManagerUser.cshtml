@@ -1,0 +1,296 @@
+﻿@{
+    ViewBag.Title = "Danh sách người dùng";
+}
+@using Card.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+    List<Groups> ListGroup = ViewBag.GroupList;
+    Users CurrentUser = ViewBag.CurrentUser;
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <span class="glyphicon glyphicon-user"></span>
+                @ViewBag.Title
+            </div>
+            <div class="box-body">
+                <div class="row" id="form">
+
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6">
+                        <select class="form-control" id="ddlActive">
+                            <option value="-1">--Trạng thái--</option>
+                            <option value="1">Hoạt Động</option>
+                            <option value="0">Không Hoạt Động</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6" @if (ListUser.Count <= 1) { @Html.Raw("style='display:none'") ; }>
+                        <select class="form-control dlUser" id="ddlUser">
+                            @if (ListUser != null && ListUser.Count > 0)
+                            {
+                                <option value="@CurrentUser.Username">@CurrentUser.Username</option>
+                                foreach (var obj in ListUser)
+                                {
+                                    <option value="@obj.Username">@obj.Username</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3 col-xs-12 col-sm-6" style="display:none">
+                        <select class="form-control" id="ddlGroup">
+                            @if (ListGroup != null && ListGroup.Count > 0)
+                            {
+                                foreach (var obj in ListGroup)
+                                {
+                                    <option value="@obj.GroupID">@obj.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+
+                        <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+                    </div>
+                    <div class="form-group col-md-1 col-xs-12 col-sm-6">
+                        <button type="button" id="btnSearch" class="btn btn-primary" style="display:none">Tìm Kiếm</button>
+                        <a href="@Url.Action("AddUserInfo")" class="btn btn-primary btAdd">Thêm tài khoản</a>
+
+                    </div>
+                    <div style="clear:both"></div>
+                   
+                    @*<div class="form-group col-md-4 col-xs-12 col-sm-6">
+                        <button type="button" class="btn btn-primary" onclick="lockAll()"><i class="fa fa-lock"></i> Khóa nạp</button>
+                        <button type="button" class="btn btn-primary" onclick="unlockAll()"><i class="fa fa-unlock-alt"></i> Mở khóa nạp</button>
+                        <button type="button" class="btn btn-primary" onclick="updateCkAll()"><i class="fa fa-money"></i> Cập nhật CK</button>
+                    </div>*@
+                    @*<div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        @Html.Action("GetUserBalance", "System")
+                    </div>*@
+                </div>
+            </div>
+            <div class="table-responsive">
+                <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                    <div id="UsersPartial" s>
+                        @*@Html.Action("ListUsers", "System")*@
+                    </div>
+
+                    <div class="dataTables_paginate" id="pager">
+                    </div>
+                    <div style="height:250px;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetList(1);
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlActive").change(function () {
+            GetList(1);
+        });
+        $("#ddlUser").change(function () {
+            GetList(1);
+        });
+        $("#ddlGroup").change(function () {
+            GetList(1);
+        });
+        $("#ddlTelco").change(function () {
+            $('.ddlPercent').hide();
+            $('#ddlPercent' + $("#ddlTelco").val()).show();
+        });
+        function GetList(currentPage) {
+            parameters = {
+                isActive: $('#ddlActive :selected').val(),
+                email: $("#txtEmail").val(),
+                createdUser: $("#ddlUser").val(),
+                group: $("#ddlGroup").val(),
+                currentPage: currentPage
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+
+            var urlRequestAns = "/System/ListUsers";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#UsersPartial").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+
+    });
+
+    function lockAll() {
+        var arr_checked_items = [];
+        $('input[type="checkbox"][name="chk_item"]:checked').each(function (i, e) {
+            arr_checked_items.push($(e).val());
+        });
+        var telco = $("#ddlTelco").val();
+        if (arr_checked_items.length > 0) {
+            bootbox.confirm("Bạn muốn khóa nạp " + telco + " ?", function (conf) {
+                if (conf == 1) {
+                    var urlUpstatus = "/System/UpdateStatusCKMulti";
+                    Utils.Loading();
+                    $.ajax({
+                        type: 'POST',
+                        url: urlUpstatus,
+                        data: addAntiForgeryToken({ arrId: arr_checked_items, status: 0, telco: telco }),
+                        success: function (data) {
+                            Utils.UnLoading();
+                            if (data.ResponseCode >= 0) {
+                                //bootbox.alert(data.Description);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                bootbox.alert(data.Description);
+                                return;
+                            }
+                        },
+                        error: function () {
+                            Utils.UnLoading();
+                        }
+                    });
+                }
+
+                return;
+            });
+        }
+        else {
+            bootbox.alert("Bạn phải chọn ít nhất 1 tài khoản");
+        }
+    }
+
+    function unlockAll() {
+        var arr_checked_items = [];
+        $('input[type="checkbox"][name="chk_item"]:checked').each(function (i, e) {
+            arr_checked_items.push($(e).val());
+        });
+        var telco = $("#ddlTelco").val();
+        if (arr_checked_items.length > 0) {
+            bootbox.confirm("Bạn muốn mở khóa nạp " + telco + " ?", function (conf) {
+                if (conf == 1) {
+                    var urlUpstatus = "/System/UpdateStatusCKMulti";
+                    Utils.Loading();
+                    $.ajax({
+                        type: 'POST',
+                        url: urlUpstatus,
+                        data: addAntiForgeryToken({ arrId: arr_checked_items, status: 1, telco: telco }),
+                        success: function (data) {
+                            Utils.UnLoading();
+                            if (data.ResponseCode >= 0) {
+                                //bootbox.alert(data.Description);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                bootbox.alert(data.Description);
+                                return;
+                            }
+                        },
+                        error: function () {
+                            Utils.UnLoading();
+                        }
+                    });
+                }
+
+                return;
+            });
+        }
+        else {
+            bootbox.alert("Bạn phải chọn ít nhất 1 tài khoản");
+        }
+    }
+    function updateCkAll() {
+        var arr_checked_items = [];
+        $('input[type="checkbox"][name="chk_item"]:checked').each(function (i, e) {
+            arr_checked_items.push($(e).val());
+        });
+        var telco = $("#ddlTelco").val();
+        if (arr_checked_items.length > 0) {
+            bootbox.confirm("Bạn muốn cập nhật chiết khấu  " + telco + " ?", function (conf) {
+                if (conf == 1) {
+                    var urlUpstatus = "/System/UpdateCKMulti";
+                    Utils.Loading();
+                    $.ajax({
+                        type: 'POST',
+                        url: urlUpstatus,
+                        data: addAntiForgeryToken({ arrId: arr_checked_items, status: $("#ddlPercent" + telco).val(), telco: telco }),
+                        success: function (data) {
+                            Utils.UnLoading();
+                            if (data.ResponseCode >= 0) {
+                                //bootbox.alert(data.Description);
+                                $("#btnSearch").click();
+                            }
+                            else {
+                                bootbox.alert(data.Description);
+                                return;
+                            }
+                        },
+                        error: function () {
+                            Utils.UnLoading();
+                        }
+                    });
+                }
+
+                return;
+            });
+        }
+        else {
+            bootbox.alert("Bạn phải chọn ít nhất 1 tài khoản");
+        }
+    }
+</script>
+<style>
+    label {
+        min-width: 68px;
+    }
+
+    .btdropdown {
+        color: #337ab7;
+    }
+
+
+
+    .dropdown-menu {
+        float: right;
+        right: 0;
+    }
+
+        .dropdown-menu i {
+            color: #3c8dbc;
+            width: 10px;
+        }
+
+        .dropdown-menu > li > a {
+            display: block;
+            white-space: nowrap;
+            border-bottom: 1px solid #f4f4f4;
+            color: black;
+            padding: 5px 5px;
+            font-size: 12px;
+            text-decoration: none
+        }
+</style>
+

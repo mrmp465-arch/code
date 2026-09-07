@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách nhóm quyền";
+}
+@using CMS.Data.DTO
+@model List<Groups>
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Subheader-->
+    <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
+        <div class="container-fluid ">
+            <!--begin::Details-->
+            <div class="filter-inline mr-2">
+                <!--begin::Title-->
+                <div class="filter-form mb-2  align-items-center">
+                    <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">@ViewBag.Title</h5>
+                </div>
+
+
+            </div>
+            <!--end::Details-->
+            <!--begin::Toolbar-->
+            <!--end::Toolbar-->
+        </div>
+    </div>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Card-->
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-loaded" id="kt_datatable" style="position: static; zoom: 1;">
+
+                            <table class="datatable-table ">
+                                <thead class="datatable-head">
+                                    <tr class="datatable-row" style="left: 0px;">
+                                        <th class="datatable-cell"><span> ID</span></th>
+                                        <th class="datatable-cell"><span>Name</span></th>
+                                        <th class="datatable-cell"><span>Quản trị</span></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="datatable-body" style="">
+                                    @if (Model != null && Model.Count > 0)
+                                    {
+                                        foreach (var obj in Model)
+                                        {
+                                            <tr class="datatable-row" style="left: 0px;">
+                                                <td class="datatable-cell"><div class="font-weight-bold">@obj.GroupID</div></td>
+                                                <td class="datatable-cell"><div class="font-weight-bold">@obj.Name </div></td>
+                                                <td class="datatable-cell">
+
+                                                    @if (ViewBag.IsFullControl)
+                                                    {
+                                                        if (obj.GroupID != 1)
+                                                        {
+                                                            <a href="@Url.Action("GetGrantGroup", new { id = obj.GroupID })" title="Grant"><i class="fa fa-cogs"></i></a>
+                                                        }
+
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+            <!--end::Card-->
+
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+
+
+

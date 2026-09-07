@@ -1,0 +1,144 @@
+﻿
+@using SMS.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+
+}
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><i class="fa fa-wrench"></i>Danh Sách tin nhắn</div>
+            <div class="box-body">
+                <div class="row" id="form">
+
+                    <div class="form-group col-md-2 col-xs-6 col-sm-6">
+                        <div class="row">
+                            <label for="txtEmail" class="control-label">Từ Khóa</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" id="txtEmail2" class="form-control" placeholder="Nhập từ khóa">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-6 col-sm-6">
+                        <div class="row">
+                            <label for="txtPort" class="control-label">Port</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" id="txtPort" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-2  col-sm-6 col-xs-6">
+                        <select class="form-control" id="ddlTelco">
+                            <option value="">Telco</option>
+                            <option value="1">VTT</option>
+                            <option value="3">VNP</option>
+                            <option value="2">VMS</option>
+                            <option value="4">VNM</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 col-sm-6 col-xs-6">
+                        <select class="form-control" id="ddlStatus2">
+                            <option value="-1">Trạng thái</option>
+                            <option value="1">Thành công</option>
+                            <option value="0">Thất bại</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-6 col-sm-6" @if (ListUser.Count == 1) { @Html.Raw("style='display:none'") ; }>
+
+
+                        <select class="form-control dlUser" id="ddlUser">
+                            @if (ListUser != null && ListUser.Count > 0)
+                            {
+                                foreach (var obj in ListUser)
+                                {
+                                    <option value="@obj.UserID">@obj.Username</option>
+                                }
+                            }
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-2 col-xs-6 col-sm-6 submit" style="text-align:center">
+                        <button type="button" id="btnSearch2" class="btn btn-primary"><i class="fa fa-search"></i> Tìm Kiếm</button>
+
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                        <div id="ListSMS">
+
+                        </div>
+
+                        <div class="dataTables_paginate" id="pager2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetList2(1);
+        var parameters2 = {
+        };
+        $("#txtEmail2").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch2").click();
+            }
+        });
+        $("#txtPort").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch2").click();
+            }
+        });
+        $("#btnSearch2").click(function () {
+            GetList2(1);
+        });
+        $("#ddlUser").change(function () {
+            GetList2(1);
+        });
+     $("#ddlTelco").change(function () {
+            GetList2(1);
+        });
+        $("#ddlStatus2").change(function () {
+            GetList2(1);
+        });
+        function GetList2(currentPage) {
+            parameters2 = {
+                 userId: $("#ddlUser").val(),
+                keyword: $("#txtEmail2").val(),
+                port: $("#txtPort").val(),
+                telco: $('#ddlTelco').val(),
+                status: $('#ddlStatus2').val(),
+                currentPage: currentPage
+            };
+            btnSearch2(currentPage);
+        };
+
+        function btnSearch2(currentPage) {
+
+            var urlRequestAns = "/Campaign/ListSMS";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters2,
+                success: function (data) {
+                    $("#ListSMS").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+    });
+
+
+</script>
+
+

@@ -1,0 +1,359 @@
+﻿
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span>Trừ tiền  tài khoản : <b>@ViewBag.UserName</b> </div>
+            <form id="defaultForm" method="post" class="form-horizontal">
+                <div class="form-horizontal">
+                    <div class="messager-body">
+                        <div class="alert alert-success display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <label>Đã lưu dữ liệu thành công !!!</label>
+                        </div>
+                        <div class="alert alert-danger display-hide alert-dismissable">
+                            <button type="button" class="close" data-close="alert" aria-hidden="true">×</button>
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            <label id="ErrorMessage">Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtAmount" class="control-label col-md-2">Số tiền :<span class="required">*</span></label>
+                        <div class="col-md-4">
+                            <div class="input-icon right">
+                                <input type="number" min="0" step="1000000" id="txtAmount" name="amount" required class="form-control" />
+                            </div>
+                        </div>
+                        <label id="textMoneyVND" class="control-label col-md-6">
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtNote" class="control-label col-md-2">Ghi chú :<span class="required"></span></label>
+                        <div class="col-md-6">
+                            <div class="input-icon right">
+                                <input type="text" id="txtNote" name="note" class="form-control" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="panel-footer form-horizontal">
+                    <div class="form-group submit">
+                        <button type="submit" class="btn btn-primary" id="btnSave"><i class="fa fa-save"></i> Cập nhập</button>
+
+                        <button type="button" class="btn btn-default" id="btnBack" data-dismiss="modal"><i class="fa fa-backward"></i >Hủy</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 50% !important;
+        height: 50% !important;
+    }
+
+    .modal-footer {
+        display: none;
+    }
+</style>
+
+
+
+
+
+
+<script type="text/javascript">
+
+
+    function formatPrice(price) {
+        var fixedToSix = (Math.round(price * 1000000) / 1000000);
+        return (Math.round(fixedToSix) == fixedToSix + 0.000001 ? fixedToSix + 0.000001 : fixedToSix);
+    }
+    Number.prototype.formatMoney = function (c, d, t) {
+        var n = this,
+            c = isNaN(c = Math.abs(c)) ? 2 : c,
+            d = d == undefined ? "." : d,
+            t = t == undefined ? "," : t,
+            s = n < 0 ? "-" : "",
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };
+
+    var unformat = function (value, decimal) {
+        // Recursively unformat arrays:
+        //            if (isArray(value)) {
+        //                return map(value, function (val) {
+        //                    return unformat(val, decimal);
+        //                });
+        //            }
+        // Fails silently (need decent errors):
+        value = value || 0;
+        // Return the value as-is if it's already a number:
+        if (typeof value === "number") return value;
+        // Default decimal point is "." but could be set to eg. "," in opts:
+        decimal = decimal || ",";
+        // Build regex to strip out everything except digits, decimal point and minus sign:
+        var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
+            unformatted = parseFloat(
+                ("" + value)
+                    .replace(/\((.*)\)/, "-$1") // replace bracketed values with negatives
+                    .replace(regex, '') // strip out any cruft
+                    .replace(decimal, ',') // make sure decimal point is standard
+            );
+        // This will fail silently which may cause trouble, let's wait and see:
+        return !isNaN(unformatted) ? unformatted : 0;
+    };
+    var DocTienBangChu = function (SoTien) {
+        var ChuSo = new Array(" không ", " một ", " hai ", " ba ", " bốn ", " năm ", " sáu ", " bảy ", " tám ", " chín ");
+        var Tien = new Array("", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ");
+        var lan = 0;
+        var i = 0;
+        var so = 0;
+        var KetQua = "";
+        var tmp = "";
+        var ViTri = new Array();
+        if (SoTien < 0) return "Số tiền âm !";
+        if (SoTien == 0) return "Không";
+        if (SoTien > 0) {
+            so = SoTien;
+        }
+        else {
+            so = -SoTien;
+        }
+        if (SoTien > 8999999999999999) {
+            //SoTien = 0;
+            return "Số quá lớn!";
+        }
+        ViTri[5] = Math.floor(so / 1000000000000000);
+        if (isNaN(ViTri[5]))
+            ViTri[5] = "0";
+        so = so - parseFloat(ViTri[5].toString()) * 1000000000000000;
+        ViTri[4] = Math.floor(so / 1000000000000);
+        if (isNaN(ViTri[4]))
+            ViTri[4] = "0";
+        so = so - parseFloat(ViTri[4].toString()) * 1000000000000;
+        ViTri[3] = Math.floor(so / 1000000000);
+        if (isNaN(ViTri[3]))
+            ViTri[3] = "0";
+        so = so - parseFloat(ViTri[3].toString()) * 1000000000;
+        ViTri[2] = parseInt(so / 1000000);
+        if (isNaN(ViTri[2]))
+            ViTri[2] = "0";
+        ViTri[1] = parseInt((so % 1000000) / 1000);
+        if (isNaN(ViTri[1]))
+            ViTri[1] = "0";
+        ViTri[0] = parseInt(so % 1000);
+        if (isNaN(ViTri[0]))
+            ViTri[0] = "0";
+        if (ViTri[5] > 0) {
+            lan = 5;
+        }
+        else if (ViTri[4] > 0) {
+            lan = 4;
+        }
+        else if (ViTri[3] > 0) {
+            lan = 3;
+        }
+        else if (ViTri[2] > 0) {
+            lan = 2;
+        }
+        else if (ViTri[1] > 0) {
+            lan = 1;
+        }
+        else {
+            lan = 0;
+        }
+        for (i = lan; i >= 0; i--) {
+            tmp = DocSo3ChuSo(ViTri[i]);
+            KetQua += tmp;
+            if (ViTri[i] > 0) KetQua += Tien[i];
+            if ((i > 0) && (tmp.length > 0)) KetQua += ',';//&& (!string.IsNullOrEmpty(tmp))
+        }
+        if (KetQua.substring(KetQua.length - 1) == ',') {
+            KetQua = KetQua.substring(0, KetQua.length - 1);
+        }
+        KetQua = KetQua.substring(1, 2).toUpperCase() + KetQua.substring(2);
+        //KetQua += " GG";
+        return KetQua;//.substring(0, 1);//.toUpperCase();// + KetQua.substring(1);
+    }
+    //Hàm chuyển số thành chữ
+    var DocSo3ChuSo = function (baso) {
+        var ChuSo = new Array(" không ", " một ", " hai ", " ba ", " bốn ", " năm ", " sáu ", " bảy ", " tám ", " chín ");
+        var Tien = new Array("", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ");
+        var tram;
+        var chuc;
+        var donvi;
+        var KetQua = "";
+        tram = parseInt(baso / 100);
+        chuc = parseInt((baso % 100) / 10);
+        donvi = baso % 10;
+        if (tram == 0 && chuc == 0 && donvi == 0) return "";
+        if (tram != 0) {
+            KetQua += ChuSo[tram] + " trăm ";
+            if ((chuc == 0) && (donvi != 0)) KetQua += " linh ";
+        }
+        if ((chuc != 0) && (chuc != 1)) {
+            KetQua += ChuSo[chuc] + " mươi";
+            if ((chuc == 0) && (donvi != 0)) KetQua = KetQua + " linh ";
+        }
+        if (chuc == 1) KetQua += " mười ";
+        switch (donvi) {
+            case 1:
+                if ((chuc != 0) && (chuc != 1)) {
+                    KetQua += " mốt ";
+                }
+                else {
+                    KetQua += ChuSo[donvi];
+                }
+                break;
+            case 5:
+                if (chuc == 0) {
+                    KetQua += ChuSo[donvi];
+                }
+                else {
+                    KetQua += " lăm ";
+                }
+                break;
+            default:
+                if (donvi != 0) {
+                    KetQua += ChuSo[donvi];
+                }
+                break;
+        }
+        return KetQua;
+    }
+</script>
+<script>
+    $("#txtAmount").keyup(function () {
+        var val = $(this).val();
+        if (val) {
+
+            val = unformat(val, 0);
+            $(this).val(val);
+
+            var price = parseInt(val);
+            var textMoneyVND = DocTienBangChu(price) + " đồng";
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.') + " VNĐ";
+            $("#textMoneyVND").html(formatMoneyVNDVal + " (" + textMoneyVND + ")");
+        }
+    }).blur(function () {
+        var val = $(this).val();
+        if (val) {
+
+            val = unformat(val, 0);
+            $(this).val(val);
+
+            var price = parseInt(val);
+            var textMoneyVND = DocTienBangChu(price) + " đồng";
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.') + " VNĐ";
+            $("#textMoneyVND").html(formatMoneyVNDVal + " (" + textMoneyVND + ")");
+        }
+    });
+    $("#txtAmount").change(function () {
+        var val = $(this).val();
+        if (val) {
+
+            val = unformat(val, 0);
+            $(this).val(val);
+
+            var price = parseInt(val);
+            var textMoneyVND = DocTienBangChu(price) + " đồng";
+            var formatMoneyVNDVal = price.formatMoney(0, '', '.') + " VNĐ";
+            $("#textMoneyVND").html(formatMoneyVNDVal + " (" + textMoneyVND + ")");
+        }
+    });
+
+    $(document).ready(function () {
+        function GotoListpage()
+        {
+            BindDataRequest(1);
+            GetBalance();
+            $('.modal ').modal('hide');
+        }
+        $('#defaultForm').bootstrapValidator({
+            message: 'This value is not valid',
+            //live: 'submitted',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+
+                amount: {
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {
+                            message: 'số tiền không được bỏ trống'
+                        },
+                        integer: {
+                            message: 'Số tiền không đúng định dạng'
+                        }
+
+                    }
+                }
+            }
+        })
+            .on('success.form.bv', function (e) {
+                // Prevent submit form
+                e.preventDefault();
+
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                SaveData();
+                $(".close").click(function () {
+                    $(".alert-success").css("display", "none");
+                });
+            })
+            .on('error.form.bv', function (e) {
+                // Active the panel element containing the first invalid element
+                e.preventDefault();
+                var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                $(".alert-danger label").text("Có một vài lỗi trong khung nhập liệu dưới đây ! kiểm tra lại");
+                $(".alert-danger").css("display", "block");
+                $(".close").click(function () {
+                    $(".alert-danger").css("display", "none");
+                    $(".alert-success").css("display", "none");
+                });
+            });
+
+        function SaveData() {
+            var param = {
+                'id': '@ViewBag.id',
+                'Amount': $("#txtAmount").val(),
+                'Note': $("#txtNote").val(),
+            };
+              $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("Deduct")",
+                    data: addAntiForgeryToken(param),
+                    async: true,
+                    success: function (data) {
+                        Utils.UnLoading();
+                        if (data.ResponseCode >= 0) {
+
+                            $(".alert-success").show("slow");
+                            $(".alert-danger").hide("slow");
+                            setTimeout(function () { $(".alert-success").hide("slow"); GotoListpage(); }, 2000);
+                        }
+                        else {
+
+                            $("#ErrorMessage").text(data.Description);
+                            $(".alert-danger").show("slow");
+                            $(".alert-success").hide("slow");
+                            setTimeout(function () { $(".alert-danger").hide("slow"); }, 5000);
+                        }
+                    }
+                });
+
+
+        }
+    });
+
+</script>

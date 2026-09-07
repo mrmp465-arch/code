@@ -1,0 +1,202 @@
+﻿@using Card.Data.DTO
+@{
+    List<Users> ListUser = ViewBag.UserList;
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <span class="glyphicon glyphicon-user"></span>
+                @ViewBag.Title
+            </div>
+            <div class="box-body">
+                <div class="row" id="form">
+
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <label class="control-label">Bản ghi</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <select class="form-control" id="ddlTop">
+
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="1000" selected> 1000</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6" @if (ListUser.Count == 1) { @Html.Raw("style='display:none'") ; }>
+
+                        <div class="col-lg-12 col-md-12 col-sm-8 col-xs-12">
+                            <select class="form-control dlUser" id="ddlUser">
+                                @if (ListUser != null && ListUser.Count > 0)
+                                {
+                                    foreach (var obj in ListUser)
+                                    {
+                                        <option value="@obj.UserID">@obj.Username</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <label class="control-label">Status</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <select class="form-control" id="ddlStatus">
+                                <option value="-1000">Tất cả</option>
+                                <option value="99">Chờ nhập OTP</option>
+                                <option value="1">Đợi xử lý</option>
+                                <option value="2">Đang xử lý</option>
+                                <option value="3">Đã hoàn thành</option>
+                                <option value="0">Không sử dụng</option>
+                                <option value="-1">Bỏ qua</option>
+                                <option value="-2">Telco khóa</option>
+                                <option value="-3">Đợi nạp</option>
+                                <option value="-6">Đợi review</option>
+                                <option value="-4">Telco hết lượt</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <label class="control-label">USSD</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <select class="form-control" id="ddlUSSD">
+                                <option value="-1">Tất cả</option>
+
+                                <option value="0" >Không</option>
+                                <option value="1">Có</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <label class="control-label">Chốt</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <select class="form-control" id="ddlConfirm">
+                                <option value="-1">Tất cả</option>
+
+                                <option value="0" @(ViewBag.confirm == 0 ? "selected='selected'" : "")>Chưa chốt</option>
+                                <option value="1" @(ViewBag.confirm == 1 ? "selected='selected'" : "")>Đã chốt</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2 col-xs-12 col-sm-6">
+                        <label class="control-label">Telco</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            <select class="form-control" id="ddlTelco">
+                                <option value="">Tất cả</option>
+                                <option value="VTT">Viettel</option>
+                                <option value="VNP">Vina</option>
+                                <option value="VMS">Mobi</option>
+                                <option value="ZING">Zing</option>
+                                <option value="GARENA">Garena</option>
+                                <option value="VTC">VTC</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1 col-xs-12 col-sm-6">
+
+                        <input type="text" id="txtMobile" class="form-control" placeholder="Số điện thoại ">
+                    </div>
+                    <div class="form-group col-md-1 col-xs-12 col-sm-6">
+                        <button type="button" id="btnSearch" class="btn btn-primary">Tìm Kiếm</button>
+
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+                                <div id="ListTransactionOrder">
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btn_export").click(function () {
+            $("#dataTables").table2excel({
+                exclude: ".noExl",
+                name: "OrderHistory",
+                filename: "OrderHistory" + '@ViewBag.OrderNo',
+                fileext: ".xls",
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true
+            });
+        });
+
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlTelco").change(function () {
+            GetList(1);
+        });
+         $("#ddlUser").change(function () {
+            GetList(1);
+        });
+        $("#ddlTop").change(function () {
+            GetList(1);
+        });
+        $("#ddlConfirm").change(function () {
+            GetList(1);
+        });
+        $("#ddlStatus").change(function () {
+            GetList(1);
+        });
+        $("#ddlUSSD").change(function () {
+            GetList(1);
+        });
+        function GetList(currentPage) {
+            parameters = {
+                telco: $('#ddlTelco').val(),
+                orderNo: '@ViewBag.OrderNo',
+                status: $("#ddlStatus").val(),
+                ussd: $("#ddlUSSD").val(),
+                confirm: $("#ddlConfirm").val(),
+                top: $("#ddlTop").val(),
+                mobile: $("#txtMobile").val(),
+                   userId: $("#ddlUser").val(),
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+            Utils.Loading();
+            var urlRequestAns = "/Order/ListTransactionSearch";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    Utils.UnLoading();
+                    $("#ListTransactionOrder").html(data);
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+        GetList(1);
+
+    });
+</script>

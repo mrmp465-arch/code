@@ -1,0 +1,47 @@
+﻿@model SMS.Data.DTO.Users
+<div class="row" style="font-size:168%;font-weight:bold ">
+    <div class="col-sm-4 col-xs-4">
+        <div class="description-block border-right">
+            <span class="description-percentage text-green"> @(100-Model.PercentVTT)%</span>
+            <h3 class="description-header">
+                VTT  @if (!Model.StatusVTT)
+                {
+                    <span class="description-text text-red">(Bảo trì)</span>
+                }
+            </h3>
+           
+
+        </div>
+        <!-- /.description-block -->
+    </div>
+    <!-- /.col -->
+    <div class="col-sm-4 col-xs-4">
+        <div class="description-block border-right">
+            <span class="description-percentage text-green"> @(100 - Model.PercentVNP)%</span>
+            <h3 class="description-header">
+                VNP  @if (!Model.StatusVNP)
+                {
+                    <span class="description-text text-red">(Bảo trì)</span>
+                }
+            </h3>
+
+        </div>
+        <!-- /.description-block -->
+    </div>
+
+    <!-- /.col -->
+    <div class="col-sm-4 col-xs-4">
+        <div class="description-block">
+            <span class="description-percentage text-green"> @(100 - Model.PercentVMS)%</span>
+            <h3 class="description-header">
+                VMS   @if (!Model.StatusVMS)
+                {
+                    <span class="description-text text-red">(Bảo trì)</span>
+                }
+            </h3>
+
+        </div>
+        <!-- /.description-block -->
+    </div>
+</div>
+<!-- /.row -->

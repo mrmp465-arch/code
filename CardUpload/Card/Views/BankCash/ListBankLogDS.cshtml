@@ -1,0 +1,53 @@
+﻿
+@using Card.Data.DTO;
+@using Card.Utility
+@model List<BankCashAPI>
+@{
+    List<String> lstPartner = ViewBag.lstPartner;
+
+}
+<table class="table table-bordered nowrap" id="dataTables">
+    <thead>
+
+        <tr class="rowsao">
+
+            <th>Đối tác</th>
+            <th>Loại</th>
+            <th>Số giao dịch</th>
+            <th>Sản lượng</th>
+            <th>Tổng</th>
+        </tr>
+        @foreach (var partner in lstPartner)
+        {
+
+            foreach (var cardType in Model.Where(e => e.UserName == partner).GroupBy(x => x.Type).Select(a => a.Key).Select((value, i) => new { i, value }))
+            {
+                if (cardType.i == 0)
+                {
+                    <tr>
+                        <td rowspan="@Model.Where(e => e.UserName == partner).GroupBy(x => x.Type).Count()">@partner</td>
+                        <td>
+                            @cardType.value
+                        </td>
+                        <td>@Model.Where(e => e.UserName == partner && e.Type == cardType.value).Sum(x => x.ReturnValue) </td>
+                        <td>@Model.Where(e => e.UserName == partner && e.Type == cardType.value).Sum(x => x.ReturnTotalValue).ToString("N0") </td>
+                        <td rowspan="@Model.Where(e => e.UserName == partner).GroupBy(x => x.Type).Count()">@Model.Where(e => e.UserName == partner).Sum(x => x.ReturnTotalValue).ToString("N0") </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            @cardType.value
+                        </td>
+                        <td>@Model.Where(e => e.UserName == partner && e.Type == cardType.value).Sum(x => x.ReturnValue) </td>
+                        <td>@Model.Where(e => e.UserName == partner && e.Type == cardType.value).Sum(x => x.ReturnTotalValue).ToString("N0") </td>
+                    </tr>
+                }
+
+
+            }
+        }
+
+    </thead>
+</table>

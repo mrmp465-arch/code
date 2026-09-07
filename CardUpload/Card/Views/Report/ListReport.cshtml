@@ -1,0 +1,121 @@
+﻿@using Card.CMS.Models
+@using Card.CMS.Helper
+@using Card.Utility
+@model List<Card.Data.Api.OrderReportHistoryItem>
+@if (ViewBag.userId > 0)
+{
+    <div class="table-responsive">
+        <div id="dgrid" class="dataTables_wrapper form-inline" role="grid">
+            @if (Model != null && Model.Count > 0)
+            {
+
+                <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables">
+                    <thead>
+                        <tr class="rowsao">
+                            <th>Ngày</th>
+                            <th>Số giao dịch</th>
+                            <th>Tổng doanh số</th>
+                            @if (ViewBag.UserType > 2)
+                            {
+                                <th>Doanh thu sau chiết khấu</th>
+                            }
+                          
+                            <th>Doanh thu đua giá</th>
+
+                        </tr>
+                    </thead>
+                    @if (Model.Count > 0)
+                    {
+                        foreach (var obj in Model)
+                        {
+                <tr>
+                    <td>@StringUtils.FormatDay(obj.Data)</td>
+                    <td>@obj.TotalTrans</td>
+                    <td>@StringUtils.InsertCommaNoStyle(obj.TotalAmount.ToString())</td>
+                    @if (ViewBag.UserType > 2)
+                    {
+                        <td><b>@StringUtils.InsertCommaNoStyle(obj.TotalRevenue.ToString())</b></td>
+                    }
+
+                <td> @StringUtils.InsertCommaNoStyle(obj.TotalBidFee.ToString()) (@string.Format("{0:N2}", (decimal)(obj.TotalBidFee) / (long)obj.TotalAmount *100) %)</td>
+                    @*<td >@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())</td>*@
+                </tr>
+                        }
+                <tr>
+                    <td><b>Tổng</b></td>
+                    <td><b>@Model.Sum(x => x.TotalTrans)</b></td>
+                    <td><b>@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.TotalAmount).ToString())</b></td>
+                    @if (ViewBag.UserType > 2)
+                    {
+                        <td><b>@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.TotalRevenue).ToString())</b></td>
+                    }
+                    @*<td ><b>@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.Amount).ToString())</b></td>*@
+                    <td><b>@StringUtils.InsertCommaNoStyle(Model.Sum(x => x.TotalBidFee).ToString()) (@string.Format("{0:N2}", (decimal)(Model.Sum(x => x.TotalBidFee)) / (long)Model.Sum(x => x.TotalAmount)*100) %)</b>
+                </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+    <script>
+        $("#btn_export").show();
+    </script>
+}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btn_export").click(function () {
+                
+                var urlRequestAns = "/Report/ReportDaily?userId=" + $("#ddlUser").val() + "&FromDate=" + $("#fromDate").val() + "&ToDate=" + $("#toDate").val() + "&telco=" + $("#ddlTelco").val()+ "&type=" + $("#ddlType").val();
+
+                window.location = urlRequestAns;
+
+            });
+            
+
+        });
+    </script>
+<div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+
+
+<script>
+    var colors = ['#f39c12', '#7ab4ec', '#ED561B'];
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Báo cáo doanh thu theo ngày'
+            },
+            colors: colors,
+            xAxis: {
+                categories: @(Html.Raw(ViewBag.datacategory)),
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Amount'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Giá trị',
+                data: @Html.Raw(ViewBag.DataLine)
+                },
+
+            ]
+        });
+</script>

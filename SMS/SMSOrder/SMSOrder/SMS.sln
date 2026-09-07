@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.CMS", "Card\SMS.CMS.csproj", "{8F5F5379-C51E-461F-BD6F-524BF08C63F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.Data", "Card.Data\SMS.Data.csproj", "{1B5A902E-2B11-4114-82E5-C242783C6B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.Utility", "Card.Utility\SMS.Utility.csproj", "{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.Service", "SMS.Service\SMS.Service.csproj", "{5F3DFA26-24A9-4022-87AB-10794D994E2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.API", "SMS.API\SMS.API.csproj", "{0AB532D9-3459-4AD7-881F-107AF3A61263}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dll", "Dll", "{DEF3BE3C-6ECA-4D5F-98BA-A5BD40EED6AA}"
+	ProjectSection(SolutionItems) = preProject
+		DLL\Microsoft.Web.RedisSessionStateProvider.dll = DLL\Microsoft.Web.RedisSessionStateProvider.dll
+		DLL\RedisSessionStateProvider.dll = DLL\RedisSessionStateProvider.dll
+		DLL\ServiceStack.Common.dll = DLL\ServiceStack.Common.dll
+		DLL\ServiceStack.Interfaces.dll = DLL\ServiceStack.Interfaces.dll
+		DLL\ServiceStack.Messaging.dll = DLL\ServiceStack.Messaging.dll
+		DLL\ServiceStack.Redis.dll = DLL\ServiceStack.Redis.dll
+		DLL\ServiceStack.Text.dll = DLL\ServiceStack.Text.dll
+		DLL\StackExchange.Redis.StrongName.dll = DLL\StackExchange.Redis.StrongName.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F3DFA26-24A9-4022-87AB-10794D994E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F3DFA26-24A9-4022-87AB-10794D994E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F3DFA26-24A9-4022-87AB-10794D994E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F3DFA26-24A9-4022-87AB-10794D994E2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AB532D9-3459-4AD7-881F-107AF3A61263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AB532D9-3459-4AD7-881F-107AF3A61263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AB532D9-3459-4AD7-881F-107AF3A61263}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AB532D9-3459-4AD7-881F-107AF3A61263}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A66BF41-407B-4199-B6F6-9F253DACB7B1}
+	EndGlobalSection
+EndGlobal

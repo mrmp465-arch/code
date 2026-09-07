@@ -1,0 +1,120 @@
+﻿#loginbt a {
+    
+    font-size: 1rem !important;
+}
+#loginbt a {
+    color: #ffffff !important;
+    font-size: 1rem !important;
+}
+/*.topbar .menu-subnav > .menu-item  {
+    padding: 11px 0px;
+}*/
+.table-responsive {
+    overflow-x: unset;
+}
+
+@media screen and (max-width: 767px) {
+    .table-responsive {
+        width: 100%;
+        margin-bottom: 15px;
+        overflow-y: hidden;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+        border: 1px solid #ddd;
+    }
+
+    .card.card-custom > .card-body {
+        padding: 1px 1px;
+    }
+}
+
+table {
+    border-collapse: collapse !important;
+    display: table !important;
+}
+
+    table i {
+        color: #3699FF;
+    }
+
+thead {
+    display: table-header-group !important;
+}
+
+tbody {
+    display: table-row-group !important;
+}
+
+th, td {
+    display: table-cell;
+    white-space: normal;
+}
+
+tr {
+    display: table-row !important;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+.topbar .menu-text {
+    color: #3F4254;
+}
+
+.topbar .menu-item :hover {
+    color: #3699FF !important;
+    background-color: rgba(77, 89, 149, 0.06) !important;
+}
+
+.topbar .menu-subnav > .menu-item > .menu-link {
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    padding: 11px 12px;
+    flex-grow: 1;
+    text-decoration: none;
+    position: relative;
+    display: flex;
+}
+
+.filter-inline .filter-form {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.label-form label {
+    margin-left: 5px;
+    display: inline-block;
+    width: 30%;
+    vertical-align: middle;
+    float: left;
+    /*font-weight:bold;*/
+}
+
+.label-form input {
+    display: inline-block;
+    float: left;
+    width: 64%;
+}
+
+.display-hide {
+    display: none;
+}
+
+.help-block {
+    color: #a94442;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: #F3F6F9;
+    opacity: 1;
+}
+
+@media (max-width: 767px) {
+    .filter-inline .filter-form {
+        width: 100%;
+        float: left;
+    }
+}
+.wizard-label .wizard-title a {
+    color: #181C32;
+}

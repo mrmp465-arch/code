@@ -1,0 +1,26 @@
+﻿@using SMS.Data.DTO
+@model Contents
+@using SMS.Utility
+@using SMS.CMS.Helper
+@if (Model != null)
+{
+
+    <li>
+        <div class="hotcontent">
+            <marquee direction="left" width="620px" scrolldelay="200" onMouseOver="this.stop()" onMouseOut="this.start()">
+                <a href="@Url.Action("Detail","AdminContent",new {Id=Model.Id,Title=StringUtils.ConvertToRewriteLink(Model.Title) })">@Model.Title</a>
+
+            </marquee>
+        </div>
+    </li>
+
+    <style>
+        @@media (max-width: 768px) {
+
+            .content-wrapper, .main-footer {
+                margin-left: 0;
+                padding-top: 60px;
+            }
+        }
+    </style>
+}
