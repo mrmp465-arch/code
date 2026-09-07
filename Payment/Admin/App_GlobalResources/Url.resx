@@ -1,0 +1,603 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Dashboard" xml:space="preserve">
+    <value>default.aspx</value>
+  </data>
+  <data name="BankGateAPIFixStatus" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.fixstatus.aspx</value>
+  </data>
+  <data name="BankGateAPIMonitor" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.monitor.aspx</value>
+  </data>
+  <data name="BankGateAPIMonitorDetail" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.monitor.detail.aspx</value>
+  </data>
+  <data name="BankGateAPIFixMomo" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.fixmomo.aspx</value>
+  </data>
+  <data name="BankGateAPIReport" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.report.aspx</value>
+  </data>
+  <data name="BankGateAPIReportPartner" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.report.partner.aspx</value>
+  </data>
+  <data name="BankGateAPIReportService" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.report.service.aspx</value>
+  </data>
+  <data name="BankGateAPISearch" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.search.aspx</value>
+  </data>
+  <data name="BuyCardCheck" xml:space="preserve">
+    <value>pages/monitor/buyCard.check.aspx</value>
+  </data>
+  <data name="BuyCardDoiSoat" xml:space="preserve">
+    <value>pages/monitor/buycard.report.doisoat.aspx</value>
+  </data>
+  <data name="BuyCardFixStatus" xml:space="preserve">
+    <value>pages/monitor/buycard.fixstatus.aspx</value>
+  </data>
+  <data name="BuyCardMonitor" xml:space="preserve">
+    <value>pages/monitor/buycard.monitor.aspx</value>
+  </data>
+  <data name="BuyCardMonitorDetail" xml:space="preserve">
+    <value>pages/monitor/buycard.monitor.detail.aspx</value>
+  </data>
+  <data name="BuyCardReport" xml:space="preserve">
+    <value>pages/monitor/buycard.report.aspx</value>
+  </data>
+  <data name="BuyCardReportCardType" xml:space="preserve">
+    <value>pages/monitor/buycard.report.cardtype.aspx</value>
+  </data>
+  <data name="BuyCardReportPartner" xml:space="preserve">
+    <value>pages/monitor/buycard.report.partner.aspx</value>
+  </data>
+  <data name="BuyCardReportProvider" xml:space="preserve">
+    <value>pages/monitor/buycard.report.provider.aspx</value>
+  </data>
+  <data name="BuyCardSearch" xml:space="preserve">
+    <value>pages/monitor/buycard.search.aspx</value>
+  </data>
+  <data name="CardAPICheck" xml:space="preserve">
+    <value>pages/monitor/cardapi.check.aspx</value>
+  </data>
+  <data name="CardAPIDoiSoat" xml:space="preserve">
+    <value>pages/monitor/cardapi.report.doisoat.aspx</value>
+  </data>
+  <data name="CardCheckDoiSoat" xml:space="preserve">
+    <value>pages/monitor/cardcheck.report.doisoat.aspx</value>
+  </data>
+  <data name="CardAPIFixBulk" xml:space="preserve">
+    <value>pages/monitor/cardapi.fixbulk.aspx</value>
+  </data>
+  <data name="CardAPIFixBulkHistory" xml:space="preserve">
+    <value>pages/monitor/cardapi.fixbulkhistory.aspx</value>
+  </data>
+  <data name="CardAPIFixStatus" xml:space="preserve">
+    <value>pages/monitor/cardapi.fixstatus.aspx</value>
+  </data>
+  <data name="CardAPIMonitor" xml:space="preserve">
+    <value>pages/monitor/cardapi.monitor.aspx</value>
+  </data>
+  <data name="CardAPIMonitorDetail" xml:space="preserve">
+    <value>pages/monitor/cardapi.monitor.detail.aspx</value>
+  </data>
+  <data name="CardAPIReport" xml:space="preserve">
+    <value>pages/monitor/cardapi.report.aspx</value>
+  </data>
+  <data name="CardAPIReportCardType" xml:space="preserve">
+    <value>pages/monitor/cardapi.report.cardtype.aspx</value>
+  </data>
+  <data name="CardAPIReportPartner" xml:space="preserve">
+    <value>pages/monitor/cardapi.report.partner.aspx</value>
+  </data>
+  <data name="CardAPIReportProvider" xml:space="preserve">
+    <value>pages/monitor/cardapi.report.provider.aspx</value>
+  </data>
+  <data name="CardAPISearch" xml:space="preserve">
+    <value>pages/monitor/cardapi.search.aspx</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>pages/security/changepassword.aspx</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>default.aspx</value>
+  </data>
+  <data name="PartnersAdd" xml:space="preserve">
+    <value>pages/paygate/partners.add.aspx</value>
+  </data>
+  <data name="PartnersDelete" xml:space="preserve">
+    <value>pages/paygate/partners.delete.aspx</value>
+  </data>
+  <data name="PartnersEdit" xml:space="preserve">
+    <value>pages/paygate/partners.edit.aspx</value>
+  </data>
+  <data name="PartnersEditDiscount" xml:space="preserve">
+    <value>pages/paygate/partners.edit.discount.aspx</value>
+  </data>
+  <data name="PartnersList" xml:space="preserve">
+    <value>pages/paygate/partners.list.aspx</value>
+  </data>
+  <data name="PaymentsAdd" xml:space="preserve">
+    <value>pages/paygate/payments.add.aspx</value>
+  </data>
+  <data name="PaymentsEdit" xml:space="preserve">
+    <value>pages/paygate/payments.edit.aspx</value>
+  </data>
+  <data name="PaymentsList" xml:space="preserve">
+    <value>pages/paygate/payments.list.aspx</value>
+  </data>
+  <data name="PaymentsLog" xml:space="preserve">
+    <value>pages/paygate/payments.log.aspx</value>
+  </data>
+  <data name="ProductAdd" xml:space="preserve">
+    <value>pages/paygate/products.add.aspx</value>
+  </data>
+  <data name="ProductDelete" xml:space="preserve">
+    <value>pages/paygate/products.delete.aspx</value>
+  </data>
+  <data name="ProductEdit" xml:space="preserve">
+    <value>pages/paygate/products.edit.aspx</value>
+  </data>
+  <data name="ProductList" xml:space="preserve">
+    <value>pages/paygate/products.list.aspx</value>
+  </data>
+  <data name="ProviderAdd" xml:space="preserve">
+    <value>pages/paygate/providers.add.aspx</value>
+  </data>
+  <data name="ProviderEdit" xml:space="preserve">
+    <value>pages/paygate/providers.edit.aspx</value>
+  </data>
+  <data name="ProviderEditDiscount" xml:space="preserve">
+    <value>pages/paygate/providers.edit.discount.aspx</value>
+  </data>
+  <data name="ProviderList" xml:space="preserve">
+    <value>pages/paygate/providers.list.aspx</value>
+  </data>
+  <data name="ProvidersDelete" xml:space="preserve">
+    <value>pages/paygate/providers.delete.aspx</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>pages/security/signin.aspx</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>pages/security/signout.aspx</value>
+  </data>
+  <data name="SMSFixStatus" xml:space="preserve">
+    <value>pages/monitor/sms.fixstatus.aspx</value>
+  </data>
+  <data name="SMSMonitor" xml:space="preserve">
+    <value>pages/monitor/sms.monitor.aspx</value>
+  </data>
+  <data name="SMSMonitorDetail" xml:space="preserve">
+    <value>pages/monitor/sms.monitor.detail.aspx</value>
+  </data>
+  <data name="SMSReport" xml:space="preserve">
+    <value>pages/monitor/sms.report.aspx</value>
+  </data>
+  <data name="SMSReportPartner" xml:space="preserve">
+    <value>pages/monitor/sms.report.partner.aspx</value>
+  </data>
+  <data name="SMSReportService" xml:space="preserve">
+    <value>pages/monitor/sms.report.service.aspx</value>
+  </data>
+  <data name="SMSSearch" xml:space="preserve">
+    <value>pages/monitor/sms.search.aspx</value>
+  </data>
+  <data name="UsersAdd" xml:space="preserve">
+    <value>pages/security/users.add.aspx</value>
+  </data>
+  <data name="UsersDelete" xml:space="preserve">
+    <value>pages/security/users.delete.aspx</value>
+  </data>
+  <data name="UsersEdit" xml:space="preserve">
+    <value>pages/security/users.edit.aspx</value>
+  </data>
+  <data name="UsersList" xml:space="preserve">
+    <value>pages/security/users.list.aspx</value>
+  </data>
+  <data name="SMSReportCardType" xml:space="preserve">
+    <value>pages/monitor/sms.report.cardtype.aspx</value>
+  </data>
+  <data name="SMSReportProvider" xml:space="preserve">
+    <value>pages/monitor/sms.report.provider.aspx</value>
+  </data>
+  <data name="SMSDoiSoat" xml:space="preserve">
+    <value>pages/monitor/sms.report.doisoat.aspx</value>
+  </data>
+  <data name="PacketMonitor" xml:space="preserve">
+    <value>pages/cardStore/packet.monitor.aspx</value>
+  </data>
+  <data name="CardResellerOrders" xml:space="preserve">
+    <value>pages/cardstore/cardReseller.orders.aspx</value>
+  </data>
+  <data name="CardResellerPacket" xml:space="preserve">
+    <value>pages/cardstore/cardReseller.packet.aspx</value>
+  </data>
+  <data name="CardResellerStore" xml:space="preserve">
+    <value>pages/cardstore/cardReseller.store.aspx</value>
+  </data>
+  <data name="RolesAdd" xml:space="preserve">
+    <value>pages/security/roles.add.aspx</value>
+  </data>
+  <data name="RolesDelete" xml:space="preserve">
+    <value>pages/security/roles.delete.aspx</value>
+  </data>
+  <data name="RolesEdit" xml:space="preserve">
+    <value>pages/security/roles.edit.aspx</value>
+  </data>
+  <data name="RolesList" xml:space="preserve">
+    <value>pages/security/roles.list.aspx</value>
+  </data>
+  <data name="TopupAdd" xml:space="preserve">
+    <value>pages/topup/topup.add.aspx</value>
+  </data>
+  <data name="TopupMonitor" xml:space="preserve">
+    <value>pages/topup/topup.monitor.aspx</value>
+  </data>
+  <data name="TopupList" xml:space="preserve">
+    <value>pages/topup/topup.list.aspx</value>
+  </data>
+  <data name="TopupListOrder" xml:space="preserve">
+    <value>pages/topup/topup.list.order.aspx</value>
+  </data>
+  <data name="TopupListOrderConfirm" xml:space="preserve">
+    <value>pages/topup/topup.list.order.confirm.aspx</value>
+  </data>
+  <data name="TopupMonitorDetail" xml:space="preserve">
+    <value>pages/topup/topup.monitor.detail.aspx</value>
+  </data>
+  <data name="TopupReport" xml:space="preserve">
+    <value>pages/topup/topup.report.aspx</value>
+  </data>
+  <data name="TopupReportOrder" xml:space="preserve">
+    <value>pages/topup/topup.report.order.aspx</value>
+  </data>
+  <data name="TopupEdit" xml:space="preserve">
+    <value>pages/topup/topup.edit.aspx</value>
+  </data>
+  <data name="TopupEditOrder" xml:space="preserve">
+    <value>pages/topup/topup.edit.order.aspx</value>
+  </data>
+  <data name="TopupDelete" xml:space="preserve">
+    <value>pages/topup/topup.delete.aspx</value>
+  </data>
+  <data name="TopupReview" xml:space="preserve">
+    <value>pages/topup/topup.review.aspx</value>
+  </data>
+  <data name="TopupSearch" xml:space="preserve">
+    <value>pages/topup/topup.search.aspx</value>
+  </data>
+  <data name="TopupUsersAdd" xml:space="preserve">
+    <value>pages/topup/users.add.aspx</value>
+  </data>
+  <data name="TopupUsersDelete" xml:space="preserve">
+    <value>pages/topup/users.delete.aspx</value>
+  </data>
+  <data name="TopupUsersEdit" xml:space="preserve">
+    <value>pages/topup/users.edit.aspx</value>
+  </data>
+  <data name="TopupUsersList" xml:space="preserve">
+    <value>pages/topup/users.list.aspx</value>
+  </data>
+  <data name="TopupDoiSoat" xml:space="preserve">
+    <value>pages/topup/topup.report.doisoat.aspx</value>
+  </data>
+  <data name="TopupReportCardType" xml:space="preserve">
+    <value>pages/topup/topup.report.telco.aspx</value>
+  </data>
+  <data name="TopupDevice" xml:space="preserve">
+    <value>pages/Topup/Topup.Device.aspx</value>
+  </data>
+  <data name="TopupSimEdit" xml:space="preserve">
+    <value>pages/Topup/Topup.Sim.Edit.aspx</value>
+  </data>
+  <data name="PartnerDiscount" xml:space="preserve">
+    <value>pages/paygate/partners.edit.discount.aspx</value>
+  </data>
+  <data name="ProviderDiscount" xml:space="preserve">
+    <value>pages/paygate/providers.edit.discount.aspx</value>
+  </data>
+  <data name="BankGateAPIReportBankCode" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.report.bankcode.aspx</value>
+  </data>
+  <data name="BankCashMonitor" xml:space="preserve">
+    <value>pages/monitor/bankcash.monitor.aspx</value>
+  </data>
+  <data name="BankCashMonitorDetail" xml:space="preserve">
+    <value>pages/monitor/bankcash.monitor.detail.aspx</value>
+  </data>
+  <data name="BankCashReport" xml:space="preserve">
+    <value>pages/monitor/bankcash.report.aspx</value>
+  </data>
+  <data name="BankCashReportBankCode" xml:space="preserve">
+    <value>pages/monitor/bankcash.report.bankcode.aspx</value>
+  </data>
+  <data name="BankCashReportPartner" xml:space="preserve">
+    <value>pages/monitor/bankcash.report.partner.aspx</value>
+  </data>
+  <data name="BankCashReportService" xml:space="preserve">
+    <value>pages/monitor/bankcash.report.service.aspx</value>
+  </data>
+  <data name="BankCashSearch" xml:space="preserve">
+    <value>pages/monitor/bankcash.search.aspx</value>
+  </data>
+  <data name="CardAPIReportPartner2" xml:space="preserve">
+    <value>pages/monitor/cardapi.report.partner2.aspx</value>
+  </data>
+  <data name="CardAPIReportCardType2" xml:space="preserve">
+    <value>pages/monitor/cardapi.report.cardtype2.aspx</value>
+  </data>
+  <data name="PartnerTransaction" xml:space="preserve">
+    <value>pages/security/partnertransaction.aspx</value>
+  </data>
+  <data name="SystemConfig" xml:space="preserve">
+    <value>pages/monitor/config.aspx</value>
+  </data>
+  <data name="CardOrder" xml:space="preserve">
+    <value>pages/monitor/card.order.aspx</value>
+  </data>
+  <data name="MomoAccount" xml:space="preserve">
+    <value>pages/momo/accounts.aspx</value>
+  </data>
+  <data name="MomoAccountAdd" xml:space="preserve">
+    <value>pages/momo/account.add.aspx</value>
+  </data>
+  <data name="MomoAccountDelete" xml:space="preserve">
+    <value>pages/momo/account.delete.aspx</value>
+  </data>
+  <data name="MomoAccountEdit" xml:space="preserve">
+    <value>pages/momo/account.edit.aspx</value>
+  </data>
+  <data name="MomoPartner" xml:space="preserve">
+    <value>pages/momo/partners.aspx</value>
+  </data>
+  <data name="MomoPartnerAdd" xml:space="preserve">
+    <value>pages/momo/partner.add.aspx</value>
+  </data>
+  <data name="PartnerMomo" xml:space="preserve">
+    <value>pages/momo/partnermomo.aspx</value>
+  </data>
+  <data name="PartnerMomoAdd" xml:space="preserve">
+    <value>pages/momo/partnermomo.add.aspx</value>
+  </data>
+  <data name="MomoTransaction" xml:space="preserve">
+    <value>pages/momo/transaction.aspx</value>
+  </data>
+  <data name="CheckTranOut" xml:space="preserve">
+    <value>pages/momo/check.tranout.aspx</value>
+  </data>
+  <data name="EditTranIn" xml:space="preserve">
+    <value>pages/momo/edit.tranin.aspx</value>
+  </data>
+  <data name="AddTranIn" xml:space="preserve">
+    <value>pages/momo/add.tranin.aspx</value>
+  </data>
+  <data name="MomoOCRDictionary" xml:space="preserve">
+    <value>pages/momo/ocrdictionary.aspx</value>
+  </data>
+  <data name="BankTransaction" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/transaction.aspx</value>
+  </data>
+  <data name="BankAccount" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/accounts.aspx</value>
+  </data>
+  <data name="BankAccountAdd" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/account.add.aspx</value>
+  </data>
+  <data name="BankAccountEdit" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/account.edit.aspx</value>
+  </data>
+  <data name="PartnerBank" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/partnerbank.aspx</value>
+  </data>
+  <data name="BankPartner" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/partners.aspx</value>
+  </data>
+  <data name="PartnerBankAdd" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/partnerbank.add.aspx</value>
+  </data>
+  <data name="BankAccountDelete" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/account.delete.aspx</value>
+  </data>
+  <data name="BankPartnerAdd" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/partnerbank.add.aspx</value>
+  </data>
+  <data name="EditBankTranIn" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/edit.tranin.aspx</value>
+  </data>
+  <data name="AddBankTranIn" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/add.tranin.aspx</value>
+  </data>
+  <data name="CheckBankTranOut" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/check.tranout.aspx</value>
+  </data>
+  <data name="MomoReport" xml:space="preserve">
+    <value>pages/momo/report.aspx</value>
+  </data>
+  <data name="MomoReportDaily" xml:space="preserve">
+    <value>pages/momo/reportdaily.aspx</value>
+  </data>
+  <data name="BankReport" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/report.aspx</value>
+  </data>
+  <data name="BankReportDaily" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/reportdaily.aspx</value>
+  </data>
+  <data name="UsersHistory" xml:space="preserve">
+    <value>pages/security/usershistory.aspx</value>
+  </data>
+  <data name="MyHistory" xml:space="preserve">
+    <value>pages/security/myhistory.aspx</value>
+  </data>
+  <data name="UsersTopup" xml:space="preserve">
+    <value>pages/security/user.topup.aspx</value>
+  </data>
+  <data name="F2A" xml:space="preserve">
+    <value>pages/security/F2A.aspx</value>
+  </data>
+  <data name="Lang" xml:space="preserve">
+    <value>pages/security/Lang.aspx</value>
+  </data>
+  <data name="BankCashDoiSoat" xml:space="preserve">
+    <value>pages/monitor/bankcash.report.doisoat.aspx</value>
+  </data>
+  <data name="BankGateDoiSoat" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.report.doisoat.aspx</value>
+  </data>
+  <data name="BankBalanceReport" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/reportbalance.aspx</value>
+  </data>
+  <data name="UserReport" xml:space="preserve">
+    <value>pages/paygate/user.report.aspx</value>
+  </data>
+  <data name="BankCashApp" xml:space="preserve">
+    <value>pages/monitor/bankcash.app.aspx</value>
+  </data>
+  <data name="UsersLog" xml:space="preserve">
+    <value>pages/security/userslog.aspx</value>
+  </data>
+  <data name="BankCashAppAuto" xml:space="preserve">
+    <value>pages/monitor/bankcash.appauto.aspx</value>
+  </data>
+  <data name="BankAccountUpdateImg" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/account.editimg.aspx</value>
+  </data>
+  <data name="UserDeposit" xml:space="preserve">
+    <value>pages/security/userdeposit.aspx</value>
+  </data>
+  <data name="BankGateAPIReportPartner2" xml:space="preserve">
+    <value>pages/monitor/bankgateapi.report.partner2.aspx</value>
+  </data>
+  <data name="MomoAccountCash" xml:space="preserve">
+    <value>pages/momo/accountcash.aspx</value>
+  </data>
+  <data name="BankCashApp2" xml:space="preserve">
+    <value>pages/monitor/bankcash.app2.aspx</value>
+  </data>
+  <data name="BankUploadVideo" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/uploadvideo.aspx</value>
+  </data>
+  <data name="ITAccount" xml:space="preserve">
+    <value>pages/bankewalletservice/InternalTransfer/ITAccounts.aspx</value>
+  </data>
+  <data name="BankUploadImage" xml:space="preserve">
+    <value>pages/bankewalletservice/bank/uploadimage.aspx</value>
+  </data>
+</root>
