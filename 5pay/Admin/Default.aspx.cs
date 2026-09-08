@@ -32,6 +32,7 @@ public partial class Default : System.Web.UI.Page
     public List<BankDashboardReport> lstReportDoiSoat1 { get; set; }
     protected int partnerCount = 0;
     JavaScriptSerializer serializer = new JavaScriptSerializer();
+    public bool IsDL { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckLogin();
@@ -42,6 +43,14 @@ public partial class Default : System.Web.UI.Page
             checkAdd = false;
         if (checkAdd)
             Response.Redirect("/cmspay/Nap.aspx");
+        if (AppUtils.IsTopup)
+        {
+            var partnerlist = new Partners().GetList();
+            if (partnerlist.Exists(x => x.SMSUrl == AppUtils.UserName))
+            {
+                IsDL = true;
+            }
+        }
         if (AppUtils.CheckRolesPermission(Resources.Url.Dashboard))
         {
             if (!IsPostBack)
@@ -82,7 +91,7 @@ public partial class Default : System.Web.UI.Page
             //}
             var user = new Users().Get(AppUtils.UserID);
             balance = user.Balance;
-            if (AppUtils.IsTopup)
+            if (!IsDL)
             {
                 balance = new Users().GetByUserName(lst.FirstOrDefault().PartnerCode).Balance;
             }

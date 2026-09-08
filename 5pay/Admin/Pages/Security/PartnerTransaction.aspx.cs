@@ -549,7 +549,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         else
         {
             name = AppUtils.UserName;
-            if (!AppUtils.IsPartner)
+            if (!AppUtils.IsPartner && !IsDL)
             {
 
 

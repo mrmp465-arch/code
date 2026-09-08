@@ -62,7 +62,7 @@
       <HintPath>..\Admin\Bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="QRCoder">
-      <HintPath>..\Admin\Bin\QRCoder.dll</HintPath>
+      <HintPath>..\DLL\QRCoder.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />

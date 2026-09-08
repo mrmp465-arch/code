@@ -115,7 +115,7 @@ public class Telegram : IHttpHandler
                         }
 
                     }
-					
+
                     if (resObj.message.text.StartsWith("/bill"))
                     {
                         var refcode = resObj.message.text.Replace("/bill", "").Trim();
@@ -151,6 +151,7 @@ public class Telegram : IHttpHandler
                             {
 
                                 var url = String.Format("http://139.180.147.57:1587/DetailScreen.aspx?orderNo={0}&refcode={1}&chatid={2}&message_id={3}", trans.TransactionID, trans.RefCode, resObj.message.chat.id.ToString(), message_id);
+                                //NLogLogger.Info("Send bill" + url);
                                 SendBill(url);
                             }
                             //SendTeleV2(resObj.message.chat.id.ToString(), "Transaction success");

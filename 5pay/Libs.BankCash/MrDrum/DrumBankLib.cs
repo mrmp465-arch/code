@@ -577,6 +577,23 @@ namespace Libs.BankCash.Drum
                 NLogLogger.Info(ex.Message);
             }
         }
+        public static string MaskString(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return value;
 
+            // Dưới 6 ký tự: chỉ hiện tối đa 3 ký tự cuối
+            if (value.Length < 6)
+            {
+                int visible = Math.Min(3, value.Length);
+                return new string('*', value.Length - visible)
+                     + value.Substring(value.Length - visible);
+            }
+
+            // Từ 6 ký tự trở lên: hiện 3 đầu + *** + 3 cuối
+            return value.Substring(0, 3)
+                 + new string('*', value.Length - 6)
+                 + value.Substring(value.Length - 3);
+        }
     }
 }

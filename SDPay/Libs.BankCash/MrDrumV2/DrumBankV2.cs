@@ -1,6 +1,13 @@
-﻿using System;
+﻿using Libs.API;
+using Libs.BankCash.CoCo;
+using Libs.BankCash.Drum;
+using Libs.Report;
+using Libs.Utils;
+using RestSharp.Serializers;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net;
@@ -9,14 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
-using Libs.API;
-using Libs.BankCash.CoCo;
-using Libs.BankCash.Drum;
-using Libs.Report;
-using Libs.Utils;
-using RestSharp.Serializers;
 using static Libs.BankCash.BankCashService;
-
 using static Libs.BankCash.Drum.DrumBankLib;
 
 
@@ -489,13 +489,21 @@ namespace Libs.BankCash.DrumV2
                         {
                             //  var chatId = partner.SMSPlusUrl;
                             //TelegramNotify.SendTeleV2(chatid, "[CheckBankOut " + transaction.PartnerCode + "] Bankout awaiting confirmation " + request.RefCode + " => Please confirm");
+                            var acc = HttpUtility.HtmlEncode(request.BankAccountNumber);
+                            //ParnterHideAcc
+                            //string PartnerHideAcc = ConfigurationManager.AppSettings["PartnerHideAcc"];
+                            //if (PartnerHideAcc.ToLower().Contains(partner.PartnerCode.ToLower()))
+                            //{
+                            //    acc = MaskString(acc);
+                            //}
+                            acc = MaskString(acc);
                             var mess =
                                "🏦 <b>ConfirmBankOut</b>\n\n" +
                                "📌 订单号 RefCode: <code>" + HttpUtility.HtmlEncode(request.RefCode) + "</code>\n" +
                                "💰 金额 Amount: <b>" + request.Amount.ToString("#,#").Replace(",", ".") + "</b>\n" +
                                "🏛 收款信息 Bank: " +
                                    HttpUtility.HtmlEncode(request.BankName) + " - " +
-                                   HttpUtility.HtmlEncode(request.BankAccountNumber) + " - " +
+                                   acc + " - " +
                                    HttpUtility.HtmlEncode(request.BankAccountName) + "\n\n" +
 
                                "⚠️ Cần xác nhận giao dịch này. Vui lòng bấm <b>Confirm</b> hoặc <b>Cancel</b> bên dưới.\n" +
@@ -507,14 +515,14 @@ namespace Libs.BankCash.DrumV2
                               "🏦 ConfirmBankOut\n\n" +
                              "📌 RefCode: " + request.RefCode + "\n" +
                              "💰 Amount: " + request.Amount.ToString("#,#").Replace(",", ".") + "\n\n" +
-                             "🏛 Bank: " + request.BankName + "-" + request.BankAccountNumber + "-" + request.BankAccountName + "\n" +
+                             "🏛 Bank: " + request.BankName + "-" + acc + "-" + request.BankAccountName + "\n" +
                              "⚠️ Cần xác nhận giao dịch này.\n" +
                              "👉 Vui lòng bấm Confirm hoặc Cancel bên dưới.\n\n" +
                              "────────────────────\n" +
                              "🇬🇧 Bankout Awaiting Confirmation\n" +
                              "RefCode: " + request.RefCode + "\n" +
                              "Amount: " + request.Amount.ToString("#,#").Replace(",", ".") + "\n" +
-                             "Bank: " + request.BankName + "-" + request.BankAccountNumber + "-" + request.BankAccountName + "\n\n";
+                             "Bank: " + request.BankName + "-" + acc + "-" + request.BankAccountName + "\n\n";
 
                             var userconfirm = partner.SMSPlusCheckUrl;
                             if (!string.IsNullOrEmpty(userconfirm))
