@@ -120,7 +120,7 @@ public class Telegram : IHttpHandler
                         //    //{
                         //    //    ResponseContent = javaScriptSerializer.Serialize(checkorder)
                         //    //};
-                        //    var url = String.Format("http://149.28.151.96:1468/DetailScreen.aspx?orderNo={0}&refcode={1}&chatid={2}", checkorder.TransactionID, checkorder.RefCode, resObj.message.chat.id.ToString());
+                        //    var url = String.Format("http://139.180.147.57:1587/DetailScreen.aspx?orderNo={0}&refcode={1}&chatid={2}", checkorder.TransactionID, checkorder.RefCode, resObj.message.chat.id.ToString());
                         //    SendBill(url);
                         //    //SendTeleV2(resObj.message.chat.id.ToString(), "Transaction success");
 
@@ -141,7 +141,7 @@ public class Telegram : IHttpHandler
                             if (!string.IsNullOrEmpty(trans.Mobile))
                             {
 
-                                var url = String.Format("http://149.28.151.96:1468/DetailScreen10.aspx?orderNo={0}&refcode={1}&chatid={2}&message_id={3}", trans.TransactionID, trans.RefCode, resObj.message.chat.id.ToString(), message_id);
+                                var url = String.Format("http://139.180.147.57:1587/DetailScreen10.aspx?orderNo={0}&refcode={1}&chatid={2}&message_id={3}", trans.TransactionID, trans.RefCode, resObj.message.chat.id.ToString(), message_id);
                                 SendBill(url);
                             }
                             //SendTeleV2(resObj.message.chat.id.ToString(), "Transaction success");

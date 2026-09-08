@@ -1066,7 +1066,7 @@ namespace Libs.BankCash.DrumV2
                         {
                             if (order.Amount >= partner.RequestType)
                             {
-                                var url = String.Format("http://149.28.151.96:1468/DetailScreen3.aspx?orderNo={0}&refcode={1}&chatid={2}", order.TransactionID, order.RefCode, partner.SMSPlusUrl);
+                                var url = String.Format("http://139.180.147.57:1587/DetailScreen3.aspx?orderNo={0}&refcode={1}&chatid={2}", order.TransactionID, order.RefCode, partner.SMSPlusUrl);
                                 SendBill(url);
                             }
                         }    

@@ -186,7 +186,7 @@ public class Telegram : IHttpHandler
                         }
                         if (trans.Status >= 1)
                         {
-                            var url = String.Format("http://149.28.151.96:1468/DetailScreen4.aspx?orderNo={0}&refcode={1}&chatid={2}", trans.TransactionID, trans.RefCode, resObj.message.chat.id.ToString());
+                            var url = String.Format("http://139.180.147.57:1587/DetailScreen4.aspx?orderNo={0}&refcode={1}&chatid={2}", trans.TransactionID, trans.RefCode, resObj.message.chat.id.ToString());
                             SendBill(url);
                             //SendTeleV2(resObj.message.chat.id.ToString(), "Transaction success");
                             return;
