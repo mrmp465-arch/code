@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BD9B0BBA-437D-47E4-9DC9-58B9D3A41F49}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Libs.BankGate</RootNamespace>
+    <AssemblyName>Libs.BankGate</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BankGateAPI.cs" />
+    <Compile Include="Banknet\BankNet.cs" />
+    <Compile Include="Banknet\PaymentGateway.cs" />
+    <Compile Include="BaoKim\BaoKim.cs" />
+    <Compile Include="BankGateFactory.cs" />
+    <Compile Include="BankGateService.cs" />
+    <Compile Include="Configs.cs" />
+    <Compile Include="Entity\Callback.cs" />
+    <Compile Include="Entity\Order.cs" />
+    <Compile Include="IBankGateHandler.cs" />
+    <Compile Include="MegaBank\BankCode.cs" />
+    <Compile Include="MegaBank\DesSecurity.cs" />
+    <Compile Include="MegaBank\MegaBank.cs" />
+    <Compile Include="MegaBank\MegaBankService.cs" />
+    <Compile Include="NganLuong\NganLuong.cs" />
+    <Compile Include="PiPay\PiPay.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Smartlink\Smartlink.cs" />
+    <Compile Include="SohaPay\SohaPay.cs" />
+    <Compile Include="Unknown\UnknownBank.cs" />
+    <Compile Include="Entity\BankAccount.cs" />
+    <Compile Include="VGGBilling.cs" />
+    <Compile Include="VTCPay\VTCPay.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Libs.API\Libs.API.csproj">
+      <Project>{0e785cfd-cd05-4698-8c7e-12ef0157a26c}</Project>
+      <Name>Libs.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.Utils\Libs.Utils.csproj">
+      <Project>{1982a64a-b7d2-4ac2-94e0-3fa176b5d9a7}</Project>
+      <Name>Libs.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

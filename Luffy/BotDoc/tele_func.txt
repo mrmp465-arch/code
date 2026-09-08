@@ -1,0 +1,60 @@
+if (!function_exists('showTeleMenu')) {
+    function showTeleMenu($chatId, $url)
+    {
+        $replyMarkup = array(
+            'keyboard' => [
+                [
+                    [
+                        'text' => 'OTP',
+                        'callback_data' => '/otp'
+                    ],
+                ]
+            ],
+            'resize_keyboard' => true
+        );
+        $message = 'Hãy chọn chức năng';
+        sendTeleMessage($chatId, $message, $url, $replyMarkup);
+    }
+}
+
+if (!function_exists('showTeleButtonShareContact')) {
+    function showTeleButtonShareContact($chatId, $url)
+    {
+        $replyMarkup = array(
+            'one_time_keyboard' => true,
+            'keyboard' => [
+                [
+                    [
+                        'text' => 'Share Contact',
+                        'request_contact' => true,
+                    ]
+                ]
+            ]
+        );
+        sendTeleMessage($chatId, 'Chào bạn, Chúng tôi muốn bạn Chia sẻ số Điện thoại để có thể sử dụng các dịch vụ. Vui lòng bấm vào button "Share Contact" ở bên dưới', $url, $replyMarkup);
+    }
+}
+
+if (!function_exists('sendTeleMessage')) {
+    function sendTeleMessage($chatId, $message, $url, $reply_markup = [])
+    {
+        $params = [
+            'parse_mode' => 'html',
+            'chat_id' => $chatId,
+            'text' => urldecode($message),
+        ];
+        if ($reply_markup) {
+            $params['reply_markup'] = json_encode($reply_markup);
+        }
+
+        $ch = curl_init($url . '/sendMessage');
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
+}

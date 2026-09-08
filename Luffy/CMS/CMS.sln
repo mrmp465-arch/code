@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Card.CMS", "Card\Card.CMS.csproj", "{8F5F5379-C51E-461F-BD6F-524BF08C63F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Card.Data", "Card.Data\Card.Data.csproj", "{1B5A902E-2B11-4114-82E5-C242783C6B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Card.Utility", "Card.Utility\Card.Utility.csproj", "{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dll", "Dll", "{2D689E00-159A-46A2-91F7-9E2767BDCF92}"
+	ProjectSection(SolutionItems) = preProject
+		Dll\Libs.API.dll = Dll\Libs.API.dll
+		Dll\Libs.Report.dll = Dll\Libs.Report.dll
+		Dll\Libs.Utils.dll = Dll\Libs.Utils.dll
+		Dll\Microsoft.Web.RedisSessionStateProvider.dll = Dll\Microsoft.Web.RedisSessionStateProvider.dll
+		Dll\RedisSessionStateProvider.dll = Dll\RedisSessionStateProvider.dll
+		Dll\ServiceStack.Common.dll = Dll\ServiceStack.Common.dll
+		Dll\ServiceStack.Interfaces.dll = Dll\ServiceStack.Interfaces.dll
+		Dll\ServiceStack.Messaging.dll = Dll\ServiceStack.Messaging.dll
+		Dll\ServiceStack.Redis.dll = Dll\ServiceStack.Redis.dll
+		Dll\ServiceStack.Text.dll = Dll\ServiceStack.Text.dll
+		Dll\StackExchange.Redis.StrongName.dll = Dll\StackExchange.Redis.StrongName.dll
+		Dll\Telegram.Bot.dll = Dll\Telegram.Bot.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bot", "Bot\Bot.csproj", "{A2D44E3A-B81D-4185-8D15-A6A490E3B5A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F5F5379-C51E-461F-BD6F-524BF08C63F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B5A902E-2B11-4114-82E5-C242783C6B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BEF7C1F-DCE6-4BB6-8E65-5859A3D90575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2D44E3A-B81D-4185-8D15-A6A490E3B5A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2D44E3A-B81D-4185-8D15-A6A490E3B5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2D44E3A-B81D-4185-8D15-A6A490E3B5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2D44E3A-B81D-4185-8D15-A6A490E3B5A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A66BF41-407B-4199-B6F6-9F253DACB7B1}
+	EndGlobalSection
+EndGlobal

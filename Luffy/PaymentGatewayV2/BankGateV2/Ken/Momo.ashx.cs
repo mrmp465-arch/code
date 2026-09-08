@@ -1,0 +1,77 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Script.Serialization;
+using Libs.API;
+using Libs.BankDirect.Bicbic;
+using Libs.Utils;
+using Libs.BankDirect.Ken;
+
+
+namespace BankGateV2.Ken
+{
+    /// <summary>
+    /// Summary description for Momo
+    /// </summary>
+    public class Momo : IHttpHandler
+    {
+
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+        public void ProcessRequest(HttpContext context)
+        {
+            context.Response.ContentType = "text/plain";
+            NLogLogger.Info(new string[] { "KenCalback", "ProcessRequest", context.Request.RawUrl });
+            BicbicBankLib.CallbackResponse callbacResponse;
+            try
+            {
+                var cbObj = new PostGetHelper().GetFromQueryString<KenBankLib.Callback>();
+                NLogLogger.Info(new string[] { "KenCalback", "ProcessRequest", serializer.Serialize(cbObj) });
+
+                var callback = new KenBank().Callback(cbObj);
+
+                if (callback.ResponseCode == (int)ResponseCode.TransactionSuccessful)
+                {
+                    callbacResponse = new BicbicBankLib.CallbackResponse()
+                    {
+                        errorCode = 0,
+                        errorDescription = callback.Description
+                    };
+                }
+                else
+                {
+                    callbacResponse = new BicbicBankLib.CallbackResponse()
+                    {
+                        errorCode = callback.ResponseCode,
+                        errorDescription = callback.Description
+                    };
+                }
+                NLogLogger.Info(new string[] { "KenCalback", "Approve Request", serializer.Serialize(callback) });
+                context.Response.Write(serializer.Serialize(callbacResponse));
+
+
+                //context.Response.Write("callback");
+            }
+            catch (Exception exp)
+            {
+                NLogLogger.Info(new string[] { "KenCalback", "ProcessRequest", exp.Message });
+                callbacResponse = new BicbicBankLib.CallbackResponse()
+                {
+                    errorCode = (int)ResponseCode.ParameterInvalid,
+                    errorDescription = "Parameter Invalid"
+                };
+                context.Response.Write(serializer.Serialize(callbacResponse));
+            }
+
+
+        }
+
+        public bool IsReusable
+        {
+            get
+            {
+                return false;
+            }
+        }
+    }
+}

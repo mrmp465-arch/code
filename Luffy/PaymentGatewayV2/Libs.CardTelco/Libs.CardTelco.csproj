@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4F42E771-D5E5-4F67-B4F1-009F9D0E887C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Libs.CardTelco</RootNamespace>
+    <AssemblyName>Libs.CardTelco</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Encrypt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLL\Encrypt.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AloPay\AloPayCard.cs" />
+    <Compile Include="AloPay\AloPayCardLib.cs" />
+    <Compile Include="AloPay\AloPayService.cs" />
+    <Compile Include="BB2DGate\BB2DGateCard.cs" />
+    <Compile Include="BB2DGate\BB2DGateCardLib.cs" />
+    <Compile Include="BB2DPay\BB2DCard.cs" />
+    <Compile Include="BB2DPay\BB2DCardLib.cs" />
+    <Compile Include="CardAPILog.cs" />
+    <Compile Include="CardTelcoFactory.cs" />
+    <Compile Include="CardTelcoService.cs" />
+    <Compile Include="Khoai\KhoaiCard.cs" />
+    <Compile Include="Khoai\KhoaiCardLib.cs" />
+    <Compile Include="Khoai\KhoaiService.cs" />
+    <Compile Include="ICardTelcoHandler.cs" />
+    <Compile Include="MoBo\MoBoCard.cs" />
+    <Compile Include="MoBo\MoBoCardLib.cs" />
+    <Compile Include="MoBo\MoboService.cs" />
+    <Compile Include="OnePice\OnePiceCard.cs" />
+    <Compile Include="OnePice\OnePiceCardLib.cs" />
+    <Compile Include="PayDirect\CHD\PayDirectCard30.cs" />
+    <Compile Include="PayDirect\KHD\PayDirectCard5.cs" />
+    <Compile Include="PayDirect\PayDirectCardLib.cs" />
+    <Compile Include="PayDirect\KHD\PayDirectCard1.cs" />
+    <Compile Include="PayDirect\KHD\PayDirectCard15.cs" />
+    <Compile Include="PaymentNow\KHD\PNowCard15.cs" />
+    <Compile Include="PaymentNow\PNowCardLib.cs" />
+    <Compile Include="PayPlusAppV1VTT\PayPlusCard.cs" />
+    <Compile Include="PayPlusAppV1VTT\PayPlusCardLib.cs" />
+    <Compile Include="PayPlusAppV1VTT\PayPlusService.cs" />
+    <Compile Include="PayPlusGame\PayPlusCard.cs" />
+    <Compile Include="PayPlusGame\PayPlusCardLib.cs" />
+    <Compile Include="PayPlusGame\PayPlusService.cs" />
+    <Compile Include="PayPlusAppV2VTT\PayPlusCard.cs" />
+    <Compile Include="PayPlusAppV2VTT\PayPlusCardLib.cs" />
+    <Compile Include="PayPlusAppV2VTT\PayPlusService.cs" />
+    <Compile Include="PayPlusAppMobi\PayPlusCard.cs" />
+    <Compile Include="PayPlusAppMobi\PayPlusCardLib.cs" />
+    <Compile Include="PayPlusAppMobi\PayPlusService.cs" />
+    <Compile Include="PayPlusAppVNTP\PayPlusCard.cs" />
+    <Compile Include="PayPlusAppVNTP\PayPlusCardLib.cs" />
+    <Compile Include="PayPlusAppVNTP\PayPlusService.cs" />
+    <Compile Include="PayPlusApp\MyViettelEntity.cs" />
+    <Compile Include="PayPlusUSSD\PayPlusCard.cs" />
+    <Compile Include="PayPlusUSSD\PayPlusService.cs" />
+    <Compile Include="PayPlusUSSD\PayPlusCardLib.cs" />
+    <Compile Include="PayPlusWeb\PayPlusCard.cs" />
+    <Compile Include="PayPlusWeb\PayPlusCardLib.cs" />
+    <Compile Include="PayPlusWeb\PayPlusService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TelegramNotify.cs" />
+    <Compile Include="TheCao24\The24Card.cs" />
+    <Compile Include="TheCao24\The24CardLib.cs" />
+    <Compile Include="TheCao24\The24Service.cs" />
+    <Compile Include="Tiger\TigerCard.cs" />
+    <Compile Include="Tiger\TigerCardLib.cs" />
+    <Compile Include="Tiger\TigerService.cs" />
+    <Compile Include="Unknown\UnknownCard.cs" />
+    <Compile Include="Vcoin\card.cs" />
+    <Compile Include="Vcoin\VcoinCard.cs" />
+    <Compile Include="Vcoin\VcoinResponse.cs" />
+    <Compile Include="Viettel\MyPolicy.cs" />
+    <Compile Include="Viettel\ScratchCardAPIService.cs" />
+    <Compile Include="Viettel\ViettelCard.cs" />
+    <Compile Include="VinaHub\VinaHubCard.cs" />
+    <Compile Include="VinaHub\VinaHubCardLib.cs" />
+    <Compile Include="VinaHub\VinaHubService.cs" />
+    <Compile Include="VinaPay\VinaPayCard.cs" />
+    <Compile Include="VinaPay\VinaPayCardLib.cs" />
+    <Compile Include="VinaPay\VinaPayService.cs" />
+    <Compile Include="VMG\KHD\BCCastle.cs" />
+    <Compile Include="VMG\KHD\VMGCard.cs" />
+    <Compile Include="VMG\KHD\VMGService.cs" />
+    <Compile Include="VNPTEPAY\EpayCard.cs" />
+    <Compile Include="VNPTEPAY\ServicesService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Libs.API\Libs.API.csproj">
+      <Project>{0e785cfd-cd05-4698-8c7e-12ef0157a26c}</Project>
+      <Name>Libs.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.Report\Libs.Report.csproj">
+      <Project>{e4ae91ab-1916-4553-a54f-dcb413dbce81}</Project>
+      <Name>Libs.Report</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs.Utils\Libs.Utils.csproj">
+      <Project>{1982a64a-b7d2-4ac2-94e0-3fa176b5d9a7}</Project>
+      <Name>Libs.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="VMG\CHD\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

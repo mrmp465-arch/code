@@ -1,0 +1,68 @@
+public function telegramWebhook(Request $request) {
+        $update = $request->input();
+        Log::info('--------------------- TELE DATA ----------------------');
+        Log::info(json_encode($update));
+        Log::info('--------------------- END TELE DATA ----------------------');
+
+        $token = config('constant.TELE.TOKEN');
+        $path = config('constant.TELE.URL_API') . $token;
+
+        if (isset($update['message'])) {
+            $chatId = $update["message"]["chat"]["id"];
+            if (isset($update["message"]["text"])) {
+                $message = $update["message"]["text"];
+            } else {
+                $message = '';
+            }
+
+            $isGotContact = (isset($update["message"]['contact']) && !empty($update["message"]['contact'])) ? true : false;
+            if ($isGotContact) {
+                $contact_mobile = $update["message"]['contact']['phone_number'];
+                if (substr($contact_mobile, 0, 1) !== "+") {
+                    $contact_mobile = "+" . $contact_mobile;
+                }
+                createTeleOTP($chatId, $contact_mobile, $path);
+            } else {
+                switch ($message) {
+                    case '/start':
+                        $check = checkTelePhoneActive($chatId);
+                        $showShareContact = false;
+                        if ($check['code'] == 1) {
+                            if ($check['is_connected']) {
+                                if ($check['is_active']) {
+                                    showTeleMenu($chatId, $path);
+                                } else {
+                                    if ($check['mobile']) {
+                                        createTeleOTP($chatId, $check['mobile'], $path);
+                                    } else {
+                                        $showShareContact = true;
+                                    }
+                                }
+                            } else {
+                                $showShareContact = true;
+                            }
+
+                            if ($showShareContact) {
+                                showTeleButtonShareContact($chatId, $path);
+                            }
+
+                        }
+                        break;
+                    case 'OTP':
+                        $check = checkTelePhoneActive($chatId);
+                        if ($check['mobile']) {
+                            createTeleOTP($chatId, $check['mobile'], $path);
+                        } else {
+                            showTeleButtonShareContact($chatId, $path);
+                        }
+                        break;
+//                case 'Quên MK':
+//                    forgotPassword($chatId, $path);
+//                    break;
+                    default:
+                        showTeleMenu($chatId, $path);
+                        break;
+                }
+            }
+        }
+    }

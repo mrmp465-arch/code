@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:intf="http://exchange.partner.service.itel.vn" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:impl="http://exchange.partner.service.itel.vn" targetNamespace="http://exchange.partner.service.itel.vn" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://exchange.partner.service.itel.vn">
+      <xsd:element name="checkTransaction">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="input" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="checkTransactionResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="checkTransactionReturn" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="exchangeCard">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="input" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="exchangeCardResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="exchangeCardReturn" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="exchangeCardWithValue">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="input" type="xsd:string" />
+            <xsd:element name="cardValue" type="xsd:long" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="exchangeCardWithValueResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="exchangeCardWithValueReturn" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="exchangeCardResponse">
+    <wsdl:part name="parameters" element="impl:exchangeCardResponse" />
+  </wsdl:message>
+  <wsdl:message name="exchangeCardWithValueResponse">
+    <wsdl:part name="parameters" element="impl:exchangeCardWithValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="checkTransactionResponse">
+    <wsdl:part name="parameters" element="impl:checkTransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="checkTransactionRequest">
+    <wsdl:part name="parameters" element="impl:checkTransaction" />
+  </wsdl:message>
+  <wsdl:message name="exchangeCardWithValueRequest">
+    <wsdl:part name="parameters" element="impl:exchangeCardWithValue" />
+  </wsdl:message>
+  <wsdl:message name="exchangeCardRequest">
+    <wsdl:part name="parameters" element="impl:exchangeCard" />
+  </wsdl:message>
+  <wsdl:portType name="CardToCash">
+    <wsdl:operation name="checkTransaction">
+      <wsdl:input name="checkTransactionRequest" message="impl:checkTransactionRequest" />
+      <wsdl:output name="checkTransactionResponse" message="impl:checkTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exchangeCard">
+      <wsdl:input name="exchangeCardRequest" message="impl:exchangeCardRequest" />
+      <wsdl:output name="exchangeCardResponse" message="impl:exchangeCardResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="exchangeCardWithValue">
+      <wsdl:input name="exchangeCardWithValueRequest" message="impl:exchangeCardWithValueRequest" />
+      <wsdl:output name="exchangeCardWithValueResponse" message="impl:exchangeCardWithValueResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CardToCashSoapBinding" type="impl:CardToCash">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="checkTransaction">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="checkTransactionRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="checkTransactionResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exchangeCard">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="exchangeCardRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="exchangeCardResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="exchangeCardWithValue">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="exchangeCardWithValueRequest">
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="exchangeCardWithValueResponse">
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CardToCashService">
+    <wsdl:port name="CardToCash" binding="impl:CardToCashSoapBinding">
+      <wsdlsoap:address location="http://itelservice.vn:8888/ITelService/services/CardToCash" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
