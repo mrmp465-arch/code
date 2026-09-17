@@ -32,7 +32,7 @@ namespace APIV2
             if (_payments == null)
             {
                 result = ResponseUtils.Response((int)ResponseCode.ServiceNotExists);
-                NLogLogger.Info(new string[] { "API", "Response", partnerCode, serviceCode, result });
+                NLogLogger.Info(new string[] { "API Card", "Response", partnerCode, serviceCode, result });
             }
 
             //cahce 
@@ -49,14 +49,15 @@ namespace APIV2
 
             //cahce
             PartnerService _partnerService = new PartnerService();
+
             //Kiểm tra Partner co được add Service ko
-            var partnerStatus = _partnerService.GetCache(_Partner.PartnerID, _payments.ServiceID);
-            if (partnerStatus == null || partnerStatus.Status == 0)
-            {
-                result = ResponseUtils.Response((int)ResponseCode.ServiceNotExists);
-                NLogLogger.Info(new string[] { "API", "Response", partnerCode, serviceCode, result });
-                return result;
-            }
+            //var partnerStatus = _partnerService.GetCache(_Partner.PartnerID, _payments.ServiceID);
+            //if (partnerStatus == null || partnerStatus.Status == 0)
+            //{
+            //    result = ResponseUtils.Response((int)ResponseCode.ServiceNotExists);
+            //    NLogLogger.Info(new string[] { "API", "Response", partnerCode, serviceCode, result });
+            //    return result;
+            //}
 
 
             // Thêm mới giao dịch, 

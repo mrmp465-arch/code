@@ -25,9 +25,8 @@ namespace APIVinaPay
         public string RequestTopup(string transactionId, string telco, string partnerCode, string providerCode, string cardSerial, string cardCode, int amount)
         {
             //NLogLogger.Info(new string[] { "IZISoftTopupPService", transactionId,telco, partnerCode, providerCode, cardSerial, cardCode, amount.ToString() });
-            if (telco.ToUpper() == "VNP" || telco.ToUpper() == "VMS" || telco.ToUpper() == "VTT")
+            if (telco.ToUpper() == "VNP" || telco.ToUpper() == "VMS" || telco.ToUpper() == "VTT" || telco.ToUpper() == "ZING" || telco.ToUpper() == "VCOIN")
             {
-
                 var result = new TopupApp().VinaPayTopupCallBack(transactionId, telco, partnerCode, providerCode, cardSerial, cardCode, amount).Result;
                 var response = result.Split('|');
                 return "{\"code\":" + response[0] + ",\"message\":\"Request success.\",\"amount\":" + response[1] + "}";

@@ -150,6 +150,15 @@
   <data name="AccountTranfer1" xml:space="preserve">
     <value>出款账号</value>
   </data>
+  <data name="Actiton" xml:space="preserve">
+    <value>任务</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="AddAccount" xml:space="preserve">
+    <value>添加新账户</value>
+  </data>
   <data name="AddMoney" xml:space="preserve">
     <value>加钱</value>
   </data>
@@ -189,6 +198,12 @@
   <data name="Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
+  <data name="Card" xml:space="preserve">
+    <value>刮刮卡</value>
+  </data>
+  <data name="CardType" xml:space="preserve">
+    <value>卡类</value>
+  </data>
   <data name="Cash" xml:space="preserve">
     <value>出款</value>
   </data>
@@ -215,6 +230,9 @@
   </data>
   <data name="ChangePassword" xml:space="preserve">
     <value>更换密码</value>
+  </data>
+  <data name="ChoseAccount" xml:space="preserve">
+    <value>选择账号</value>
   </data>
   <data name="Completiontime" xml:space="preserve">
     <value>时间完成</value>
@@ -245,6 +263,9 @@
   </data>
   <data name="DeductMoney" xml:space="preserve">
     <value>扣钱</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
   </data>
   <data name="Deposit" xml:space="preserve">
     <value>入款</value>
@@ -302,7 +323,7 @@
     <value>商户号</value>
   </data>
   <data name="Keyword" xml:space="preserve">
-    <value>咨询</value>
+    <value>交易内容</value>
   </data>
   <data name="Last7day" xml:space="preserve">
     <value>7天前</value>
@@ -340,6 +361,9 @@
   </data>
   <data name="NotEnoughInformation" xml:space="preserve">
     <value>输入信息不足</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>命令</value>
   </data>
   <data name="OldPassword" xml:space="preserve">
     <value>旧密码</value>
@@ -402,6 +426,12 @@
   <data name="SecuritySetupOK" xml:space="preserve">
     <value>设置谷歌验证码成功</value>
   </data>
+  <data name="Setup" xml:space="preserve">
+    <value>环境</value>
+  </data>
+  <data name="Sevice" xml:space="preserve">
+    <value>服务</value>
+  </data>
   <data name="Statitics" xml:space="preserve">
     <value>统计收益</value>
   </data>
@@ -433,11 +463,23 @@
   <data name="Total" xml:space="preserve">
     <value>总</value>
   </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>交易金额</value>
+  </data>
+  <data name="TotalDeposite" xml:space="preserve">
+    <value>订单列表</value>
+  </data>
+  <data name="TotalTransaction" xml:space="preserve">
+    <value>交易详情</value>
+  </data>
   <data name="TransactionType" xml:space="preserve">
     <value>交易类型</value>
   </data>
   <data name="TransferInfo" xml:space="preserve">
     <value>转账信息</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>更新</value>
   </data>
   <data name="View" xml:space="preserve">
     <value>查</value>
@@ -445,8 +487,14 @@
   <data name="ViewLog" xml:space="preserve">
     <value>查交易</value>
   </data>
+  <data name="ViewMore" xml:space="preserve">
+    <value>更多信息</value>
+  </data>
   <data name="WaitApproval" xml:space="preserve">
     <value>未确认</value>
+  </data>
+  <data name="WithdrawalAccount" xml:space="preserve">
+    <value>提款账户</value>
   </data>
   <data name="WithdrawalHistory" xml:space="preserve">
     <value>出款历史</value>

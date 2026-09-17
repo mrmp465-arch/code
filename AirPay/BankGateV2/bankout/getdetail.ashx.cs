@@ -37,15 +37,15 @@ namespace BankGateV2.bankout
                 JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
                 var request = javaScriptSerializer.Deserialize<RequestDetail>(jsonString);
 
-                string xpartnerCode = context.Request.Headers["x-api-code"];
+                //string xpartnerCode = context.Request.Headers["x-api-code"];
 
-                NLogLogger.Info(new string[] { "GetDetail", "Request", jsonString, IPAddress.Get(), xpartnerCode });
+                //NLogLogger.Info(new string[] { "GetDetail", "Request", jsonString, IPAddress.Get(), xpartnerCode });
 
-                if (string.IsNullOrEmpty(xpartnerCode))
-                {
-                    context.Response.Write(ResponseUtils.Response((int)ResponseCode.PartnerNotExistsNotActive));
-                    return;
-                }
+                //if (string.IsNullOrEmpty(xpartnerCode))
+                //{
+                //    context.Response.Write(ResponseUtils.Response((int)ResponseCode.PartnerNotExistsNotActive));
+                //    return;
+                //}
 
                 Partners _Partner = new Partners().GetCache(request.PartnerCode);
                 //Kiểm tra _Partner tồn tại hoặc Active không

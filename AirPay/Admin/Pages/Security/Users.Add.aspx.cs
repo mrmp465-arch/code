@@ -173,11 +173,11 @@ public partial class Pages_Security_Users_Add : System.Web.UI.Page
         if (_User.IsPartner == 1 || _User.IsTopup == 1)
         {
             var LstRoles = new Roles().GetList();
-            var listRoleId = new List<int> { 84, 20, 21, 23,89, 92, 93, 95,102, 147,138,139 };
+            var listRoleId = new List<int> { 84, 20, 21, 23,89, 92, 93, 95,102, 147,138,1391,1,2,4 };
             //tk mc
             if (_User.IsTopup == 1)
             {
-                listRoleId = new List<int> { 84, 20, 21, 23, 89,92, 93, 95,139, 102, 147, 138 };
+                listRoleId = new List<int> { 84, 20, 21, 23, 89,92, 93, 95,139, 102, 147, 138, 1, 2, 4 };
             }
             foreach (var role in listRoleId)
             {

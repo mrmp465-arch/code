@@ -85,6 +85,25 @@ namespace Libs.Utils
             //var data = int.Parse(result) + Amount;
             DataCaching.SetCache(KeyCache, Amount.ToString(), 86400 );
         }
+        public static List<LogInfo> GetLogCard(long Id)
+        {
+
+            string KeyCache = string.Format("{0}:{1}", "LogCard", Id);
+            return DataCaching.GetCache<List<LogInfo>>(KeyCache);
+        }
+        public static void LogCard(LogInfo log)
+        {
+            log.Respone = RemoveAllHtmlTags(log.Respone);
+            string KeyCache = string.Format("{0}:{1}", "LogCard", log.TransactionID);
+            var result = DataCaching.GetCache<List<LogInfo>>(KeyCache);
+            if (result == null)
+            {
+                result = new List<LogInfo>();
+
+            }
+            result.Add(log);
+            DataCaching.SetCache(KeyCache, result, 86400 * 3);
+        }
         public static int GetAmountLitmit()
         {
 
@@ -141,6 +160,7 @@ namespace Libs.Utils
             }
         }
     }
+
     public class PBankInfo
     {
         public string RefCode { get; set; }

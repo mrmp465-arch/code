@@ -1521,8 +1521,15 @@ namespace Libs.BankDirect.MDrumV2
                             //var partner = new Partners().GetCache(order.PartnerCode);
                             datacb.Signature = PaymentUtils.Signature(datacb.ResponseCode.ToString() + datacb.Description + datacb.RefCode + datacb.Amount, partner.PrivateKey, partner.SignatureType);
                             //apiResponse.Signature = PaymentUtils.Signature(apiResponse.ResponseCode.ToString() + apiResponse.Description + apiResponse.ResponseContent, partner.PrivateKey, partner.SignatureType);
-
-                            Task.Run(async () => await MDrumBankLib.CallbackJsonV2(order.ReturnUrl, serializer.Serialize(datacb), order.TransactionID, order.RefCode + " " + order.OrderNo).ConfigureAwait(false));
+                            if (order.PartnerCode == "k36")
+                            {
+                                Task.Run(async () => await MDrumBankLib.CallbackJsonV3(order.ReturnUrl, serializer.Serialize(datacb), order.TransactionID, order.RefCode + " " + order.OrderNo).ConfigureAwait(false));
+                            }
+                            else
+                            {
+                                Task.Run(async () => await MDrumBankLib.CallbackJsonV2(order.ReturnUrl, serializer.Serialize(datacb), order.TransactionID, order.RefCode + " " + order.OrderNo).ConfigureAwait(false));
+                            }
+                            
                         }
                     }
                 }

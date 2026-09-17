@@ -24,9 +24,9 @@ namespace BankGateTest
     {
 
         //string urlService = "https://apicard.coroach.xyz/VPGJsonService.ashx";
-        string urlService = "http://45.32.115.186:1581//VPGJsonService.ashx";
-        string partnerKey = "0675e5889dd17f15c9e71f25c8f1dd20";
-        string partnerCode = "pp";
+        string urlService = "https://apicard.airpay.fun/VPGJsonService.ashx";
+        string partnerKey = "13578527702ed71a15a34f1dc9a414fa";
+        string partnerCode = "paytest";
         string serviceCode = "cardtelco";
         string commandCode = "usecard";
         protected void Page_Load(object sender, EventArgs e)

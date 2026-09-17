@@ -207,6 +207,9 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
                     txtDiscountVTT.Text = ((float)_partnerDiscount.DiscountVTT * 100).ToString();
                     hdDiscountVTT.Value = ((float)_partnerDiscount.DiscountVTT * 100).ToString();
 
+                    txtDiscountVNP.Text = ((float)_partnerDiscount.DiscountVNP * 100).ToString();
+                    txtDiscountVMS.Text = ((float)_partnerDiscount.DiscountVMS * 100).ToString();
+
                 }
                 else
                 {
@@ -228,6 +231,8 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
 
                     txtDiscountVTT.Text = "0.0000";
                     hdDiscountVTT.Value = "0.0000";
+                    txtDiscountVNP.Text = "0.0000";
+                    txtDiscountVMS.Text = "0.0000";
 
                     txtRewardMOMOOUT.Text = "0.0000";
                     txtRewardMOMO.Text = "0.0000";
@@ -254,6 +259,8 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
 
                 txtDiscountVTT.Text = "0.0000";
                 hdDiscountVTT.Value = "0.0000";
+                txtDiscountVNP.Text = "0.0000";
+                txtDiscountVMS.Text = "0.0000";
 
             }
 
@@ -416,6 +423,15 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
             decimal RWMOMOOUT;
             bool isDecimal9 = decimal.TryParse(txtRewardMOMOOUT.Text, out RWMOMOOUT);
 
+            decimal DiscountVNP;
+            bool isDecimal10 = decimal.TryParse(txtDiscountVNP.Text, out DiscountVNP);
+            DiscountVNP = DiscountVNP / 100;
+
+            decimal DiscountVMS;
+            bool isDecimal11 = decimal.TryParse(txtDiscountVMS.Text, out DiscountVMS);
+            DiscountVMS = DiscountVMS / 100;
+
+
 
             if (!isDecimal || !isDecimal2 || !isDecimal3 || !isDecimal4 || !isDecimal5)
             {
@@ -436,9 +452,9 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
             obj.Date = new DateTime(2030, 1, 1);
             obj.DiscountVTT = DiscountVTT;
             obj.RewardVTT = 0;
-            obj.DiscountVNP = DiscountVTT;
+            obj.DiscountVNP = DiscountVNP;
             obj.RewardVNP = 0;
-            obj.DiscountVMS = DiscountVTT;
+            obj.DiscountVMS = DiscountVMS;
             obj.RewardVMS = 0;
 
             obj.DiscountZING = 0;

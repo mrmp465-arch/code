@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -17,6 +18,7 @@ using System.Web.Services.Configuration;
 using APIVinaPay.Entity;
 using Libs.Report;
 using Libs.Utils;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace APIVinaPay
@@ -24,56 +26,38 @@ namespace APIVinaPay
     internal class TopupApp
     {
 
-        private string ServiceUrl = ConfigurationManager.AppSettings["ServiceUrl"] ?? "https://shippay.top/";
-        private string CallbackUrl = ConfigurationManager.AppSettings["CallbackUrl"] ?? "http://139.180.128.96:1596/CardCallback.ashx";
-        private string CallbackUrlV2 = "http://139.180.128.96:1596/CardCallbackV2.ashx";
-        private const string apiKey = "api58@";
-        private const string username = "api58@gmail.com";
-        private const int ClientID = 37;
+        private string ServiceUrl = ConfigurationManager.AppSettings["ServiceUrl"] ?? "http://66.42.62.119:8082/partner/RequestPayment";
+        private string CallbackUrl = ConfigurationManager.AppSettings["CallbackUrl"] ?? "http://45.76.176.235:1596/CardCallback.ashx";
+        private string CallbackUrlV2 = "http://45.76.176.235:1587/CardCallbackV2.ashx";
+        private const string apiKey = "vdt50@";
+        private const string username = "vdt50@gmail.com";
+        private const int ClientID = 20;
 
-        private const string SecretKey = "4ssay4xnyRTFTSzXPRyecQmXG00suhxRpMmZ8bac";
+        private const string SecretKey = "yS8eV1vmhDqLbA6xbO4sdBvBHIDPsQrhtCthcez4FnZkPXhsLlpteODoMfzZrGo6";
         JavaScriptSerializer serializer = new JavaScriptSerializer();
-        private string getToken()
-        {
-            var token = "";
-            var dataCache = DataCaching.GetCache<string>("VinaPaysToken");
-            if (dataCache != null)
-            {
-                token = dataCache.ToString();
-                //NLogLogger.Info(new string[] { "APIVinaPays", "Token", "", "", token});
-            }
-            else
-            {
-                var data = new { client_id = ClientID, client_secret = SecretKey, username = username, grant_type = "password", password = apiKey, scope = "*" };
-                //NLogLogger.Info(new string[] { "APIVinaPays", "Request", "", "", serializer.Serialize((data)) });
-                var response = Task.Run(async () => await PostTask(string.Format("{0}//oauth/token", ServiceUrl), serializer.Serialize(data))).Result;
-                //NLogLogger.Info(new string[] { "APIVinaPays", "Response", "", "", response });
-                if (!string.IsNullOrEmpty(response))
-                {
-                    var res = serializer.Deserialize<TokenResponse>(response);
-                    token = res.access_token;
-                    DataCaching.SetCache("VinaPaysToken", token, 86400);
-                }
-            }
-
-            return token;
-        }
+       
         public async Task<string> VinaPayTopupCallBack(string transactionId, string telco, string partnerCode, string providerCode, string serial, string pin, int amount)
         {
 
 
-            var type = 0;
+            var type = "";
 
             switch (telco.ToLower())
             {
                 case "vtt":
-                    type = 0;
+                    type = "VT";
                     break;
                 case "vms":
-                    type = 2;
+                    type = "Mobi";
                     break;
                 case "vnp":
-                    type = 1;
+                    type = "Vina";
+                    break;
+                case "zing":
+                    type = "Zing";
+                    break;
+                case "vcoin":
+                    type = "Vcoin";
                     break;
             }
 
@@ -83,7 +67,7 @@ namespace APIVinaPay
             topup.PartnerCode = partnerCode;
             topup.ProviderCode = providerCode;
             topup.Telco = telco;
-            topup.SimTarget = "ship";
+            topup.SimTarget = "ttp";
             topup.CardSerial = serial;
             topup.CardCode = pin;
             topup.Amount = amount;
@@ -102,15 +86,11 @@ namespace APIVinaPay
                 cardRequest.amount = amount.ToString();
                 cardRequest.url_callback = CallbackUrlV2;
                 cardRequest.custom_trans = topup.Id.ToString();
-
-                var token = getToken();
-                var getUrl = $"{ServiceUrl}/api/payment?pin={cardRequest.pin}&serial={cardRequest.serial}&carrier={cardRequest.carrier}&amount={cardRequest.amount}&email={cardRequest.email}&url_callback={cardRequest.url_callback}&custom_trans={cardRequest.custom_trans}";
-                NLogLogger.Info(new string[] { "APIVinaPays", "Request", transactionId, topup.Id.ToString(), getUrl });
-                var sw = new Stopwatch();
-                sw.Start();
-                var response = Task.Run(async () => await GetTask(getUrl, token)).Result;
-                sw.Stop();
-                NLogLogger.Info(new string[] { "APIVinaPays", "Response", transactionId, topup.Id.ToString(), response });
+                var signature = Encrypts.MD5(SecretKey + amount+ topup.Id+ serial);
+                var data = string.Format("ApiToken={0}&TransID={1}&Signature={2}&CardType={3}&CardSeri={5}&CardCode={4}&Amount={6}&UrlCallBack={7}", SecretKey, topup.Id, signature, type, pin, serial, amount, cardRequest.url_callback);
+                NLogLogger.Info(new string[] { "APITiger", "Request", transactionId, topup.Id.ToString(), data });
+                var response = Task.Run(async () => await PostTask(ServiceUrl, data)).Result;
+                NLogLogger.Info(new string[] { "APITiger", "Response", transactionId, topup.Id.ToString(), response });
                 //if (sw.ElapsedMilliseconds > 5000)
                 //{
                 //    TelegramNotify.SendNotify(-845553760, $"Nghi vấn thẻ {serial} bị nuốt");
@@ -119,32 +99,12 @@ namespace APIVinaPay
                 {
                     var res = serializer.Deserialize<TopupResponse>(response);
 
-                    switch (res.error_code)
+                    switch (res.errorCode)
                     {
                         case 0:
                             return "0|0";
                             break;
-
-                       
-                        case 101:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -330, string.Empty, string.Empty);
-                            return "-330|0";
-                        case 104:
-                        case 12:
-                        case 3:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -334, string.Empty, string.Empty);
-                            return "-334|0";
-                        case 13:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -327, string.Empty, string.Empty);
-                            return "-327|0";
-                        case 4:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -330, string.Empty, string.Empty);
-                            return "-330|0";
-
-                        case 103:
-                        case 11:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -7, string.Empty, string.Empty);
-                            return "-7|0";
+                            
                         default:
                             DataRequest.UpdateTopupCard(topup.Id, 0, -1, string.Empty, string.Empty);
                             return "-1|0";
@@ -168,18 +128,18 @@ namespace APIVinaPay
         {
 
 
-            var type = 0;
+            var type = "";
 
             switch (telco.ToLower())
             {
                 case "vtt":
-                    type = 0;
+                    type = "VT";
                     break;
                 case "vms":
-                    type = 2;
+                    type = "Mobi";
                     break;
                 case "vnp":
-                    type = 1;
+                    type = "Vina";
                     break;
             }
 
@@ -209,47 +169,22 @@ namespace APIVinaPay
                 cardRequest.url_callback = CallbackUrl;
                 cardRequest.custom_trans = topup.Id.ToString();
 
-                var token = getToken();
-                var getUrl = $"{ServiceUrl}/api/payment?pin={cardRequest.pin}&serial={cardRequest.serial}&carrier={cardRequest.carrier}&amount={cardRequest.amount}&email={cardRequest.email}&url_callback={cardRequest.url_callback}&custom_trans={cardRequest.custom_trans}";
-                NLogLogger.Info(new string[] { "APIVinaPays", "Request", transactionId, topup.Id.ToString(), getUrl});
-                var sw = new Stopwatch();
-                sw.Start();
-                var response = Task.Run(async () => await GetTask( getUrl, token)).Result;
-                sw.Stop();
-                NLogLogger.Info(new string[] { "APIVinaPays", "Response", transactionId, topup.Id.ToString(), response });
-                if (sw.ElapsedMilliseconds > 5000)
-                {
-                    TelegramNotify.SendNotify(-845553760, $"Nghi vấn thẻ {serial} nhận chậm");
-                }
+                var signature = Encrypts.MD5(SecretKey + amount + topup.Id + serial);
+                var data = string.Format("ApiToken={0}&TransID={1}&Signature={2}&CardType={3}&CardSeri={5}&CardCode={4}&Amount={6}&UrlCallBack={7}", SecretKey, topup.Id, signature, type, pin, serial, amount, cardRequest.url_callback);
+                NLogLogger.Info(new string[] { "APITiger", "Request", transactionId, topup.Id.ToString(), data });
+                var response = Task.Run(async () => await PostTask(ServiceUrl, data)).Result;
+                NLogLogger.Info(new string[] { "APITiger", "Response", transactionId, topup.Id.ToString(), response });
                 if (!string.IsNullOrEmpty(response))
                 {
                     var res = serializer.Deserialize<TopupResponse>(response);
 
-                    switch (res.error_code)
+                    switch (res.errorCode)
                     {
                         case 0:
                             var task = Task.Run(async () => await CheckStatusAsync(topup.Id));
                             if (task.Wait(TimeSpan.FromSeconds(130))) return task.Result;
                             break;
-
-                        case 3:
-                        case 101:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -330, string.Empty, string.Empty);
-                            return "-330|0";
-                        case 104:
-                        case 12:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -334, string.Empty, string.Empty);
-                            return "-334|0";
-                        case 13:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -327, string.Empty, string.Empty);
-                            return "-327|0";
-                        case 4:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -330, string.Empty, string.Empty);
-                            return "-330|0";
-                        case 11:
-                        case 103:
-                            DataRequest.UpdateTopupCard(topup.Id, 0, -7, string.Empty, string.Empty);
-                            return "-7|0";
+                      
                         default:
                             DataRequest.UpdateTopupCard(topup.Id, 0, -1, string.Empty, string.Empty);
                             return "-1|0";
@@ -295,31 +230,32 @@ namespace APIVinaPay
             return "-326|0";
         }
 
-        public async Task<string> PostTask(string url, Dictionary<string, string> postData)
+        public static async Task<string> PostTask(string url, string postData)
         {
+
+            var uri = new Uri(url);
+            var httpClient = new HttpClient();
             try
             {
-                var uri = new Uri(url);
-                var httpContent = new FormUrlEncodedContent(postData);
+                var httpContent = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
                 httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-                var client = new HttpClient();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-                var response = await client.PostAsync(uri, httpContent);
-                if (response.Content != null)
+
+                var response = await httpClient.PostAsync(uri, httpContent);
+                if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
+                    httpClient.Dispose();
                     return responseContent;
                 }
-
             }
+
             catch (Exception e)
             {
-                NLogLogger.Info(new string[] { "APIVinaPay", "Exeption Post", e.Message });
-                return string.Empty;
+                NLogLogger.Info(new string[] { "APITiger", "PostTask", "Exception", e.Message });
             }
 
+            httpClient.Dispose();
             return string.Empty;
-
 
         }
         public static string PostJson(string uri, string postData)
@@ -359,26 +295,7 @@ namespace APIVinaPay
             }
         }
 
-        [Obsolete]
-        public static async Task<string> PostTask(string url, string postData, string token = "")
-        {
-
-            var client = new RestClient(url);
-
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "application/json");
-            if (!string.IsNullOrEmpty(token))
-            {
-                //httpContent.Headers.Add("Authorization", "bearer " + token);
-                request.AddHeader("Authorization", "Bearer " + token);
-            }
-           
-            request.AddParameter("application/json", postData, ParameterType.RequestBody);
-            var response = client.ExecuteTaskAsync(request);
-            return response.Result.Content;
-            
-        }
+       
 
         public static async Task<string> GetTask(string url, string token = "")
         {

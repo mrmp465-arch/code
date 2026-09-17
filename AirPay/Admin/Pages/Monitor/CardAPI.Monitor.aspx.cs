@@ -14,13 +14,15 @@ using System.Net.Http;
 using System.Net;
 using System.Text;
 using System.Net.Http.Headers;
+using System.IO;
 
 public partial class Pages_Monitor_CardAPI_Monitor : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.CardAPIMonitor);
-
+        Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
+        Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         if (!IsPostBack)
         {
             init();
@@ -49,26 +51,26 @@ public partial class Pages_Monitor_CardAPI_Monitor : System.Web.UI.Page
                 Status = _CardAPILog.Status,
                 Signature = Libs.Utils.Encrypts.MD5(_CardAPILog.RequestNo + _CardAPILog.Status + _CardAPILog.Amount + privateKey)
             };
-            Task.Run(() => CallbackJson(_CardAPILog.CallbackUrl, serializer.Serialize(datacb), _CardAPILog.PartnerCode, 0, 2).ConfigureAwait(false));
+            Task.Run(() => CallbackJson(_CardAPILog.CallbackUrl, serializer.Serialize(datacb), _CardAPILog.PartnerCode, _CardAPILog.TransactionID).ConfigureAwait(false));
         }
         GetList();
     }
     private void init()
     {
-        txtCreatTime.Text = DateTime.Now.AddDays(1).ToString();
-
+        btView.Text = Resources.Pay.View;
         var lst = new List<Partners>();
         if (AppUtils.IsAdmin)
             lst = new Partners().GetList();
         else
             lst = new Partners().GetListByUserId(AppUtils.UserID);
-        lst = lst.OrderBy(x => x.PartnerCode).ToList();
+
+
         drpPartner.DataSource = lst;
         drpPartner.DataTextField = "Name";
         drpPartner.DataValueField = "PartnerCode";
         drpPartner.DataBind();
-        drpPartner.Items.Insert(0, new ListItem("Đối tác:", ""));
 
+        drpPartner.Items.Insert(0, new ListItem(Resources.Pay.Partner, ""));
         var lstProvider = new List<Providers>();
         if (AppUtils.IsAdmin)
             lstProvider = new Providers().GetList(7);
@@ -85,27 +87,53 @@ public partial class Pages_Monitor_CardAPI_Monitor : System.Web.UI.Page
         drpCardType.DataTextField = "Name";
         drpCardType.DataValueField = "Code";
         drpCardType.DataBind();
-        drpCardType.Items.Insert(0, new ListItem("Loại thẻ:", ""));
+        drpCardType.Items.Insert(0, new ListItem(Resources.Pay.CardType, ""));
 
+        drpStatus.Items.Insert(0, new ListItem(Resources.Pay.Status, "-999"));
+        drpStatus.Items.Insert(1, new ListItem(Resources.Pay.Success, "1"));
+        drpStatus.Items.Insert(2, new ListItem(Resources.Pay.Processing, "0"));
+        drpStatus.Items.Insert(3, new ListItem(Resources.Pay.Fail, "-1"));
 
+        txtCreatTime.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1).AddSeconds(-1).ToString("dd/MM/yyyy HH:mm:ss");
+        //txtFromDate.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).ToString("dd/MM/yyyy HH:mm:ss");
+        txtFromDate.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).ToString("dd/MM/yyyy HH:mm:ss");
+        if (AppUtils.IsAdmin)
+            txtFromDate.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-10).ToString("dd/MM/yyyy HH:mm:ss");
     }
-
+    public DateTime ToDateTime(string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            try
+            {
+                CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+                return DateTime.Parse(value, cul);
+                //return Convert.ToDateTime(value);
+            }
+            catch (Exception)
+            {
+                return DateTime.Now;
+            }
+        }
+        return DateTime.Now;
+    }
     private void GetList()
     {
         //NLogLogger.Info(new string[] { "IsProvider", AppUtils.IsProvider.ToString(), "IsPartner", AppUtils.IsPartner.ToString() });
-
-        bool erro = false;
-        int? status = null;
-        if (txtStatus.Text.ToLower() != "all")
-            status = AppUtils.ToInt32(txtStatus.Text, out erro);
-        if (erro)
-        {
-            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfos').html('Chưa nhập Status'); $('#AlertInfo').modal()}); ", true);
-            return;
-        }
-
         int top = Convert.ToInt32(drpTop.SelectedValue);
-        DateTime creatTime = AppUtils.ToDateTime(txtCreatTime.Text);
+        DateTime requestTime = ToDateTime(txtCreatTime.Text);
+        DateTime fromDate = ToDateTime(txtFromDate.Text);
+        //if(AppUtils.UserName=="admin")
+        //{
+        //    NLogLogger.Info(new string[] { "date", txtFromDate.Text, fromDate.ToString("dd/MM/yyyy HH:mm:sss") });
+        //}    
+
+        //bool erro = false;
+        int? status = null;
+        if (int.Parse(drpStatus.SelectedValue) > -1)
+        {
+            status = int.Parse(drpStatus.SelectedValue);
+        }
 
 
         string cardType = drpCardType.SelectedValue;
@@ -115,7 +143,7 @@ public partial class Pages_Monitor_CardAPI_Monitor : System.Web.UI.Page
         string providerCodes = drpProvider.SelectedValue;
 
 
-        if (AppUtils.IsPartner && !AppUtils.IsAdmin)
+        if (!AppUtils.IsAdmin)
         {
 
             if (string.IsNullOrEmpty(partnerCodes))
@@ -126,9 +154,10 @@ public partial class Pages_Monitor_CardAPI_Monitor : System.Web.UI.Page
                     partnerCodes = string.Join(",", lstPartner.Select(e => e.PartnerCode).ToArray());
                 }
             }
-            
+
 
         }
+
 
         if (AppUtils.IsProvider && !AppUtils.IsAdmin)
         {
@@ -144,7 +173,7 @@ public partial class Pages_Monitor_CardAPI_Monitor : System.Web.UI.Page
         }
         
         CardAPILog _CardAPILog = new CardAPILog();
-        rptList.DataSource = _CardAPILog.GetTable(top, partnerCodes, creatTime, status, cardType, providerCodes);
+        rptList.DataSource = _CardAPILog.GetTable(top, partnerCodes, fromDate, requestTime, status, cardType, providerCodes,txtOrderNo.Text.Trim());
         rptList.DataBind();
     }
 
@@ -170,61 +199,67 @@ public partial class Pages_Monitor_CardAPI_Monitor : System.Web.UI.Page
         public string Signature { get; set; }
 
     }
-    public async Task<string> CallbackJson(string url, string postData, string code, long tranId = 0, int type = 0)
+    public async Task<string> CallbackJson(string url, string postData, string code, long Id = 0)
     {
-        NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Request", code, tranId.ToString(), url, postData });
+        NLogLogger.Info(new string[] { "NTNet", "Callback Partner", "Request", code, url, postData });
 
         try
         {
             var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
             using (var client = new HttpClient())
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var response = await client.PostAsync(url, httpContent).ConfigureAwait(false);
 
                 if (response.Content != null)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Response", code, tranId.ToString(), url, postData, responseContent });
-                    try
+                    NLogLogger.Info(new string[] { "NTNet", "Callback Partner", "Response", code, url, postData, responseContent });
+
+                    var log = new LogInfo
                     {
-                        if (responseContent.Contains("1|"))
-                        {
-                            NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Process TRUE", responseContent });
-                            if (type == 1)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, 1, null);
-                            }
-                            else if (type == 2)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, null, 1);
-                            }
-                        }
-                        else
-                        {
-                            NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Process FAIL", responseContent });
-                            if (type == 1)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, -1, null);
-                            }
-                            else if (type == 2)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, null, -1);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Error", e.Message });
-                    }
+                        LogTime = DateTime.Now,
+                        Url = url,
+                        TransactionID = Id,
+                        Request = postData,
+                        Respone = responseContent
+                    };
+                    LogCache.LogCard(log);
                     return responseContent;
                 }
             }
         }
-        catch (Exception e)
+        catch (WebException e)
         {
-            NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Error", e.Message });
+            var responseStream = e.Response.GetResponseStream();
+
+            if (responseStream != null)
+            {
+                using (var reader = new StreamReader(responseStream))
+                {
+                    NLogLogger.Info(new string[] { "MDrum", "Exeption Post", reader.ReadToEnd() });
+                    var log1 = new LogInfo
+                    {
+                        LogTime = DateTime.Now,
+                        Url = url,
+                        TransactionID = Id,
+                        Request = postData,
+                        Respone = reader.ReadToEnd()
+                    };
+                    LogCache.LogCard(log1);
+                    //return result;
+                }
+            }
+            NLogLogger.Info(new string[] { "MDrum", "Exeption Post", e.Message });
+            var log = new LogInfo
+            {
+                LogTime = DateTime.Now,
+                Url = url,
+                TransactionID = Id,
+                Request = postData,
+                Respone = e.Message
+            };
+            LogCache.LogCard(log);
             return string.Empty;
         }
 

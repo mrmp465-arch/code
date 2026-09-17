@@ -54,7 +54,7 @@
                 <li><a href="#sales-chart-partner" data-toggle="tab">Đối tác</a></li>
 
                 <%}%>
-                <%if ( RoleUpadte)
+                <%if (RoleUpadte)
                     {%>
                 <li><a href="#sales-roles" data-toggle="tab">Chức năng quản trị</a></li>
                 <%}%>
@@ -293,10 +293,18 @@
                             <label for="txtDiscountVTT">Reward Momo out </label>
                             <asp:TextBox ID="txtRewardMOMOOUT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group" style="display: none">
-                            <label for="txtDiscountVTT">Chiếu khấu thẻ </label>
+                        <div class="form-group">
+                            <label for="txtDiscountVTT">Chiếu khấu VTT </label>
                             <asp:HiddenField ID="hdDiscountVTT" runat="server" />
                             <asp:TextBox ID="txtDiscountVTT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtDiscountVTT">Chiếu khấu VINA </label>
+                            <asp:TextBox ID="txtDiscountVNP" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtDiscountVTT">Chiếu khấu MOBI </label>
+                            <asp:TextBox ID="txtDiscountVMS" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                         <div class="form-group">
                             <asp:CheckBox ID="rckUpdate" runat="server"></asp:CheckBox>

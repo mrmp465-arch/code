@@ -3,14 +3,14 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>Thẻ cào
+        <h1><%= Resources.Pay.Card%> 
         <small>
-            <asp:Label ID="lblTtitle" runat="server" Text="Báo cáo doanh số" CssClass="title"></asp:Label>
+           <%= Resources.Pay.Report%> 
         </small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<%=Constant.ADMIN_PATH %>Default.aspx"><i class="fa fa-dashboard"></i>Home</a></li>
-            <li class="active">Báo cáo</li>
+            <li class="active"><%= Resources.Pay.Report%> </li>
         </ol>
     </section>
     <!-- Main content -->
@@ -18,18 +18,19 @@
         <div class="nav-tabs-custom">
             <!-- Tabs within a box -->
             <ul class="nav nav-tabs pull-left">
-                <li class="pull-left header"><i class="fa fa-inbox"></i>Báo cáo doanh số</li>
-                <li class="active"><a href="#revenue-chart" data-toggle="tab">Theo thời gian</a></li>
+                <li class="pull-left header"><i class="fa fa-inbox"></i><%= Resources.Pay.Report%> </li>
+                <li class="active"><a href="#revenue-chart" data-toggle="tab"><%= Resources.Pay.ReportTime%> </a></li>
+                 <%if (AppUtils.IsAdmin)
+                 {%>
                 <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.CardAPIReportCardType %>">Theo loại thẻ</a></li>
-                <%if (AppUtils.IsAdmin)
-                    {%>
+               
                 <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.CardAPIReportPartner %>">Theo đối tác</a></li>
                 <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.CardAPIReportProvider %>">Theo nhà cung cấp</a></li>
                                 <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.CardAPIReportPartner2 %>">Tổng hợp</a></li>
                 <% }%>
 
 
-                <% if (AppUtils.IsAdmin || AppUtils.IsPartner)
+                <% if (AppUtils.IsAdmin )
                             { %>
                   <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.CardAPIReportCardType2 %>">Tổng hợp thẻ</a></li>
                 <% }%>
@@ -82,20 +83,13 @@
                             <thead>
                                 <tr>
                                     <th style="width: 10px;">#</th>
-                                    <th>Time</th>
-                                    <th>TotalTransaction</th>
-                                    <th>%</th>
-                                    <th>TotalAmount</th>
-                                    <th>%</th>
-                                    <th>CardType</th>
-                                    <% if (AppUtils.IsAdmin || AppUtils.IsProvider)
-                                        {%>
-                                    <th>Provider</th>
-                                    <%}%>
-                                    <% if (AppUtils.IsAdmin || AppUtils.IsPartner)
-                                        { %>
-                                    <th>Partner</th>
-                                    <% } %>
+                                   <th><%= Resources.Pay.Time%></th>
+                                  
+                                    <th><%= Resources.Pay.TotalTransaction%></th>
+                                     <th><%= Resources.Pay.TotalAmount%></th>
+                                    
+                                   
+                                  
                                 </tr>
                             </thead>
                             <tbody>
@@ -105,19 +99,10 @@
                                             <td></td>
                                             <td><%#Eval("Time")%></td>
                                             <td><%#Convert.ToInt32(Eval("TotalTransaction")).ToString("N0").Replace(",", ".") %></td>
-                                            <td><%# AppUtils.AmountToPercent(Eval("TotalTransaction").ToString(),lblTotalTransaction.Text) %></td>
+                                           
                                             <td><%#Convert.ToInt64(Eval("TotalAmount")).ToString("N0").Replace(",", ".") %></td>
-                                            <td><%# AppUtils.AmountToPercent(Eval("TotalAmount").ToString(),lblTotalAmount.Text) %></td>
-                                            <td><%#Eval("CardType") %></td>
-                                            <% if (AppUtils.IsAdmin || AppUtils.IsProvider)
-                                                {%>
-                                            <td><%#Eval("Provider") %></td>
-                                            <%}%>
-                                            <% if (AppUtils.IsAdmin || AppUtils.IsPartner)
-                                                { %>
-                                            <td><%# (Eval("PartnerCode").ToString().Contains(",")) ? "" : Eval("PartnerCode") %></td>
-                                            <% } %>
-                                        </tr>
+                                          
+                                           
                                     </ItemTemplate>
                                 </asp:Repeater>
                             </tbody>
@@ -125,9 +110,9 @@
                     </div>
                     <div class="box-info">
                         <div style="padding: 10px">
-                            Tổng số giao dịch: <b>
+                           <%= Resources.Pay.TotalTransaction%>: <b>
                                 <asp:Label ID="lblTotalTransaction" runat="server" Text="0"></asp:Label></b>
-                            , tổng giá trị giao dịch: <b>
+                            , <%= Resources.Pay.TotalAmount%>: <b>
                                 <asp:Label ID="lblTotalAmount" runat="server" Text="0"></asp:Label></b>
                         </div>
                     </div>

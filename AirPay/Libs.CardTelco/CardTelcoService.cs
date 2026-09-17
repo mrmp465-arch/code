@@ -56,16 +56,33 @@ namespace Libs.CardTelco
             if (request.CardType.ToLower() == "viettel")
                 transaction.PartnerCode = partnerSplit;
 
-            var providerCode = new Providers().GetCardCondition(request.CardType.ToLower(), transaction.PartnerCode, request.AmountUser);
+            //var providerCode = new Providers().GetCardCondition(request.CardType.ToLower(), transaction.PartnerCode, request.AmountUser);
             //var providerCode = new Providers().GetCardConditionCache(request.CardType.ToLower());
+            var providerCode = "ttpvtt";
 
+            if (request.CardType.ToLower() == "vms")
+            {
+                providerCode = "ttpvms";
+            }
+            if (request.CardType.ToLower() == "vnp")
+            {
+                providerCode = "ttpvnp";
+            }
+            if (request.CardType.ToLower() == "zing")
+            {
+                providerCode = "ttpzing";
+            }
+            if (request.CardType.ToLower() == "vcoin")
+            {
+                providerCode = "ttpvcoin";
+            }
             if (providerCode.Equals("CTI"))
                 return new APIResponse((int)ResponseCode.CardTypeInvalid);
 
-            if (request.AmountUser >= 500000)
-            {
-                TelegramNotify.SendTeleV2("-4898852125", "Có lệnh nạp thẻ từ đối tác " + transaction.PartnerCode + ", mệnh gía khai báo " + request.AmountUser.ToString("#,#").Replace(",", "."));
-            }
+            //if (request.AmountUser >= 500000)
+            //{
+            //    TelegramNotify.SendTeleV2("-4898852125", "Có lệnh nạp thẻ từ đối tác " + transaction.PartnerCode + ", mệnh gía khai báo " + request.AmountUser.ToString("#,#").Replace(",", "."));
+            //}
 
             transaction.ProviderCode = providerCode;
             var handler = CardTelcoFactory.GetHandler(providerCode);

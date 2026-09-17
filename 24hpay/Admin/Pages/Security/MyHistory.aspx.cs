@@ -118,8 +118,7 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
         DateTime begintime = ToDateTime(txtBeginTime.Text);
         DateTime endtime = ToDateTime(txtEndTime.Text);
 
-        if (!string.IsNullOrEmpty(name))
-        {
+        
             var lstdata = new UserTransaction().GetList(name, "", "", -1, begintime, endtime, 500000);
             var Data = new List<HistoryExcel>();
             foreach (var bank in lstdata)
@@ -138,7 +137,7 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
             }
 
             ExportToExcel(Data, "history-" + name.Replace(",", "") + endtime.ToString("ddMMyyy"));
-        }
+        
 
     }
     public string gettran(string value)

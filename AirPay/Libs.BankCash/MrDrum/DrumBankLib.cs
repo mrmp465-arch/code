@@ -453,6 +453,144 @@ namespace Libs.BankCash.Drum
                     client.Dispose();
             }
         }
+        public static async Task<string> CallbackJsonV3(string url, string postData, long Id = 0, string refcode = "", int maxRetry = 3)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            HttpClient client = null;
+
+            // Retry delays: retry #1=30s, retry #2=5m, retry #3=10m
+            var retryDelays = new[]
+            {
+                TimeSpan.FromSeconds(60),
+                TimeSpan.FromMinutes(5),
+                TimeSpan.FromMinutes(10)
+            };
+
+            try
+            {
+                var handler = new WebRequestHandler
+                {
+                    UseCookies = false,
+                    ReadWriteTimeout = 60000
+                };
+                handler.UseProxy = true;
+
+                handler.Proxy = new WebProxy(
+                   "202.231.136.127",
+                   40023
+               );
+                handler.Proxy.Credentials = new NetworkCredential(
+                    "1109yaeyet",
+                    "1109yaeyet"
+                );
+                client = new HttpClient(handler);
+                client.Timeout = TimeSpan.FromSeconds(90);
+
+
+                // Tổng số lần gọi = 1 (lần đầu) + maxRetry (số lần retry)
+                for (int attempt = 0; attempt <= maxRetry; attempt++)
+                {
+                    try
+                    {
+                        var attemptNo = (attempt + 1).ToString(); // để log dễ đọc (1..)
+
+                        NLogLogger.Info(new[] { "MDrum", "Callback", "Attempt", attemptNo, "Transid", Id.ToString(), "Refcode", refcode, "Url", url });
+
+                        using (var httpContent = new StringContent(postData ?? "", Encoding.UTF8, "application/json"))
+                        {
+                            var response = await client.PostAsync(url, httpContent).ConfigureAwait(false);
+
+                            var responseContent = response.Content != null
+                                ? await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+                                : string.Empty;
+
+                            LogCache.LogBankCash(new LogInfo
+                            {
+                                LogTime = DateTime.Now,
+                                Url = url,
+                                TransactionID = Id,
+                                Request = postData,
+                                Respone = "HTTP " + ((int)response.StatusCode) + " " + response.ReasonPhrase + " | " + responseContent
+                            });
+
+                            if ((int)response.StatusCode == 200)
+                                return responseContent;
+
+                            if (responseContent.Contains("not found"))
+                                TelegramNotify.SendTeleV2("-5260338940", refcode);
+                            NLogLogger.Info(new[] { "MDrum", "Callback", "StatusNot200", "Attempt", attemptNo, "Status", ((int)response.StatusCode).ToString(), responseContent });
+                        }
+                    }
+                    catch (TaskCanceledException ex)
+                    {
+                        var attemptNo = (attempt + 1).ToString();
+
+                        NLogLogger.Info(new[] { "MDrum", "Callback", "Timeout", "Attempt", attemptNo, "Transid", Id.ToString(), "Refcode", refcode, ex.Message });
+
+                        LogCache.LogBankCash(new LogInfo
+                        {
+                            LogTime = DateTime.Now,
+                            Url = url,
+                            TransactionID = Id,
+                            Request = postData,
+                            Respone = "Timeout: " + ex.ToString()
+                        });
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        var attemptNo = (attempt + 1).ToString();
+
+                        NLogLogger.Info(new[] { "MDrum", "Callback", "HttpRequestException", "Attempt", attemptNo, "Transid", Id.ToString(), "Refcode", refcode, ex.Message });
+
+                        LogCache.LogBankCash(new LogInfo
+                        {
+                            LogTime = DateTime.Now,
+                            Url = url,
+                            TransactionID = Id,
+                            Request = postData,
+                            Respone = "HttpRequestException: " + ex.ToString()
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        var attemptNo = (attempt + 1).ToString();
+
+                        NLogLogger.Info(new[] { "MDrum", "Callback", "Exception", "Attempt", attemptNo, "Transid", Id.ToString(), "Refcode", refcode, ex.Message });
+
+                        LogCache.LogBankCash(new LogInfo
+                        {
+                            LogTime = DateTime.Now,
+                            Url = url,
+                            TransactionID = Id,
+                            Request = postData,
+                            Respone = "Exception: " + ex.ToString()
+                        });
+
+                        return string.Empty; // lỗi không retry tiếp (theo logic cũ của bạn)
+                    }
+
+                    // Nếu đã hết lượt (lần cuối) thì dừng
+                    if (attempt == maxRetry)
+                        break;
+
+                    // Delay theo lịch: retry #1=30s, #2=5m, #3=10m
+                    var delayIndex = attempt; // attempt=0 -> delay[0] (30s), attempt=1 -> delay[1] (5m), attempt=2 -> delay[2] (10m)
+                    var delay = retryDelays[Math.Min(delayIndex, retryDelays.Length - 1)];
+
+                    NLogLogger.Info(new[] { "MDrum", "Callback", "DelayBeforeRetry", delay.ToString(), "AttemptNext", (attempt + 2).ToString(), "Transid", Id.ToString(), "Refcode", refcode });
+
+                    await Task.Delay(delay).ConfigureAwait(false);
+                }
+
+                return string.Empty;
+            }
+            finally
+            {
+                if (client != null)
+                    client.Dispose();
+            }
+        }
         public static string GetChatId(string id)
         {
             string partnecode = "";

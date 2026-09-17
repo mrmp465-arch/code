@@ -32,7 +32,7 @@ namespace Libs.BankDirect.FastPay
         private const string callbackurl = "https://bankgate.cd99pay.info/Callback/fastbank.ashx";
         JavaScriptSerializer serializer = new JavaScriptSerializer();
         private const string Apikey = "cd99";
-        private const string urlBaseService = "https://bankgate.fspay.info/";
+        private const string urlBaseService = "https://bankgate.tn99.info/";
         private const string ApiSecret = "daee96339f77a3a9124a2dfbef9da4ed";
         public APIResponse GetBanksV3(string ParnerId, string AccoutName)
         {

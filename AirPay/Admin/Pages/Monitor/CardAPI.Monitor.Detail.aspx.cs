@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Libs.API;
 using Libs.CardTelco;
+using Libs.Utils;
 using CardAPILog = Libs.Report.CardAPILog;
 
 public partial class Pages_Monitor_CardAPI_Monitor_Detail : System.Web.UI.Page
@@ -14,7 +16,8 @@ public partial class Pages_Monitor_CardAPI_Monitor_Detail : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.CardAPIMonitorDetail);
-
+        Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
+        Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         if (!IsPostBack)
         {
             BindData();
@@ -39,16 +42,23 @@ public partial class Pages_Monitor_CardAPI_Monitor_Detail : System.Web.UI.Page
         lblCallbackUrl.Text = _CardAPILog.CallbackUrl;
         lblStatus.Text = _CardAPILog.Status + " (" + ResponseUtils.Description(_CardAPILog.Status) + ")";
         txtLog.Text = _CardAPILog.Description;
-        if(!AppUtils.IsAdmin)
-        {
-            if(_CardAPILog.PartnerCode!=AppUtils.UserName)
-            {
-                Response.Redirect(Constant.ADMIN_PATH + "500.html");
-            }    
-        }    
-        
-    }
 
+        //log callback
+        var lstLogData = LogCache.GetLogCard(_CardAPILog.TransactionID);
+        rptList.DataSource = lstLogData;
+        rptList.DataBind();
+
+    }
+    public string DecodeFromUtf8(string str)
+    {
+        // copy the string as UTF-8 bytes.
+        return Regex.Replace(str, @"\\u([0-9a-fA-F]{4})", match =>
+        {
+            var unicodeValue = Convert.ToInt32(match.Groups[1].Value, 16);
+            var unicodeChar = char.ConvertFromUtf32(unicodeValue);
+            return unicodeChar;
+        });
+    }
     protected void txtRecheck_Click(object sender, EventArgs e)
     {
 

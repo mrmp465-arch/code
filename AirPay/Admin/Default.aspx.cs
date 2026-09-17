@@ -188,7 +188,7 @@ public partial class Default : System.Web.UI.Page
             var lstDataBank = new BankGateAPI().ReportDashboard(partnerCodes, begintime, endtime);
             var lstDataBankCash = new BankCashAPI().ReportDashboard(partnerCodes, begintime, endtime);
 
-            //var lstDataCard = new CardAPILog().ReportDashboard(partnerCodes, begintime, endtime);
+            var lstDataCard = new CardAPILog().ReportDashboard(partnerCodes, begintime, endtime);
             //var lstDataBuyCard = new BuyCard().ReportDashboard(partnerCodes, begintime, endtime);
 
 
@@ -263,15 +263,16 @@ public partial class Default : System.Web.UI.Page
             lstData.Add(item2);
             //lstData.Add(item);
 
-            //var item4 = new BankDashboardReport();
-            //item4.Type = "CARD";
+            var item4 = new BankDashboardReport();
+            item4.Type = "CARD";
 
-            //var datacard = lstDataCard.FirstOrDefault();
-            //item4.TotalFee = datacard.TotalFee;
-            //item4.TotalTrans = datacard.TotalTrans;
-            //item4.TotalTransSuccess = datacard.TotalTransSuccess.Value;
-            //item4.TotalAmountSuccess = datacard.TotalAmountSuccess;
-            //lstData.Add(item4);
+            var datacard = lstDataCard.FirstOrDefault();
+            item4.TotalFee = datacard.TotalFee;
+            item4.TotalTrans = datacard.TotalTrans;
+            item4.TotalTransSuccess = datacard.TotalTransSuccess.Value;
+            item4.TotalAmountSuccess = datacard.TotalAmountSuccess;
+            lstData.Add(item4);
+
             var item3 = new BankDashboardReport();
             item3.Type = Resources.Pay.Total;
             item3.TotalFee =  item2.TotalFee ;

@@ -144,6 +144,15 @@
   <data name="AccountTranfer" xml:space="preserve">
     <value>Tài khoản chuyển</value>
   </data>
+  <data name="Actiton" xml:space="preserve">
+    <value>Tác vụ</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Thêm mới</value>
+  </data>
+  <data name="AddAccount" xml:space="preserve">
+    <value>Thêm mới tài khoản</value>
+  </data>
   <data name="AddMoney" xml:space="preserve">
     <value>AddMoney</value>
   </data>
@@ -183,6 +192,12 @@
   <data name="Cancel" xml:space="preserve">
     <value>Hủy</value>
   </data>
+  <data name="Card" xml:space="preserve">
+    <value>Thẻ cào</value>
+  </data>
+  <data name="CardType" xml:space="preserve">
+    <value>Loại thẻ</value>
+  </data>
   <data name="Cash" xml:space="preserve">
     <value>Rút bank</value>
   </data>
@@ -209,6 +224,9 @@
   </data>
   <data name="ChangePassword" xml:space="preserve">
     <value>Đổi mật khẩu</value>
+  </data>
+  <data name="ChoseAccount" xml:space="preserve">
+    <value>Chọn tài khoản</value>
   </data>
   <data name="Completiontime" xml:space="preserve">
     <value>Thời gian hoàn thành</value>
@@ -239,6 +257,9 @@
   </data>
   <data name="DeductMoney" xml:space="preserve">
     <value>DeductMoney</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Xoá</value>
   </data>
   <data name="Deposit" xml:space="preserve">
     <value>Nạp bank</value>
@@ -335,6 +356,9 @@
   <data name="NotEnoughInformation" xml:space="preserve">
     <value>Bạn chưa nhập đủ thông tin</value>
   </data>
+  <data name="Number" xml:space="preserve">
+    <value>Thứ tự</value>
+  </data>
   <data name="OldPassword" xml:space="preserve">
     <value>Mật khẩu cũ</value>
   </data>
@@ -396,6 +420,12 @@
   <data name="SecuritySetupOK" xml:space="preserve">
     <value>Cài đặt bảo mật Google Authenticator thành công</value>
   </data>
+  <data name="Setup" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="Sevice" xml:space="preserve">
+    <value>Dịch vụ</value>
+  </data>
   <data name="Statitics" xml:space="preserve">
     <value>Thống kê doanh số</value>
   </data>
@@ -427,11 +457,23 @@
   <data name="Total" xml:space="preserve">
     <value>Tổng</value>
   </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>TotalAmount</value>
+  </data>
+  <data name="TotalDeposite" xml:space="preserve">
+    <value>Danh sách lệnh nạp</value>
+  </data>
+  <data name="TotalTransaction" xml:space="preserve">
+    <value>TotalTransaction</value>
+  </data>
   <data name="TransactionType" xml:space="preserve">
     <value>Loại giao dịch</value>
   </data>
   <data name="TransferInfo" xml:space="preserve">
     <value>Thông tin chuyển tiền</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Cập nhật</value>
   </data>
   <data name="View" xml:space="preserve">
     <value>Xem</value>
@@ -439,8 +481,14 @@
   <data name="ViewLog" xml:space="preserve">
     <value>Xem log giao dịch</value>
   </data>
+  <data name="ViewMore" xml:space="preserve">
+    <value>Xem thêm</value>
+  </data>
   <data name="WaitApproval" xml:space="preserve">
     <value>Đợi duyệt</value>
+  </data>
+  <data name="WithdrawalAccount" xml:space="preserve">
+    <value>Tài khoản rút tiền</value>
   </data>
   <data name="WithdrawalHistory" xml:space="preserve">
     <value>Lịch sử rút tiền</value>

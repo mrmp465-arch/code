@@ -47,6 +47,7 @@ namespace Libs.Report
         public int ReturnValue { get; set; }
         public long Fee { get; set; }
         public long Reward { get; set; }
+        public long FeeProvider { get; set; }
         public CardAPILog()
         {
 
@@ -71,13 +72,15 @@ namespace Libs.Report
         /// </summary>
         /// <param name="PartnerCodes">vd: 1,3,4</param>
         /// <param name="status">vd: null=all,0,1,2,3</param>
-        public DataTable GetTable(int top, string partnerCodes, DateTime creatTime, int? status, string cardType, string provider)
+        public DataTable GetTable(int top, string partnerCodes, DateTime creatTime, DateTime requestTime, int? status, string cardType, string provider, string orderNo)
         {
             DBHelper db = new DBHelper(Configs.VPGLogReportConnectionStrings);
             return db.GetDataTableSP("sp_CardAPILog_SelectList"
                 , new SqlParameter("@Top", top)
+                , string.IsNullOrEmpty(orderNo) ? new SqlParameter("@OrderNo", DBNull.Value) : new SqlParameter("@OrderNo", orderNo)
                 , string.IsNullOrEmpty(partnerCodes) ? new SqlParameter("@PartnerCodes", DBNull.Value) : new SqlParameter("@PartnerCodes", partnerCodes)
                 , new SqlParameter("@CreatTime", creatTime)
+                , new SqlParameter("@RequestTime", requestTime)
                 , status == null ? new SqlParameter("@Status", DBNull.Value) : new SqlParameter("@Status", status)
                 , string.IsNullOrEmpty(cardType) ? new SqlParameter("@CardType", DBNull.Value) : new SqlParameter("@CardType", cardType)
                 , string.IsNullOrEmpty(provider) ? new SqlParameter("@Provider", DBNull.Value) : new SqlParameter("@Provider", provider)
@@ -337,7 +340,7 @@ namespace Libs.Report
         public void Update()
         {
             DBHelper db = new DBHelper(Configs.VPGLogConnectionStrings);
-            SqlParameter[] pars = new SqlParameter[8];
+            SqlParameter[] pars = new SqlParameter[9];
             pars[0] = new SqlParameter("@TransactionID", TransactionID);
             pars[1] = new SqlParameter("@Status", Status);
             pars[2] = new SqlParameter("@Amount", Amount);
@@ -346,6 +349,7 @@ namespace Libs.Report
             pars[4] = new SqlParameter("@ReturnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
             pars[6] = new SqlParameter("@Fee", Fee);
             pars[7] = new SqlParameter("@Reward", Reward);
+            pars[8] = new SqlParameter("@FeeProvider", FeeProvider);
             db.ExecuteNonQuerySP("sp_CardAPILog_Update", pars);
             ReturnValue = Convert.ToInt32(pars[4].Value);
         }

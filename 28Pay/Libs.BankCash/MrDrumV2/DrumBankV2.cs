@@ -3,7 +3,7 @@ using Libs.BankCash.CoCo;
 using Libs.BankCash.Drum;
 using Libs.Report;
 using Libs.Utils;
-using RestSharp.Serializers;
+
 using System;
 using System.CodeDom;
 using System.Collections.Generic;

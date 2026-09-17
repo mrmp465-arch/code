@@ -147,7 +147,16 @@ public partial class Pages_Monitor_BankCash_Monitor_Detail : System.Web.UI.Page
 
             // apiResponse.ResponseContent = serializer.Serialize(datacb);
             //apiResponse.Signature = PaymentUtils.Signature(apiResponse.ResponseCode.ToString() + apiResponse.Description + apiResponse.ResponseContent, partner.PrivateKey, partner.SignatureType);
-            Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+
+            if (_CardAPILog.PartnerCode == "k36")
+            {
+                Task.Run(async () => await CallbackJsonV2(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+            }
+            else
+            {
+                Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+            }
+            //Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
         }
         System.Threading.Thread.Sleep(500);
         BindData();
@@ -167,6 +176,84 @@ public partial class Pages_Monitor_BankCash_Monitor_Detail : System.Web.UI.Page
         public string Description { get; set; }
 
         public string Signature { get; set; }
+    }
+    public static async Task<string> CallbackJsonV2(string url, string postData, long Id)
+    {
+
+        NLogLogger.Info(new string[] { "MDrum", "Callback", "Partner", "Request", postData });
+        var uri = new Uri(url);
+        var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
+        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        HttpClient client = null;
+        var handler = new HttpClientHandler
+        {
+            UseCookies = false,
+            UseProxy = true,
+            Proxy = new WebProxy(
+          "202.231.136.127",
+                   40023
+            )
+        };
+
+        handler.Proxy.Credentials = new NetworkCredential(
+            "1109yaeyet",
+            "1109yaeyet"
+        );
+        client = new HttpClient(handler);
+        client.Timeout = TimeSpan.FromSeconds(90);
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        //client.Timeout = TimeSpan.FromSeconds(60);
+        try
+        {
+            var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);
+            if (response.Content != null)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response", responseContent });
+                var log = new LogInfo
+                {
+                    LogTime = DateTime.Now,
+                    Url = url,
+                    TransactionID = Id,
+                    Request = postData,
+                    Respone = responseContent
+                };
+                LogCache.LogBankCash(log);
+                client.Dispose();
+                return responseContent;
+            }
+            else
+            {
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response Is Null" });
+            }
+
+        }
+        catch (Exception e)
+        {
+            //var responseStream = e.Response.GetResponseStream();
+
+            //if (responseStream != null)
+            //{
+            //    using (var reader = new StreamReader(responseStream))
+            //    {
+            //        NLogLogger.Info(new string[] { "CMS", "Exeption Post", reader.ReadToEnd() }); 
+            //        
+            //    }
+            //}
+            var log = new LogInfo
+            {
+                LogTime = DateTime.Now,
+                Url = url,
+                TransactionID = Id,
+                Request = postData,
+                Respone = e.Message
+            };
+            LogCache.LogBank(log);
+            NLogLogger.Info(new string[] { "CMS", "Exeption Post", e.Message });
+            return string.Empty;
+        }
+        client.Dispose();
+        return string.Empty;
     }
     public static async Task<string> CallbackJson(string url, string postData, long Id)
     {

@@ -1121,7 +1121,17 @@ namespace Libs.BankCash.DrumV2
                         datacb.ResponseCode = apiResponse.ResponseCode;
                         datacb.Description = apiResponse.Description;
                         datacb.Signature = PaymentUtils.Signature(datacb.ResponseCode.ToString() + datacb.Description + datacb.RefCode, partner.PrivateKey, partner.SignatureType);
-                        Task.Run(async () => await DrumBankLib.CallbackJsonV2(order.ReturnUrl, serializer.Serialize(datacb), order.TransactionID, order.RefCode).ConfigureAwait(false));
+
+                        if (order.PartnerCode == "k36")
+                        {
+                            Task.Run(async () => await DrumBankLib.CallbackJsonV3(order.ReturnUrl, serializer.Serialize(datacb), order.TransactionID, order.RefCode).ConfigureAwait(false));
+
+                        }
+                        else
+                        {
+                            Task.Run(async () => await DrumBankLib.CallbackJsonV2(order.ReturnUrl, serializer.Serialize(datacb), order.TransactionID, order.RefCode).ConfigureAwait(false));
+
+                        }
 
                         if (partner.RequestType > 0)
                         {

@@ -13,6 +13,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Libs.API;
 using System.Net;
+using DocumentFormat.OpenXml.Math;
+using System.IO;
+
+
 
 public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
 {
@@ -84,18 +88,17 @@ public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
             if (oldStatus < 1)
             {
                 var ck = getck(_CardAPILog.PartnerCode, _CardAPILog.CardType);
+                var rw = getrw(_CardAPILog.PartnerCode, _CardAPILog.CardType);
+                var feeProvider = getfeeProvider(_CardAPILog.CardType);
                 var Amount = Math.Min(_CardAPILog.AmountUser, Convert.ToInt64(_CardAPILog.Amount));
                 _CardAPILog.Fee = Convert.ToInt32(Amount * ck);
-               
-                _CardAPILog.Reward = _CardAPILog.Fee;
-                
-                UpdatePartnerBalance(partner.PartnerCode, Amount, _CardAPILog.Fee, String.Format("Topup to recharge card {4} mgd: {0}-{1}-{2}-{3}", _CardAPILog.TransactionID, _CardAPILog.CardType, _CardAPILog.CardSerial, _CardAPILog.CardCode, Amount.ToString("#,#").Replace(",", ".")), "Card_" + _CardAPILog.TransactionID);
-               
+                _CardAPILog.Reward = Convert.ToInt32(Amount * rw);
+                _CardAPILog.FeeProvider = Convert.ToInt32(Amount * feeProvider);
+                UpdatePartnerBalance(partner.PartnerCode, Amount, _CardAPILog.Fee, String.Format("Topup to recharge card {4} transId: {0}-{1}-{2}-{3}", _CardAPILog.TransactionID, _CardAPILog.CardType, _CardAPILog.CardSerial, _CardAPILog.CardCode, Amount.ToString("#,#").Replace(",", ".")), "Card_" + _CardAPILog.TransactionID);
+                //UpdatePartnerBalanceReward(partner.SMSUrl, _CardAPILog.Reward, String.Format("Cộng tiền hoa hồng nạp thẻ đối tác {5} {4} mgd: {0}-{1}-{2}-{3}", _CardAPILog.TransactionID, _CardAPILog.CardType, _CardAPILog.CardSerial, _CardAPILog.CardCode, Amount.ToString("#,#").Replace(",", "."), partner.PartnerCode), "RCard_" + _CardAPILog.TransactionID.ToString());
             }
             _CardAPILog.Update();
-
             var _topupMobile3rdLog = new TopupMobile3rdLog().GetByTransactionIdSuccess(tranid);
-
             if (_topupMobile3rdLog != null)
             {
                 var amountChange = AppUtils.ToInt32(txtAmount.Text) - Convert.ToInt32(_topupMobile3rdLog.Amount);
@@ -107,26 +110,17 @@ public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
                 _topupMobile3rdLog.Status = AppUtils.ToInt32(txtStatus.Text);
                 _topupMobile3rdLog.LogContent = "Fix Satus";
                 _topupMobile3rdLog.Update();
-
                 NLogLogger.Info(new string[] { "CardAPI.FixStatus", "UPDATE", serializer.Serialize(_topupMobile3rdLog) });
-
                 if (AppUtils.ToInt32(txtStatus.Text) > 0)
                 {
                     _topupMobileLog.TransactionID = Convert.ToInt64(_topupMobile3rdLog.RequestNo);
                     _topupMobileLog.Get();
                     NLogLogger.Info(new string[] { "CardAPI.FixStatus", "GET TopupMobileLog", AppUtils.UserName, serializer.Serialize(_topupMobileLog) });
                     _topupMobileLog.Topup(1, amountChange, _topupMobile3rdLog.BidRate);
-
-                    if (_topupMobile3rdLog.Telco == "zing")
-                    {
-                        Task.Run(() => CallBackProvider(_topupMobile3rdLog.Id.ToString(), _topupMobile3rdLog.Amount.GetValueOrDefault()).ConfigureAwait(false));
-                    }
                 }
-
             }
             else
             {
-
                 NLogLogger.Info(new string[] { "CardAPI.FixStatus", "NONE 3RD", serializer.Serialize(_topupMobile3rdLog) });
             }
 
@@ -140,33 +134,33 @@ public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
                 //update balance
                 //NLogLogger.Info(new string[] { "CardTelco Topup", transaction.PartnerCode, result.ResponseContent, request.CardType.ToLower() });
 
-                if (oldStatus < 1)
-                {
-                    var Amount = Math.Min(Convert.ToInt64(_topupMobile3rdLog.Amount), _topupMobile3rdLog.AmountUser);
-                    if (_CardAPILog.CardType == "gate")
-                        Amount = Convert.ToInt64(_topupMobile3rdLog.Amount);
-                    Action<string, long, string, string, string> send = UpdatePartnerBalance;
-                    var asynSend = send.BeginInvoke(_CardAPILog.PartnerCode, Amount, _CardAPILog.CardType.ToLower(), String.Format("Cộng tiền nạp thẻ {4} mgd: {0}-{1}-{2}-{3}", _CardAPILog.TransactionID, _CardAPILog.CardType, _CardAPILog.CardSerial, _CardAPILog.CardCode, Amount.ToString("#,#").Replace(",", ".")), "Card_" + _CardAPILog.TransactionID, null, null);
+                //if (oldStatus < 1)
+                //{
+                //    var Amount = Math.Min(Convert.ToInt64(_topupMobile3rdLog.Amount), _topupMobile3rdLog.AmountUser);
+                //    if (_CardAPILog.CardType == "gate")
+                //        Amount = Convert.ToInt64(_topupMobile3rdLog.Amount);
+                //    Action<string, long, string, string, string> send = UpdatePartnerBalance;
+                //    var asynSend = send.BeginInvoke(_CardAPILog.PartnerCode, Amount, _CardAPILog.CardType.ToLower(), String.Format("Cộng tiền nạp thẻ {4} mgd: {0}-{1}-{2}-{3}", _CardAPILog.TransactionID, _CardAPILog.CardType, _CardAPILog.CardSerial, _CardAPILog.CardCode, Amount.ToString("#,#").Replace(",", ".")), "Card_" + _CardAPILog.TransactionID, null, null);
 
-                }
+                //}
 
-                if (!string.IsNullOrEmpty(_topupMobileLog.CallbackUrl)) // Callback Provider
-                {
-                    var callbackData = new DataCallbackOrder()
-                    {
-                        OrderId = _topupMobileLog.TransactionID,
-                        Amount = Convert.ToInt32(_topupMobile3rdLog.Amount),
-                        Status = 1,
-                        CardSerial = _topupMobile3rdLog.CardSerial,
-                        CardCode = _topupMobile3rdLog.CardCode,
-                        BidRate = _topupMobile3rdLog.BidRate,
-                        UpdateTime = DateTime.Now,
-                        CreatTime = _topupMobile3rdLog.CreateTime,
-                        Signature = string.Empty
-                    };
+                //if (!string.IsNullOrEmpty(_topupMobileLog.CallbackUrl)) // Callback Provider
+                //{
+                //    var callbackData = new DataCallbackOrder()
+                //    {
+                //        OrderId = _topupMobileLog.TransactionID,
+                //        Amount = Convert.ToInt32(_topupMobile3rdLog.Amount),
+                //        Status = 1,
+                //        CardSerial = _topupMobile3rdLog.CardSerial,
+                //        CardCode = _topupMobile3rdLog.CardCode,
+                //        BidRate = _topupMobile3rdLog.BidRate,
+                //        UpdateTime = DateTime.Now,
+                //        CreatTime = _topupMobile3rdLog.CreateTime,
+                //        Signature = string.Empty
+                //    };
 
-                    Task.Run(() => CallbackJson(_CardAPILog.CallbackUrl, serializer.Serialize(callbackData), _topupMobileLog.AccountName, _topupMobile3rdLog.Id, 1).ConfigureAwait(false));
-                }
+                //    Task.Run(() => CallbackJson(_CardAPILog.CallbackUrl, serializer.Serialize(callbackData), _topupMobileLog.AccountName, _topupMobile3rdLog.Id, 1).ConfigureAwait(false));
+                //}
             }
             else
             {
@@ -184,7 +178,7 @@ public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
                     Status = cbStatus,
                     Signature = Libs.Utils.Encrypts.MD5(_CardAPILog.RequestNo + cbStatus + _CardAPILog.Amount + privateKey)
                 };
-                Task.Run(() => CallbackJson(_CardAPILog.CallbackUrl, serializer.Serialize(datacb), _CardAPILog.PartnerCode, 0, 2).ConfigureAwait(false));
+                Task.Run(() => CallbackJson(_CardAPILog.CallbackUrl, serializer.Serialize(datacb), _CardAPILog.PartnerCode, _CardAPILog.TransactionID).ConfigureAwait(false));
             }
 
             NLogLogger.Info(new string[] { "CardAPI.FixStatus", "UPDATE", AppUtils.UserName, _CardAPILog.TransactionID.ToString(), _CardAPILog.CardSerial, _CardAPILog.Amount.ToString(), _CardAPILog.Status.ToString() });
@@ -223,9 +217,80 @@ public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
             case "viettel":
                 ck = _partnerDiscount.DiscountVTT;
                 break;
+            case "zing":
+                ck = _partnerDiscount.DiscountZING;
+                break;
+            case "vcoin":
+                ck = _partnerDiscount.DiscountGATE;
+                break;
 
         }
-        ck = _partnerDiscount.DiscountVTT;
+        // ck = _partnerDiscount.DiscountVTT;
+        return ck;
+    }
+    private decimal getfeeProvider( string Type)
+    {
+        decimal ck = 0;
+        switch (Type)
+        {
+            case "vms":
+                ck = 18/100;
+                break;
+            case "vnp":
+                ck = 18 / 100;
+                break;
+            case "viettel":
+                ck = 18 / 100;
+                break;
+            case "zing":
+                ck = 18 / 100;
+                break;
+            case "vcoin":
+                ck = 18 / 100;
+                break;
+
+        }
+        return ck;
+    }
+
+    private decimal getrw(string PartnerCode, string Type)
+    {
+        decimal ck = 0;
+        //var partner = new Partners().GetCache(PartnerCode);
+        var listpartnerDiscount = new PartnersDiscount().GetList(PartnerCode, 2030, 1);
+        if (listpartnerDiscount == null)
+        {
+            //TelegramNotify.SendWarning("-4214596800", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
+            return ck;
+        }
+
+        if (!listpartnerDiscount.Exists(x => x.Date.Day == 1))
+        {
+            //TelegramNotify.SendWarning("-4214596800", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
+            return ck;
+        }
+        var _partnerDiscount = listpartnerDiscount.FirstOrDefault(x => x.Date.Day == 1);
+        ck = _partnerDiscount.RewardVTT;
+        switch (Type)
+        {
+            case "vms":
+                ck = _partnerDiscount.RewardVMS;
+                break;
+            case "vnp":
+                ck = _partnerDiscount.RewardVNP;
+                break;
+            case "viettel":
+                ck = _partnerDiscount.RewardVTT;
+                break;
+            case "zing":
+                ck = _partnerDiscount.RewardZING;
+                break;
+            case "vcoin":
+                ck = _partnerDiscount.RewardGATE;
+                break;
+
+        }
+        // ck = _partnerDiscount.RewardVTT;
         return ck;
     }
     private void UpdatePartnerBalance(string PartnerCode, long Amount, long fee, string TranId, string RefCode)
@@ -262,75 +327,41 @@ public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
 
 
     }
-    private void UpdatePartnerBalance(string PartnerCode, long Amount, string CardType, string Note, string RefCode)
+    private void UpdatePartnerBalanceReward(string PartnerCode, long realAmount, string TranId, string RefCode)
     {
         try
         {
-            NLogLogger.Info(new string[] { "Update Balance", PartnerCode, Amount.ToString(), CardType, Note });
+            NLogLogger.Info(new string[] { "Update Balance", PartnerCode, realAmount.ToString(), TranId.ToString(), RefCode });
             var partner = new Partners().GetCache(PartnerCode);
-            if (string.IsNullOrEmpty(partner.Hotline))
+            //if (string.IsNullOrEmpty(partner.Hotline))
+            //{
+            //    //TelegramNotify.SendWarning("-4214596800", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+            //    // return;
+            //}
+            //var user = new Users().GetByUserName(partner.Hotline.Trim());
+            //if (user == null)
+            //{
+            //    //TelegramNotify.SendWarning("-4214596800", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+            //    return;
+            //}
+            if (realAmount == 0)
             {
-                //TelegramNotify.SendTeleV2("-4006848376", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
-                return;
-            }
-            var user = new Users().GetByUserName(partner.Hotline.Trim());
-            if (user == null)
-            {
-                //TelegramNotify.SendTeleV2("-4006848376", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
-                return;
-            }
-            var listpartnerDiscount = new PartnersDiscount().GetList(PartnerCode,  DateTime.Now.Year, DateTime.Now.Month);
-            if (listpartnerDiscount == null)
-            {
-                //TelegramNotify.SendTeleV2("-4006848376", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
+                //TelegramNotify.SendWarning("-4214596800", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
                 return;
             }
 
-            if (!listpartnerDiscount.Exists(x => x.Date.Day == DateTime.Now.Day))
-                return;
-
-            var _partnerDiscount = listpartnerDiscount.FirstOrDefault(x => x.Date.Day == DateTime.Now.Day);
-            decimal ck = 0;
-            switch (CardType)
-            {
-                case "vms":
-                    ck = _partnerDiscount.DiscountVMS;
-                    break;
-                case "vnp":
-                    ck = _partnerDiscount.DiscountVNP;
-                    break;
-                case "viettel":
-                    ck = _partnerDiscount.DiscountVTT;
-                    break;
-                case "zing":
-                    ck = _partnerDiscount.DiscountZING;
-                    break;
-                case "gate":
-                    ck = _partnerDiscount.DiscountGATE;
-                    break;
-            }
-            if (ck == 0)
-                return;
-
-            long realAmount = Amount - Convert.ToInt64(Amount * ck);
-            //NLogLogger.Info(new string[] { "CardTelco Topup", realAmount.ToString(), ck.ToString() });
-            new Users().Topup(realAmount, user.UserName, PartnerCode, Note, RefCode);
+            //long realAmount = Amount - fee;
+            // NLogLogger.Info(new string[] { "Bank Topup", realAmount.ToString(), ck.ToString() });
+            new Users().Topup(realAmount, PartnerCode, PartnerCode, TranId, RefCode);
         }
         catch (Exception ex)
         {
             NLogLogger.Info(ex.Message);
         }
+
+
     }
-    protected async Task<string> CallBackProvider(string Id, int Amount)
-    {
-        var urlConfirm = "http://localhost:1583/TopupCallbackAppVTT.asmx";
-        var privateKey = "1e7f56ca5fcbf781fa022f4f5dff74d6";
-        var signature = Encrypts.MD5(string.Format("{0}|{1}|{2}|{3}|{4}|{5}", Id, -6, Amount, string.Empty, string.Empty, privateKey));
-        var service = new APIProxy.VTTService.TopupCallbackAppVTT(urlConfirm);
-        var res = service.Callback(Id, -6, Amount, string.Empty, string.Empty, signature);
-        Response.Redirect(Request.RawUrl);
-        return "";
-    }
+
     /// <summary>
     /// Callback for Provider or Partner
     /// </summary>
@@ -340,61 +371,67 @@ public partial class Pages_Monitor_CardAPI_FixStatus : System.Web.UI.Page
     /// <param name="tranId"></param>
     /// <param name="type">1: Provider, 2: Partner</param>
     /// <returns></returns>
-    public async Task<string> CallbackJson(string url, string postData, string code, long tranId = 0, int type = 0)
+    public async Task<string> CallbackJson(string url, string postData, string code, long Id = 0)
     {
-        NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Request", code, tranId.ToString(), url, postData });
+        NLogLogger.Info(new string[] { "NTNet", "Callback Partner", "Request", code, url, postData });
 
         try
         {
             var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
             using (var client = new HttpClient())
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var response = await client.PostAsync(url, httpContent).ConfigureAwait(false);
 
                 if (response.Content != null)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Response", code, tranId.ToString(), url, postData, responseContent });
-                    try
+                    NLogLogger.Info(new string[] { "NTNet", "Callback Partner", "Response", code, url, postData, responseContent });
+
+                    var log = new LogInfo
                     {
-                        if (responseContent.Contains("1|"))
-                        {
-                            NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Process TRUE", responseContent });
-                            if (type == 1)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, 1, null);
-                            }
-                            else if (type == 2)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, null, 1);
-                            }
-                        }
-                        else
-                        {
-                            NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Process FAIL", responseContent });
-                            if (type == 1)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, -1, null);
-                            }
-                            else if (type == 2)
-                            {
-                                new TopupMobile3rdLog().UpdateCallback(tranId, null, -1);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Error", e.Message });
-                    }
+                        LogTime = DateTime.Now,
+                        Url = url,
+                        TransactionID = Id,
+                        Request = postData,
+                        Respone = responseContent
+                    };
+                    LogCache.LogCard(log);
                     return responseContent;
                 }
             }
         }
-        catch (Exception e)
+        catch (WebException e)
         {
-            NLogLogger.Info(new string[] { "TopupAppVTT", "Callback Type", type.ToString(), "Error", e.Message });
+            var responseStream = e.Response.GetResponseStream();
+
+            if (responseStream != null)
+            {
+                using (var reader = new StreamReader(responseStream))
+                {
+                    NLogLogger.Info(new string[] { "MDrum", "Exeption Post", reader.ReadToEnd() });
+                    var log1 = new LogInfo
+                    {
+                        LogTime = DateTime.Now,
+                        Url = url,
+                        TransactionID = Id,
+                        Request = postData,
+                        Respone = reader.ReadToEnd()
+                    };
+                    LogCache.LogCard(log1);
+                    //return result;
+                }
+            }
+            NLogLogger.Info(new string[] { "MDrum", "Exeption Post", e.Message });
+            var log = new LogInfo
+            {
+                LogTime = DateTime.Now,
+                Url = url,
+                TransactionID = Id,
+                Request = postData,
+                Respone = e.Message
+            };
+            LogCache.LogCard(log);
             return string.Empty;
         }
 

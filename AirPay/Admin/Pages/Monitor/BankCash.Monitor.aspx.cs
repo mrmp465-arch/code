@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Libs.API;
+using Libs.CardTelco;
+using Libs.Report;
+using Libs.Utils;
+using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -14,12 +19,6 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-using Libs.API;
-using Libs.CardTelco;
-using Libs.Report;
-using Libs.Utils;
-using OfficeOpenXml;
-using RestSharp.Serializers;
 
 public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
 {
@@ -343,7 +342,84 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
     }
     //cập nhật sai
 
+    public static async Task<string> CallbackJsonV2(string url, string postData, long Id)
+    {
 
+        NLogLogger.Info(new string[] { "MDrum", "Callback", "Partner", "Request", postData });
+        var uri = new Uri(url);
+        var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
+        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        HttpClient client = null;
+        var handler = new HttpClientHandler
+        {
+            UseCookies = false,
+            UseProxy = true,
+            Proxy = new WebProxy(
+         "202.231.136.127",
+                   40023
+            )
+        };
+
+        handler.Proxy.Credentials = new NetworkCredential(
+            "1109yaeyet",
+            "1109yaeyet"
+        );
+        client = new HttpClient(handler);
+        client.Timeout = TimeSpan.FromSeconds(90);
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        //client.Timeout = TimeSpan.FromSeconds(60);
+        try
+        {
+            var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);
+            if (response.Content != null)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response", responseContent });
+                client.Dispose();
+                var log = new LogInfo
+                {
+                    LogTime = DateTime.Now,
+                    Url = url,
+                    TransactionID = Id,
+                    Request = postData,
+                    Respone = responseContent
+                };
+                LogCache.LogBankCash(log);
+                return responseContent;
+            }
+            else
+            {
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response Is Null" });
+            }
+
+        }
+        catch (Exception e)
+        {
+            //var responseStream = e.Response.GetResponseStream();
+
+            //if (responseStream != null)
+            //{
+            //    using (var reader = new StreamReader(responseStream))
+            //    {
+            //        NLogLogger.Info(new string[] { "CMS", "Exeption Post", reader.ReadToEnd() }); 
+            //        
+            //    }
+            //}
+            var log = new LogInfo
+            {
+                LogTime = DateTime.Now,
+                Url = url,
+                TransactionID = Id,
+                Request = postData,
+                Respone = e.Message
+            };
+            LogCache.LogBankCash(log);
+            NLogLogger.Info(new string[] { "CMS", "Exeption Post", e.Message });
+            return string.Empty;
+        }
+        client.Dispose();
+        return string.Empty;
+    }
     public static async Task<string> CallbackJson(string url, string postData, long Id)
     {
 
@@ -765,7 +841,15 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
                         datacb.Description = apiResponse.Description;
                         datacb.Signature = PaymentUtils.Signature(datacb.ResponseCode.ToString() + datacb.Description + datacb.RefCode, partner.PrivateKey, partner.SignatureType);
 
-                        Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        if (_CardAPILog.PartnerCode == "k36")
+                        {
+                            Task.Run(async () => await CallbackJsonV2(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
+                        else
+                        {
+                            Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
+                        
                     }
                     //AlertSuccesss.Text = "Cập nhật thành công";
                     //Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#MAlertSuccess').modal()}); ", true);
@@ -905,7 +989,15 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
                         datacb.Description = apiResponse.Description;
                         datacb.Signature = PaymentUtils.Signature(datacb.ResponseCode.ToString() + datacb.Description + datacb.RefCode, partner.PrivateKey, partner.SignatureType);
 
-                        Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+
+                        if (_CardAPILog.PartnerCode == "k36")
+                        {
+                            Task.Run(async () => await CallbackJsonV2(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
+                        else
+                        {
+                            Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
                     }
                 }
 

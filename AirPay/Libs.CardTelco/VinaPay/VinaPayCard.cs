@@ -97,6 +97,12 @@ namespace Libs.CardTelco.VinaPay
                     case "viettel":
                         telcoCode = "vtt";
                         break;
+                    case "zing":
+                        telcoCode = "zing";
+                        break;
+                    case "vcoin":
+                        telcoCode = "vcoin";
+                        break;
 
                 }
 
@@ -132,7 +138,15 @@ namespace Libs.CardTelco.VinaPay
                     _CardAPILog.Amount = Convert.ToInt64(cardResult.amount);
                     _APIResponse.ResponseContent = _CardAPILog.Amount.ToString();
                     _CardAPILog.Description = "Amount: " + _CardAPILog.Amount;
-                    _CardAPILog.Status = (int) ResponseCode.TransactionSuccessful;
+                    _CardAPILog.Status = (int)ResponseCode.TransactionSuccessful;
+
+                    var ck = GetCK(_CardAPILog.PartnerCode, _CardAPILog.CardType);
+                    _CardAPILog.AccountID = Convert.ToInt64(cardResult.amount * ck);
+                    //cong tien
+                    var Amount = Math.Min(_CardAPILog.AmountUser, Convert.ToInt64(cardResult.amount));
+                    Action<string, long, string, string, string> send = UpdatePartnerBalance;
+                    var asynSend = send.BeginInvoke(transaction.PartnerCode, Amount, request.CardType.ToLower(), String.Format("Cộng tiền nạp thẻ {4} mgd: {0}-{1}-{2}-{3}", _CardAPILog.TransactionID, _CardAPILog.CardType, _CardAPILog.CardSerial, _CardAPILog.CardCode, Amount.ToString("#,#").Replace(",", ".")), "Card_" + _CardAPILog.TransactionID, null, null);
+                    /// _CardAPILog.Status = (int) ResponseCode.TransactionSuccessful;
 
 
                 }
@@ -234,6 +248,109 @@ namespace Libs.CardTelco.VinaPay
             return _APIResponse;
         }
 
+        private decimal GetCK(string PartnerCode, string CardType)
+        {
+            try
+            {
+
+                var listpartnerDiscount = new PartnersDiscount().GetList(PartnerCode, DateTime.Now.Year, DateTime.Now.Month);
+                if (listpartnerDiscount == null)
+                {
+                    //TelegramNotify.SendTeleV2("-4006848376", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
+                    return 0;
+                }
+
+                if (!listpartnerDiscount.Exists(x => x.Date.Day == DateTime.Now.Day))
+                    return 0;
+
+                var _partnerDiscount = listpartnerDiscount.FirstOrDefault(x => x.Date.Day == DateTime.Now.Day);
+                decimal ck = 0;
+                switch (CardType)
+                {
+                    case "vms":
+                        ck = _partnerDiscount.DiscountVMS;
+                        break;
+                    case "vnp":
+                        ck = _partnerDiscount.DiscountVNP;
+                        break;
+                    case "viettel":
+                        ck = _partnerDiscount.DiscountVTT;
+                        break;
+                    case "zing":
+                        ck = _partnerDiscount.DiscountZING;
+                        break;
+                    case "vcoin":
+                        ck = _partnerDiscount.DiscountGATE;
+                        break;
+                }
+                return ck;
+
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+        private void UpdatePartnerBalance(string PartnerCode, long Amount, string CardType, string Note, string RefCode)
+        {
+            try
+            {
+                NLogLogger.Info(new string[] { "Update Balance", PartnerCode, Amount.ToString(), CardType, Note });
+                var partner = new Partners().GetCache(PartnerCode);
+                if (string.IsNullOrEmpty(partner.Hotline))
+                {
+                    //TelegramNotify.SendTeleV2("-4006848376", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+                    return;
+                }
+                var user = new Users().GetByUserName(partner.Hotline.Trim());
+                if (user == null)
+                {
+                    //TelegramNotify.SendTeleV2("-4006848376", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+                    return;
+                }
+                var listpartnerDiscount = new PartnersDiscount().GetList(PartnerCode, DateTime.Now.Year, DateTime.Now.Month);
+                if (listpartnerDiscount == null)
+                {
+                    //TelegramNotify.SendTeleV2("-4006848376", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
+                    return;
+                }
+
+                if (!listpartnerDiscount.Exists(x => x.Date.Day == DateTime.Now.Day))
+                    return;
+
+                var _partnerDiscount = listpartnerDiscount.FirstOrDefault(x => x.Date.Day == DateTime.Now.Day);
+                decimal ck = 0;
+                switch (CardType)
+                {
+                    case "vms":
+                        ck = _partnerDiscount.DiscountVMS;
+                        break;
+                    case "vnp":
+                        ck = _partnerDiscount.DiscountVNP;
+                        break;
+                    case "viettel":
+                        ck = _partnerDiscount.DiscountVTT;
+                        break;
+                    case "zing":
+                        ck = _partnerDiscount.DiscountZING;
+                        break;
+                    case "gate":
+                        ck = _partnerDiscount.DiscountGATE;
+                        break;
+                }
+                if (ck == 0)
+                    return;
+
+                long realAmount = Amount - Convert.ToInt64(Amount * ck);
+                //NLogLogger.Info(new string[] { "CardTelco Topup", realAmount.ToString(), ck.ToString() });
+                new Users().Topup(realAmount, user.UserName, PartnerCode, Note, RefCode);
+            }
+            catch (Exception ex)
+            {
+                NLogLogger.Info(ex.Message);
+            }
+        }
         public APIResponse ReCheck(string transactionId)
         {
             throw new NotImplementedException();

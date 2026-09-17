@@ -1,23 +1,24 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using Libs.API;
+using Libs.CardTelco;
+using Libs.Report;
+using Libs.Utils;
+using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Libs.Report;
-using System.Globalization;
-using Libs.API;
-using System.Web.Script.Serialization;
-using System.Threading.Tasks;
-using Libs.Utils;
-using System.Net.Http;
-using System.Text;
-using System.Net.Http.Headers;
-using System.Net;
-using DocumentFormat.OpenXml.Drawing;
-using System.IO;
-using Libs.CardTelco;
-using OfficeOpenXml;
 
 
 public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
@@ -97,13 +98,21 @@ public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
             //var ignorePartners = new HashSet<string> { "bp7", "b23", "sn1", "tmtm", "lime" };
             //if (_CardAPILog.Amount != _CardAPILog.TotalAmount)
             //{
-                
+
             //    if (!ignorePartners.Contains(_CardAPILog.PartnerCode))
             //    {
             //        return;
             //    }
             //}
-            Task.Run(() => CallbackJson(url, serializer.Serialize(datacb), TransId).ConfigureAwait(false));
+            if (_CardAPILog.PartnerCode == "k36")
+            {
+                Task.Run(() => CallbackJsonV2(url, serializer.Serialize(datacb), TransId).ConfigureAwait(false));
+            }
+            else
+            {
+                Task.Run(() => CallbackJson(url, serializer.Serialize(datacb), TransId).ConfigureAwait(false));
+            }
+            
 
 
 
@@ -140,6 +149,84 @@ public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
         var client = new HttpClient();
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         client.Timeout = TimeSpan.FromSeconds(60);
+        try
+        {
+            var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);
+            if (response.Content != null)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response", responseContent });
+                var log = new LogInfo
+                {
+                    LogTime = DateTime.Now,
+                    Url = url,
+                    TransactionID = Id,
+                    Request = postData,
+                    Respone = responseContent
+                };
+                LogCache.LogBank(log);
+                client.Dispose();
+                return responseContent;
+            }
+            else
+            {
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response Is Null" });
+            }
+
+        }
+        catch (Exception e)
+        {
+            //var responseStream = e.Response.GetResponseStream();
+
+            //if (responseStream != null)
+            //{
+            //    using (var reader = new StreamReader(responseStream))
+            //    {
+            //        NLogLogger.Info(new string[] { "CMS", "Exeption Post", reader.ReadToEnd() }); 
+            //        
+            //    }
+            //}
+            var log = new LogInfo
+            {
+                LogTime = DateTime.Now,
+                Url = url,
+                TransactionID = Id,
+                Request = postData,
+                Respone = e.Message
+            };
+            LogCache.LogBank(log);
+            NLogLogger.Info(new string[] { "CMS", "Exeption Post", e.Message });
+            return string.Empty;
+        }
+        client.Dispose();
+        return string.Empty;
+    }
+    public static async Task<string> CallbackJsonV2(string url, string postData, long Id)
+    {
+
+        NLogLogger.Info(new string[] { "BankGate Moniter", "Callback", "Partner", "Request", postData });
+        var uri = new Uri(url);
+        var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
+        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        HttpClient client = null;
+        var handler = new HttpClientHandler
+        {
+            UseCookies = false,
+            UseProxy = true,
+            Proxy = new WebProxy(
+         "202.231.136.127",
+                   40023
+            )
+        };
+
+        handler.Proxy.Credentials = new NetworkCredential(
+            "1109yaeyet",
+            "1109yaeyet"
+        );
+        client = new HttpClient(handler);
+        client.Timeout = TimeSpan.FromSeconds(90);
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        //client.Timeout = TimeSpan.FromSeconds(60);
         try
         {
             var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);

@@ -13,8 +13,10 @@ public partial class Pages_Monitor_CardAPI_Report : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.CardAPIReport);
-
+        Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
+        Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         if (!IsPostBack)
+            if (!IsPostBack)
         {
             init();
             GetList();
@@ -56,7 +58,7 @@ public partial class Pages_Monitor_CardAPI_Report : System.Web.UI.Page
         drpCardType.DataTextField = "Name";
         drpCardType.DataValueField = "Code";
         drpCardType.DataBind();
-        drpCardType.Items.Insert(0, new ListItem("Loại thẻ:", ""));
+        drpCardType.Items.Insert(0, new ListItem(Resources.Pay.CardType, ""));
 
 
         var lst = new List<Partners>();
@@ -69,7 +71,7 @@ public partial class Pages_Monitor_CardAPI_Report : System.Web.UI.Page
         drpPartner.DataTextField = "Name";
         drpPartner.DataValueField = "PartnerCode";
         drpPartner.DataBind();
-        drpPartner.Items.Insert(0, new ListItem("Đối tác:", ""));
+        drpPartner.Items.Insert(0, new ListItem(Resources.Pay.Partner, ""));
 
 
         var lstProvider = new List<Providers>();

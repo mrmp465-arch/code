@@ -1,4 +1,11 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Libs.API;
+using Libs.CardTelco;
+using Libs.Report;
+using Libs.Utils;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -14,21 +21,13 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using Libs.API;
-using Libs.CardTelco;
-using Libs.Report;
-using Libs.Utils;
-using Newtonsoft.Json.Linq;
-using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
-using RestSharp.Serializers;
 
 public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
 {
     public bool RoleAppAuto { get; set; }
-   
+
     private const string urlBaseServiceGetAccount = "http://45.32.115.186:1592/ServiceHandler/GetAcountInfo.ashx";
-  
+
     JavaScriptSerializer serializer = new JavaScriptSerializer();
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -329,7 +328,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
     {
         GetList();
     }
-   
+
     //hủy xuất khuẩn
     protected void btCancelClick(object sender, EventArgs e)
     {
@@ -414,7 +413,16 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                         datacb.Description = apiResponse.Description;
                         datacb.Signature = PaymentUtils.Signature(datacb.ResponseCode.ToString() + datacb.Description + datacb.RefCode, partner.PrivateKey, partner.SignatureType);
 
-                        Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        if (_CardAPILog.PartnerCode == "k36")
+                        {
+                            Task.Run(async () => await CallbackJsonV2(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
+                        else
+                        {
+                            Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
+
+                        
                     }
                 }
 
@@ -446,7 +454,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
     protected void btAppClick(object sender, EventArgs e)
 
     {
-       
+
         JavaScriptSerializer serializer = new JavaScriptSerializer();
         for (int i = 0; i < rptList.Items.Count; i++)
         {
@@ -505,7 +513,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                     //    TelegramNotify.SendTeleV4("-1002857697732", mess);
                     //}
                     //bắn tele
-                  
+
                     var partner = new Partners().GetCache(_CardAPILog.PartnerCode);
 
                     //if (!string.IsNullOrEmpty(partner.SMSUrl))
@@ -538,7 +546,15 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
 
                         //apiResponse.ResponseContent = serializer.Serialize(datacb);
                         //apiResponse.Signature = PaymentUtils.Signature(apiResponse.ResponseCode.ToString() + apiResponse.Description + apiResponse.ResponseContent, partner.PrivateKey, partner.SignatureType);
-                        Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        if (_CardAPILog.PartnerCode == "k36")
+                        {
+                            Task.Run(async () => await CallbackJsonV2(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
+                        else
+                        {
+                            Task.Run(async () => await CallbackJson(_CardAPILog.ReturnUrl, serializer.Serialize(datacb), _CardAPILog.TransactionID).ConfigureAwait(false));
+                        }
+                        
                     }
 
                 }
@@ -633,7 +649,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                     {
 
                     }
-                    if (_CardAPILog.Status == -2  && ischeck == 1)
+                    if (_CardAPILog.Status == -2 && ischeck == 1)
                     {
                         TelegramClient.SendTeleV2("-5550261869", "Duyệt tự động lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
                         System.Threading.Thread.Sleep(100);
@@ -643,7 +659,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                         _CardAPILog.LogContent = " duyệt tự động bởi " + AppUtils.UserName;
                         //_CardAPILog.ApproveUser = AppUtils.UserName;
                         _CardAPILog.LastTime = DateTime.Now;
-                         var resultupdate= _CardAPILog.UpdateApp();
+                        var resultupdate = _CardAPILog.UpdateApp();
 
 
 
@@ -959,6 +975,84 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
         var client = new HttpClient();
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         client.Timeout = TimeSpan.FromSeconds(60);
+        try
+        {
+            var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);
+            if (response.Content != null)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response", responseContent });
+                client.Dispose();
+                var log = new LogInfo
+                {
+                    LogTime = DateTime.Now,
+                    Url = url,
+                    TransactionID = Id,
+                    Request = postData,
+                    Respone = responseContent
+                };
+                LogCache.LogBankCash(log);
+                return responseContent;
+            }
+            else
+            {
+                NLogLogger.Info(new string[] { "CMS", "Callback", "Partner", "Response Is Null" });
+            }
+
+        }
+        catch (Exception e)
+        {
+            //var responseStream = e.Response.GetResponseStream();
+
+            //if (responseStream != null)
+            //{
+            //    using (var reader = new StreamReader(responseStream))
+            //    {
+            //        NLogLogger.Info(new string[] { "CMS", "Exeption Post", reader.ReadToEnd() }); 
+            //        
+            //    }
+            //}
+            var log = new LogInfo
+            {
+                LogTime = DateTime.Now,
+                Url = url,
+                TransactionID = Id,
+                Request = postData,
+                Respone = e.Message
+            };
+            LogCache.LogBankCash(log);
+            NLogLogger.Info(new string[] { "CMS", "Exeption Post", e.Message });
+            return string.Empty;
+        }
+        client.Dispose();
+        return string.Empty;
+    }
+    public static async Task<string> CallbackJsonV2(string url, string postData, long Id)
+    {
+
+        NLogLogger.Info(new string[] { "MDrum", "Callback", "Partner", "Request", postData });
+        var uri = new Uri(url);
+        var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
+        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        HttpClient client = null;
+        var handler = new HttpClientHandler
+        {
+            UseCookies = false,
+            UseProxy = true,
+            Proxy = new WebProxy(
+         "202.231.136.127",
+                   40023
+            )
+        };
+
+        handler.Proxy.Credentials = new NetworkCredential(
+            "1109yaeyet",
+            "1109yaeyet"
+        );
+        client = new HttpClient(handler);
+        client.Timeout = TimeSpan.FromSeconds(90);
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        //client.Timeout = TimeSpan.FromSeconds(60);
         try
         {
             var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);

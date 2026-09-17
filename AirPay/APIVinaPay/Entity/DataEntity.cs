@@ -39,7 +39,7 @@ namespace APIVinaPay.Entity
         public string url_callback { get; set; }
         public string serial { get; set; }
         public string pin { get; set; }
-        public int carrier { get; set; }
+        public string carrier { get; set; }
         public string amount { get; set; }
         public string custom_trans { get; set; }
     }

@@ -23,28 +23,30 @@ namespace APIVinaPay.Entity
 
     public class TopupResponse
     {
-        public int status { get; set; }
-        public int error_code { get; set; }
-        public string message { get; set; }
-        public string signature { get; set; }
+        //public int status { get; set; }
+        public int errorCode { get; set; }
+        public string msg { get; set; }
+        // public string signature { get; set; }
         //public DataTopup data { get; set; }
     }
     public class TokenResponse
     {
-       
+
         public string access_token { get; set; }
-        
+
     }
     public class Callback
     {
-        public string transaction_id { get; set; }
-        public string type_transaction { get; set; }
-        public int value { get; set; }
-        
-        public int status { get; set; }
-       
-        public string carrier_return_value { get; set; }
-        public string message { get; set; }
-        public string signature { get; set; }
+        public string TransID { get; set; }
+
+        public int Amount { get; set; }
+        public int ReadAmount { get; set; }
+
+        public int Status { get; set; }
+
+        public string Signature { get; set; }
+        public string CardCode { get; set; }
+        public string CardSeri { get; set; }
+
     }
 }
