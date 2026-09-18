@@ -84,9 +84,7 @@ public class Telegram : IHttpHandler
                         {
 
                             SendTeleV4(resObj.message.chat.id.ToString(), "Giao dịch thành công | Transaction Successful | 交易成功", message_id);
-                            System.Threading.Thread.Sleep(500);
-                            SendTeleV2(resObj.message.chat.id.ToString(), String.Format("{0} | {1} | {2} | {3} | {4} ", trans.TransactionID, trans.RefCode,
-                                trans.Amount.ToString("N0").Replace(".", ","), trans.FullName, trans.LastTime.ToString("dd/MM/yy HH:mm:ss")));
+                            
                             return;
                         }
 
@@ -102,9 +100,7 @@ public class Telegram : IHttpHandler
                         if (trans.Status >= 1)
                         {
                             SendTeleV4(resObj.message.chat.id.ToString(), "Giao dịch thành công | Transaction Successful | 交易成功", message_id);
-                            System.Threading.Thread.Sleep(500);
-                            SendTeleV2(resObj.message.chat.id.ToString(), String.Format("{0} | {1} | {2} | {3} | {4} ", trans.TransactionID, trans.RefCode,
-                               trans.Amount.ToString("N0").Replace(".", ","), trans.FullName, trans.LastTime.ToString("dd/MM/yy HH:mm:ss")));
+                            
                             return;
                         }
                         else
@@ -212,10 +208,8 @@ public class Telegram : IHttpHandler
                             //    ResponseContent = javaScriptSerializer.Serialize(checkorder)
                             //};
                             SendTeleV4(resObj.message.chat.id.ToString(), "Lệnh out thành công | Payout Successful | 出款成功 ", message_id);
-                            System.Threading.Thread.Sleep(500);
-                            SendTeleV2(resObj.message.chat.id.ToString(), String.Format("{0} | {1} | {2} |{4} | {5} | {3} ", trans.TransactionID, trans.RefCode,
-                            trans.Amount.ToString("N0").Replace(".", ","), trans.LastTime.ToString("dd/MM/yy HH:mm:ss"),
-                            trans.BankCode + " - " + trans.BankAccountNumber + " - " + trans.BankAccountName, trans.Mobile));
+                           
+                           
 
                             return;
                         }
@@ -232,10 +226,7 @@ public class Telegram : IHttpHandler
                         if (trans.Status >= 1)
                         {
                             SendTeleV4(resObj.message.chat.id.ToString(), "Lệnh out thành công | Payout Successful | 出款成功 ", message_id);
-                            System.Threading.Thread.Sleep(500);
-                            SendTeleV2(resObj.message.chat.id.ToString(), String.Format("{0} | {1} | {2} |{4} | {5} | {3}  ", trans.TransactionID, trans.RefCode,
-                            trans.Amount.ToString("N0").Replace(".", ","), trans.LastTime.ToString("dd/MM/yy HH:mm:ss"),
-                            trans.BankCode + " - " + trans.BankAccountNumber + " - " + trans.BankAccountName, trans.Mobile));
+                           
 
                             return;
                         }
