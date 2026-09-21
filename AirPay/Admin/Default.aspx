@@ -52,7 +52,7 @@
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="#" class="small-box-footer"><%= Resources.Pay.ViewMore%>  <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -66,7 +66,7 @@
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer">Xem thêm <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="#" class="small-box-footer"><%= Resources.Pay.ViewMore%> <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <% if (AppUtils.IsPartner)
@@ -253,7 +253,7 @@
 
 
                                                             <th><%= Resources.Pay.TransactionType%></th>
-                                                              <th>Tổng</th>
+                                                              <th><%= Resources.Pay.Total%> </th>
                                                             <th><%= Resources.Pay.DepositAmount%></th>
                                                             <th><%= Resources.Pay.DepositFee%></th>
                                                             <th><%= Resources.Pay.DepositOrderNumber%></th>

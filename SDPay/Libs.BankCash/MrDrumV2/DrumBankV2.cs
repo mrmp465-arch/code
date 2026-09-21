@@ -492,7 +492,7 @@ namespace Libs.BankCash.DrumV2
                             var acc = HttpUtility.HtmlEncode(request.BankAccountNumber);
                             acc = MaskString(acc);
                             var accName = HttpUtility.HtmlEncode(request.BankAccountName);
-                            accName = MaskString(accName);
+                            accName = MaskString2(accName);
                             var mess =
                                "🏦 <b>ConfirmBankOut</b>\n\n" +
                                "📌 订单号 RefCode: <code>" + HttpUtility.HtmlEncode(request.RefCode) + "</code>\n" +

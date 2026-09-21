@@ -41,13 +41,13 @@
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs pull-left">
                 <li class="pull-left header"><i class="fa fa-inbox"></i>
-                    Cài đặt
+                    <%= Resources.Pay.Setup%>
                 </li>
 
-                <li class="active"><a href="#revenue-chart" data-toggle="tab">Bảo mật 2 lớp</a></li>
+                <li class="active"><a href="#revenue-chart" data-toggle="tab"><%= Resources.Pay._2FASetup%></a></li>
                 <% if (AppUtils.IsPartner)
                     {%>
-                <li><a href="#bank" data-toggle="tab">Tài khoản rút tiền</a></li>
+                <li><a href="#bank" data-toggle="tab"><%= Resources.Pay.WithdrawalAccount%></a></li>
                 <%}%>
             </ul>
         </div>
@@ -101,16 +101,16 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Thêm mới tài khoản</h3>
+                                    <h3 class="box-title"><%= Resources.Pay.AddAccount%></h3>
                                 </div>
 
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="txtClassName">Ngân hàng</label>
+                                                <label for="txtClassName"><%= Resources.Pay.BankCode%></label>
                                                 <asp:DropDownList ID="drpBankCode" runat="server" CssClass="form-control select2">
-                                                    <asp:ListItem Value="">Chọn bank</asp:ListItem>
+                                                    <asp:ListItem Value="">BankCode</asp:ListItem>
                                                     <asp:ListItem Value="trc20">usdt-trc20</asp:ListItem>
                                                     <asp:ListItem Value="bep20">usdt-bep20</asp:ListItem>
                                                     <asp:ListItem Value="erc20">usdt-erc20</asp:ListItem>
@@ -166,7 +166,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="txtDescription">Số tài khoản/ví *</label>
+                                                <label for="txtDescription"><%= Resources.Pay.AccountNumber%></label>
                                                 <asp:TextBox ID="txtAccountNumber" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
 
                                             </div>
@@ -176,7 +176,7 @@
 
 
                                             <div class="form-group">
-                                                <label for="txtDescription">Tên tài khoản </label>
+                                                <label for="txtDescription"><%= Resources.Pay.AccountName%> </label>
                                                 <asp:TextBox ID="txtAccountName" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
 
                                             </div>
@@ -186,7 +186,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="txtDescription">Trạng thái</label>
+                                                <label for="txtDescription"><%= Resources.Pay.Status%></label>
                                                 <div class="checkbox">
                                                     <label for="cbxIsActive">
                                                         <asp:CheckBox ID="chkIsActive" Checked="True" runat="server"></asp:CheckBox>
@@ -207,7 +207,7 @@
                             <div class="box">
                                 <!-- /.box-header -->
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Danh sách tài khoản</h3>
+                                    <h3 class="box-title"><%= Resources.Pay.WithdrawalAccount%></h3>
                                 </div>
                                 <div class="box-body  no-padding">
                                     <div style="height: 20px; clear: both;"></div>
@@ -215,14 +215,14 @@
                                         <thead>
                                             <tr>
                                                 <%-- <th>Stt</th>--%>
-                                                <th>BankCode</th>
-                                                <th>Số tài khoản</th>
-                                                <th>Tên tài khoản</th>
-                                                <th>Thứ tự</th>
+                                                <th><%= Resources.Pay.BankCode%></th>
+                                                <th><%= Resources.Pay.AccountNumber%></th>
+                                                <th><%= Resources.Pay.AccountName%></th>
+                                                <th><%= Resources.Pay.Number%></th>
                                                 <%-- <th>IP</th>--%>
-                                                <th>Time</th>
-                                                <th>Status</th>
-                                                <th>Tác vụ</th>
+                                                <th><%= Resources.Pay.Time%></th>
+                                                <th><%= Resources.Pay.Status%></th>
+                                                <th><%= Resources.Pay.Actiton%></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -245,7 +245,7 @@
                                                         <td><%#GetDate(Eval("Time")) %></td>
 
                                                         <td>
-                                                            <asp:LinkButton ID="lnDelete" runat="server" OnClientClick="return confirm('Bạn có muốn xóa?')" OnCommand="Delete_Command" CommandName="Delete" CommandArgument='<%#Eval("Id")%>'>Xóa </asp:LinkButton>
+                                                            <asp:LinkButton ID="lnDelete" runat="server" OnClientClick="return confirm('Bạn có muốn xóa?')" OnCommand="Delete_Command" CommandName="Delete" CommandArgument='<%#Eval("Id")%>'><%= Resources.Pay.Delete%> </asp:LinkButton>
                                                         </td>
                                                     </tr>
                                                 </ItemTemplate>
@@ -255,7 +255,7 @@
                                 </div>
                                 <div class="box-footer">
 
-                                    <asp:Button ID="Button5" runat="server" Text="Cập nhật" CssClass="btn btn-info pull-right " OnClick="btApply_Click"></asp:Button>
+                                    <asp:Button ID="btUpdate" runat="server" Text="Cập nhật" CssClass="btn btn-info pull-right " OnClick="btApply_Click"></asp:Button>
                                 </div>
                             </div>
                             <!-- /.box-body -->
@@ -297,7 +297,7 @@
             }
 
         });
-    </script>
+</script>
     <style>
         .select2-container {
             display: block;

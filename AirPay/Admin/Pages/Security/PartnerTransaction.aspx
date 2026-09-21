@@ -157,7 +157,12 @@
                                     </div>
 
                                 </div>
+                                <div class="form-group" runat="server" id="dvOTP" visible="false">
+                                    <label for="txtDescription">
+                                        <%= Resources.Pay._2FACode%>*</label>
+                                    <asp:TextBox ID="txtOTP" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
 
+                                </div>
 
 
                             </div>
@@ -840,7 +845,7 @@
             var formatMoneyVNDVal = price.formatMoney(0, '', '.') + "";
             $("#textMoneyVND3").html(formatMoneyVNDVal);
         }
-        <%--$("#<%=txtUsdt.ClientID %>").change(function () {
+<%--$("#<%=txtUsdt.ClientID %>").change(function () {
 
             var user = $("#<%=ddlAccount.ClientID %>").val();
             if (user == "sn1" || user == "sn3") {
@@ -870,5 +875,5 @@
                 $("#textMoneyVND3").html(formatMoneyVNDVal);
             }
         });--%>
-    </script>
+</script>
 </asp:Content>

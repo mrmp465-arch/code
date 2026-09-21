@@ -9,7 +9,7 @@ using Libs.API;
 using Libs.Utils;
 using System.Globalization;
 using System.Data;
-
+using Google.Authenticator;
 
 
 
@@ -18,7 +18,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
     public string UrlHistory;
     public bool RoleApp { get; set; }
     public bool IsDL { get; set; }
-
+    public string UserUniqueKey;
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.PartnerTransaction);
@@ -37,6 +37,10 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             {
                 IsDL = true;
             }
+        }
+        if (AppUtils.UserName.Contains("jkvv") || AppUtils.UserName == "paytest")
+        {
+            dvOTP.Visible = true;
         }
 
         if (!IsPostBack)
@@ -104,7 +108,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
 
     protected void btAdd_Click(object sender, EventArgs e)
     {
-      if (AppUtils.IsPartner || IsDL)
+        if (AppUtils.IsPartner || IsDL)
         {
             if (string.IsNullOrEmpty(txtAccountName.Text) || string.IsNullOrEmpty(txtAmount.Text) || string.IsNullOrEmpty(txtAccountNumber.Text) || string.IsNullOrEmpty(drpBankCode.SelectedValue))
             {
@@ -142,12 +146,26 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
             return;
         }
+        if (AppUtils.UserName.Contains("jkvv") || AppUtils.UserName == "paytest")
+        {
+            TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
+            string googleAuthKey = "airpay6868";
+            UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+            bool isValid = TwoFacAuth.ValidateTwoFactorPIN(UserUniqueKey, txtOTP.Text, false);
+            if (!isValid)
+            {
+
+                AlertInfoss.Text = Resources.Pay._2FAWrong;
+                Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
+                return;
+            }
+        }
         var _tran = new UserWithdraw();
         _tran.UserName = AppUtils.UserName;
         _tran.Amount = amount;
         _tran.Note = String.Format("Ngân hàng: <b>{0}</b><br>Số tài khoản: <b>{1}</b>  <br> Chủ tài khoản: <b>{2}</b>", drpBankCode.SelectedItem.Text, txtAccountNumber.Text, txtAccountName.Text);
-		//thêm thằng support nó cũng rút đc
-       if (!AppUtils.IsPartner && !IsDL)
+        //thêm thằng support nó cũng rút đc
+        if (!AppUtils.IsPartner && !IsDL)
         {
             var arrbank = drpBankCode2.SelectedValue.Split('-');
             _tran.Note = String.Format("Ngân hàng: <b>{0}</b><br>Số tài khoản: <b>{1}</b>  <br> Chủ tài khoản: <b>{2}</b>", arrbank[0], arrbank[2], arrbank[1]);
@@ -175,7 +193,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         var bankCode = getBankCode(drpBankCode.SelectedValue);
         if (!string.IsNullOrEmpty(bankCode))
         {
-            _tran.BankInfo = String.Format("https://img.vietqr.io/image/{0}-{1}-print.jpg?amount={2}&accountName={3}", bankCode, txtAccountNumber.Text.Trim(), txtAmount.Text,txtAccountName.Text);
+            _tran.BankInfo = String.Format("https://img.vietqr.io/image/{0}-{1}-print.jpg?amount={2}&accountName={3}", bankCode, txtAccountNumber.Text.Trim(), txtAmount.Text, txtAccountName.Text);
             if (_tran.Amount > 500000000)
                 _tran.BankInfo = String.Format("https://img.vietqr.io/image/{0}-{1}-print.jpg?accountName={2}", bankCode, txtAccountNumber.Text.Trim(), txtAccountName.Text);
         }

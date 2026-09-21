@@ -26,6 +26,8 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
         Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         btSubmit.Text = Resources.Pay.Confirm;
+        btAdd.Text = Resources.Pay.Add;
+        btUpdate.Text = Resources.Pay.Update;
         Init();
     }
     protected void Init()

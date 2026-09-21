@@ -129,7 +129,8 @@ public partial class Layout_TopMenu : System.Web.UI.UserControl
                 return "提款";
             case "Lịch sử giao dịch":
                 return "历史";
-
+            case "Cài đặt":
+                return "设置谷歌验证码";
             case "Đối tác":
                 return "商户";
 
@@ -147,6 +148,8 @@ public partial class Layout_TopMenu : System.Web.UI.UserControl
                 return "买卡";
             case "Xác thực 2 lớp":
                 return "双因素身份验证";
+            case "Nạp tiền":
+                return "充值";
         }
         return groupname;
     }
