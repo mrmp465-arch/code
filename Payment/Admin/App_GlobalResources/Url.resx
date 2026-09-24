@@ -600,4 +600,7 @@
   <data name="BankUploadImage" xml:space="preserve">
     <value>pages/bankewalletservice/bank/uploadimage.aspx</value>
   </data>
+  <data name="MomoUploadImage" xml:space="preserve">
+    <value>pages/momo/uploadimage.aspx</value>
+  </data>
 </root>

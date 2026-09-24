@@ -1,32 +1,34 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing;
+using Libs.API;
+using Libs.CardTelco;
+using Libs.Report;
+using Libs.Utils;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Libs.Report;
-using System.Globalization;
-using Libs.API;
-using System.Web.Script.Serialization;
-using System.Threading.Tasks;
-using Libs.Utils;
-using System.Net.Http;
-using System.Text;
-using System.Net.Http.Headers;
-using System.Net;
-using DocumentFormat.OpenXml.Drawing;
-using System.IO;
-using Libs.CardTelco;
-using System.Reflection;
 using Telegram.Bot.Types.Payments;
 
-public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
+public partial class Pages_Monitor_BankGateAPI_Monitor2 : System.Web.UI.Page
 {
     public string Lang { get; set; }
     public bool RoleFix { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
-        AppUtils.CheckRoles(Resources.Url.BankGateAPIMonitor);
+        AppUtils.CheckRoles("pages/monitor/bankgateapi.monitor2.aspx");
         RoleFix = AppUtils.CheckRolesPermission(Resources.Url.BankGateAPIFixStatus);
         Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
         Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
@@ -63,7 +65,7 @@ public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
                 RefCode = _CardAPILog.RefCode,
                 OrderNo = _CardAPILog.FullName,
                 OrderInfo = _CardAPILog.OrderInfo,
-                Fee=_CardAPILog.Fee,
+                Fee = _CardAPILog.Fee,
                 Amount = Convert.ToInt32(_CardAPILog.TotalAmount),
                 Type = "bank"
             };
@@ -80,7 +82,7 @@ public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
                 };
 
             }
-               
+
             apiResponse = new APIResponse((int)ResponseCode.TransactionSuccessful)
             {
                 ResponseContent = serializer.Serialize(datacb)
@@ -102,8 +104,8 @@ public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
             //}
             //else
             //{
-                apiResponse.Signature = PaymentUtils.Signature(apiResponse.ResponseCode.ToString() + apiResponse.Description + apiResponse.ResponseContent, privateKey, 1);
-                Task.Run(() => CallbackJson(url, serializer.Serialize(apiResponse), TransId).ConfigureAwait(false));
+            apiResponse.Signature = PaymentUtils.Signature(apiResponse.ResponseCode.ToString() + apiResponse.Description + apiResponse.ResponseContent, privateKey, 1);
+            Task.Run(() => CallbackJson(url, serializer.Serialize(apiResponse), TransId).ConfigureAwait(false));
             //}
 
         }
@@ -312,7 +314,7 @@ public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
                 partnerCodes = string.Join(",", listbyUser.Select(x => x.PartnerCode).ToArray());
             }
         }
-        var data = new BankGateAPI().GetTable(100000, partnerCodes, providerCodes, fromDate, requestTime, 1, string.Empty, string.Empty, string.Empty, string.Empty, null, txtBankId.Text,0, cbDay.Checked);
+        var data = new BankGateAPI().GetTable(100000, partnerCodes, providerCodes, fromDate, requestTime, 1, "MOMO", string.Empty, string.Empty, string.Empty, null, txtBankId.Text, 0, cbDay.Checked);
         var lstData = new List<BankGateAPIExcel>();
         foreach (var bank in GlobalHelper.ConvertToList<BankGateAPI>(data))
         {
@@ -467,11 +469,9 @@ public partial class Pages_Monitor_BankGateAPI_Monitor : System.Web.UI.Page
             }
             else
             {
-                rptList.DataSource = _BankGateAPI.GetTable(top, partnerCodes, providerCodes, fromDate, requestTime, status, bankCode, txtRefCode.Text, txtOrderNo.Text, txtOrderInfo.Text, amount, txtBankId.Text, 0, cbDay.Checked);
+                rptList.DataSource = _BankGateAPI.GetTable(top, partnerCodes, providerCodes, fromDate, requestTime, status, "MOMO", txtRefCode.Text, txtOrderNo.Text, txtOrderInfo.Text, amount, txtBankId.Text, 0, cbDay.Checked);
             }
-            var lstDataBank = new BankGateAPI().ReportDashboard(partnerCodes, fromDate, requestTime, txtBankId.Text, int.Parse(drpType.SelectedValue));
-            if (lstDataBank != null)
-                lblTotal.Text = String.Format("{0} : {1}/{2} - {3} : {4} - {5} : {6}", Resources.Pay.DepositOrderNumber, lstDataBank.Sum(x => x.TotalTransSuccess).ToString(), lstDataBank.Sum(x => x.TotalTrans).ToString(), Resources.Pay.DepositAmount, lstDataBank.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","), Resources.Pay.DepositFee, lstDataBank.Sum(x => x.TotalFee).ToString("N0").Replace(".", ","));
+             
             rptList.DataBind();
         }
         catch (Exception ex)

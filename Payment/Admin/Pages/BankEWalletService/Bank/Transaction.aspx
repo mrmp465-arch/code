@@ -223,9 +223,9 @@
                         <div class="col-xs-12 col-sm-6 col-md-1">
                             <asp:Button ID="btView" runat="server" CssClass="btn btn-primary" OnClick="btView_Click" Text="Xem"></asp:Button>
                         </div>
-                        <%-- <div style="display:none;">
+                         <div style="display:none;">
                             <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary" OnClick="btView2_Click" Text="Xem"></asp:Button>
-                        </div>--%>
+                        </div>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body  no-padding">

@@ -106,21 +106,57 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <br />
-                        <br />
-                        <div class="form-group">
-                            <img width="639" src="<%=Constant.ADMIN_PATH  %>Content/tempmomo.png?r=2" />
+                        <div class="box box-default">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Thêm tài khoản thông thường</h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+
+                                </div>
+                            </div>
+                            <div class="box-body" style="">
+                                <div class="form-group">
+                                    <img width="639" src="<%=Constant.ADMIN_PATH  %>Content/tempmomo.png?r=2" />
+                                </div>
+
+                                <div class="form-group">
+                                    <a href="<%=Constant.ADMIN_PATH  %>content/tempmomo.xlsx?r=2"><strong>Tải file excel mẫu</strong></a>
+                                </div>
+                                <div class="form-group">
+                                    <asp:FileUpload ID="FileUploadExcel" runat="server" />
+                                </div>
+                                <div class="form-group">
+                                    <asp:Button ID="btnUpload" runat="server" Text="Tải lên" CssClass="btn btn-primary" OnClick="btnUpload_Click"></asp:Button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box box-default">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Thêm tài khoản (+IMEI)</h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+
+                                </div>
+                            </div>
+                            <div class="box-body" style="">
+                                <div class="form-group">
+                                    <img width="539" src="<%=Constant.ADMIN_PATH  %>Content/tempmomov2.png?r=3" />
+                                </div>
+
+                                <div class="form-group">
+                                    <a href="<%=Constant.ADMIN_PATH  %>content/tempmomov2.xlsx?r=2"><strong>Tải file excel mẫu</strong></a>
+                                </div>
+                                <div class="form-group">
+                                    <asp:FileUpload ID="FileUpload1" runat="server" />
+                                </div>
+                                <div class="form-group">
+                                    <asp:Button ID="Button1" runat="server" Text="Tải lên" CssClass="btn btn-primary" OnClick="btnUpload2_Click"></asp:Button>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <a href="<%=Constant.ADMIN_PATH  %>content/tempmomo.xlsx?r=2"><strong>Tải file excel mẫu</strong></a>
-                        </div>
-                        <div class="form-group">
-                            <asp:FileUpload ID="FileUploadExcel" runat="server" />
-                        </div>
-                        <div class="form-group">
-                            <asp:Button ID="btnUpload" runat="server" Text="Tải lên" CssClass="btn btn-primary" OnClick="btnUpload_Click"></asp:Button>
-                        </div>
 
                     </div>
                 </div>
@@ -138,7 +174,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <script type="text/javascript">
         $(document).ready(function () {
-           
+
         });
     </script>
 </asp:Content>

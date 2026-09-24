@@ -21,7 +21,7 @@ public partial class Pages_Security_Users_List : System.Web.UI.Page
 
     private void BindData()
     {
-        var lst = new Users().GetList();
+        var lst = new Users().GetList().OrderByDescending(x=>x.Balance).ToList();
         //if (lst != null) 
         //    lst = lst.Where(e => e.ParentId == AppUtils.UserID || e.UserID == AppUtils.UserID).ToList();
 
@@ -48,7 +48,7 @@ public partial class Pages_Security_Users_List : System.Web.UI.Page
         }
         else
         {
-            lst = lst.OrderBy(x => x.UserName).ToList();
+            lst = lst.OrderByDescending(x => x.Balance).ToList();
         }
 
         var total = lst.Sum(x => x.Balance);

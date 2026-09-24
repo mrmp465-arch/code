@@ -41,8 +41,8 @@
                                  <asp:ListItem Value="5">Xuất khoản</asp:ListItem>
                                <%-- <asp:ListItem Value="6">SMS</asp:ListItem>
                                 <asp:ListItem Value="7">Kho thẻ</asp:ListItem>--%>
-                                 <asp:ListItem Value="8">Bank, Ví</asp:ListItem>
-                                <asp:ListItem Value="9">Kết Nối</asp:ListItem>
+                                 <asp:ListItem Value="8">Bank Core</asp:ListItem>
+ <asp:ListItem Value="9">Momo Core</asp:ListItem>
                                 <asp:ListItem Value="10">Cấu hình</asp:ListItem>
                                 <asp:ListItem Value="11">Quản Trị</asp:ListItem>
                                 <asp:ListItem Value="12">Số dư</asp:ListItem>

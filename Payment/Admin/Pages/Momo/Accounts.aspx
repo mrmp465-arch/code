@@ -104,12 +104,12 @@
                             </div>
                         </div>
 
-                        <div class="col-xs-12 col-sm-12 col-md-1">
+                        <div class="col-xs-12 col-sm-12 col-md-1" runat="server" id="dvSource"  visible="false">
                             <div class="form-group">
                                 <asp:DropDownList ID="drpPartner" runat="server" CssClass="form-control select2" OnSelectedIndexChanged="drpPartner_SelectedIndexChanged" AutoPostBack="True">
-                                    <%-- <asp:ListItem Text="Source" Value=""></asp:ListItem>
+                                     <asp:ListItem Text="Source" Value=""></asp:ListItem>
                                     <asp:ListItem Text="inhouse" Value="inhouse"></asp:ListItem>
-                                    <asp:ListItem Text="mouse" Value="mouse"></asp:ListItem>--%>
+                                    <asp:ListItem Text="krillin" Value="krillin"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -163,7 +163,9 @@
 
 
                         </div>
-
+                       <%-- <div class="col-xs-12 col-sm-6 col-md-2">
+                            <asp:Button ID="btAdd2" CssClass="btn btn-primary" runat="server" OnClick="btAdd2_Click" Text="Thêm mới TK (+IMEI)"></asp:Button>
+                        </div>--%>
 
                         <div class="col-xs-12 col-sm-6 col-md-4" style="font-weight: bold; float: right">
                             <asp:Label runat="server" ID="lblTotal"></asp:Label>
@@ -172,7 +174,7 @@
 
                     <div style="clear: both"></div>
 
-                    <div class="box-tools" style="margin-top: 10px;">
+                    <div class="box-tools" style="margin-top: 10px;" runat="server" id="dvAction" visible="false" >
                         <div class="col-xs-12 col-sm-6 col-md-2">
                             <asp:TextBox ID="txtUser" runat="server" placeholder="Số ví nhận tiền" CssClass="form-control"></asp:TextBox>
                         </div>
@@ -180,6 +182,7 @@
                             <asp:Button ID="btApp" runat="server" OnClientClick="return CheckApp()" CssClass="btn btn-info" OnClick="btAppClick" Text="Chuyển tiền"></asp:Button>
                             &nbsp;&nbsp;
                             <asp:Button ID="btApp2" runat="server" OnClientClick="return CheckApp2()" CssClass="btn btn-info" OnClick="btApp2Click" Text="Bật"></asp:Button>
+                            &nbsp;&nbsp;<asp:Button ID="Button1" runat="server" OnClientClick="return CheckApp3()" CssClass="btn btn-info" OnClick="btApp3Click" Text="Save ảnh"></asp:Button>
                         </div>
                     </div>
 
@@ -208,8 +211,8 @@
                                     <th>In</th>
                                     <th>Out</th>
                                     <th>T.Thái</th>
-                                    <th>Partner</th>
-
+                                    <th>Source</th>
+                                     <th>LoginDate</th>
                                     <th>K.Hoạt</th>
                                     <%-- <th>G.Pháp</th>--%>
                                     <th>T.Vụ</th>
@@ -224,7 +227,7 @@
                                                  <asp:Label ID="ID" runat="server" Visible="false" Text='<%#Eval("MomoId") %>'></asp:Label>
                                             </td>
                                             <td><%# Container.ItemIndex + 1 %></td>
-                                            <td ><%#Eval("Id") %></td>
+                                            <td><%#Eval("Id") %></td>
                                             <td style="<%#GetSolutionStyle(Eval("ByPass20M")) %>"><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.MomoAccountEdit %>?id=<%#Eval("Id") %>" title="<%#Eval("StopScanAt") %>"><%#Eval("MomoName") %> 
                                                
                                             </a></td>
@@ -243,9 +246,9 @@
                                             <td><%#GetStatus(Eval("StatusOver"))%></td>
                                             <td><%#GetStatus(Eval("StatusOverOut")) %></td>
                                             <td><%#GetStatusExtra(Eval("StatusExtra")) %></td>
-                                            <%-- <td><%#Eval("Source")%></td>--%>
-                                            <td><%#Eval("PartnerName")%></td>
-
+                                             <td><%#Eval("Source")%></td>
+                                           <%-- <td><%#Eval("PartnerName")%></td>--%>
+                                              <td><%#GetDate(Eval("CreatedAt")) %></td>
                                             <td><%#GetStatusActive(Eval("Status")) %> &nbsp;
 
                                                  <asp:CheckBox Visible='<%# (Eval("Status").ToString() == "1" || Eval("Status").ToString() == "0" ) %> ' ID="cbxStatus" CssClass="cbxStatus" runat="server" Checked='<%#Convert.ToBoolean(Eval("Status")) %>' Title='<%#Eval("Id") %>'></asp:CheckBox>
@@ -481,8 +484,29 @@
             }
             return false;
         }
-        
+
         function CheckApp2() {
+            var check = 0;
+            $('.CheckAll input').each(function (i, e) {
+
+                if ($(e).prop("checked") == true) {
+                    check = 1;
+
+                }
+
+            });
+
+            if (check == 0) {
+
+                alert('Vui lòng chọn tài khoản để bật');
+                return false;
+            }
+            if (confirm("Bạn có muốn cbật?")) {
+                return true;
+            }
+            return false;
+        }
+        function CheckApp3() {
             var check = 0;
             $('.CheckAll input').each(function (i, e) {
 

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Layout/Layout.master" AutoEventWireup="true" CodeFile="Users.Edit.aspx.cs" Inherits="Pages_Security_Users_Edit" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Layout/Layout2.master" AutoEventWireup="true" CodeFile="Users.Edit.aspx.cs" Inherits="Pages_Security_Users_Edit" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <section class="content-header">
@@ -57,6 +57,11 @@
                         <div class="form-group" style="display: none">
                             <label for="txtDeposit">Số dư tài khoản đối ứng *</label>
                             <asp:TextBox ID="txtDeposit" runat="server" CssClass="form-control"></asp:TextBox>
+
+                        </div>
+                        <div class="form-group" style="">
+                            <label for="txtSource">Source *</label>
+                            <asp:TextBox ID="txtSource" runat="server" CssClass="form-control"></asp:TextBox>
 
                         </div>
                         <div class="form-group">

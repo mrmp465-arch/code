@@ -131,7 +131,7 @@
                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control select2">
                                     <asp:ListItem Text="Tất cả" Value=""></asp:ListItem>
                                     <asp:ListItem Text="inhouse" Value="inhouse"></asp:ListItem>
-                                    <asp:ListItem Text="mouse" Value="mouse"></asp:ListItem>
+                                    <asp:ListItem Text="krillin" Value="krillin"></asp:ListItem>
 
 
                                 </asp:DropDownList>

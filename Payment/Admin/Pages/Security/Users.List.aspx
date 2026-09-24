@@ -23,8 +23,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon" style="padding: 5px;">Hoạt động</span>
                                 <asp:DropDownList ID="drpStatus" runat="server" CssClass="form-control select2">
-                                    <asp:ListItem Text="Tất cả" Value="-1" Selected="True"></asp:ListItem>
-                                    <asp:ListItem Text="Bình thường" Value="1"> </asp:ListItem>
+                                    <asp:ListItem Text="Tất cả" Value="-1" ></asp:ListItem>
+                                    <asp:ListItem Text="Bình thường" Value="1" Selected="True"> </asp:ListItem>
                                     <asp:ListItem Text="Khóa" Value="0"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>

@@ -63,7 +63,7 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
             data = data.Where(x => x.BankType.Equals(banktype)).ToList();
 
 
-        lblTota2.Text = String.Format("Tổng số bank : {0} - tổng số dư : {1}", data.Where(x => x.Status == 1).Count().ToString(), data.Sum(x => Convert.ToInt64(x.BalanceTotal)).ToString("N0"));
+        lblTota2.Text = String.Format("Tổng số bank : {0} - tổng số dư : {1}", data.Where(x => x.Status == 1).Count().ToString(), data.Where(x=>x.Type=="IN"||x.Type=="INOUT").Where(a=>a.StatusExtra==1).Sum(x => Convert.ToInt64(x.BalanceTotal)).ToString("N0"));
 
 
 
@@ -367,5 +367,15 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
         if (BankCode == "NVB")
             BankCode = "NCB";
         return String.Format("https://img.vietqr.io/image/{0}-{1}-print.jpg?accountName={2}", BankCode, BankId, AccountName);
+    }
+    public string GetSolutionStyle(object statusOver)
+    {
+        if (statusOver.ToString() == "PC002")
+        {
+            return "font-weight:bold";
+        }
+        
+
+        return "";
     }
 }

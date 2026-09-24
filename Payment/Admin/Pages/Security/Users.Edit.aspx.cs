@@ -30,7 +30,7 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         cbxIsTopup.Checked = Convert.ToBoolean(_User.IsTopup);
         cbxIsProvider.Checked = Convert.ToBoolean(_User.IsProvider);
         txtIp.Text = _User.Ip;
-        //txtDeposit.Text = _User.F2a.ToString();
+        txtSource.Text = _User.Source.ToString();
 
         var LstPartners = new Partners().GetList();
         DataTable table = new DataTable();
@@ -212,7 +212,7 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         _User.IsTopup = Convert.ToInt32(cbxIsTopup.Checked);
         _User.IsProvider = Convert.ToInt32(cbxIsProvider.Checked);
         _User.Ip = txtIp.Text.Trim();
-        //_User.F2a = txtDeposit.Text;
+       _User.Source = txtSource.Text;
         _User.Update();
 
         var LstPartners = new Partners().GetList();

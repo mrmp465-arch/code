@@ -29,6 +29,8 @@ namespace Libs.API
         public long Deposit { get; set; }
         public string F2a { get; set; }
         public string Ip { get; set; }
+        public string Source { get; set; }
+        
         public Users()
         {
 
@@ -131,7 +133,7 @@ namespace Libs.API
         public void Update()
         {
             DBHelper db = new DBHelper(Configs.VPGAPIConnectionStrings);
-            SqlParameter[] pars = new SqlParameter[13];
+            SqlParameter[] pars = new SqlParameter[14];
             pars[0] = new SqlParameter("@ReturnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
             pars[1] = new SqlParameter("@UserID", UserID);
             pars[2] = new SqlParameter("@UserName", UserName);
@@ -145,6 +147,7 @@ namespace Libs.API
             pars[10] = new SqlParameter("@IsProvider", IsProvider);
             pars[11] = new SqlParameter("@F2a", F2a);
             pars[12] = new SqlParameter("@Ip", Ip);
+            pars[13] = new SqlParameter("@Source", Source);
             db.ExecuteNonQuerySP("sp_Users_Update", pars);
             ReturnValue = Convert.ToInt32(pars[0].Value);
         } 

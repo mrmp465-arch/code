@@ -24,7 +24,8 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
     //private string urlBaseService = "https://localhost:44373/MomoService.ashx";
     //private string urlBaseService = "http://127.0.0.1:9001/MomoService.ashx";
     JavaScriptSerializer serializer = new JavaScriptSerializer();
-
+    public bool RoleUpload { get; set; }
+    public bool RoleTransfer { get; set; }
     public string DesColor;
     public string Solution
     {
@@ -49,6 +50,14 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
             ViewState["UrlBaseService"] = value;
         }
     }
+    public string Id
+    {
+        get
+        {
+            return AppUtils.Request("id").ToString();
+        }
+
+    }
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -64,6 +73,16 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         btnOpen.OnClientClick = "validate(" + ")";
         AppUtils.CheckRoles(Resources.Url.MomoAccountEdit);
         serializer.MaxJsonLength = Int32.MaxValue;
+
+        RoleUpload = AppUtils.CheckRolesPermission("pages/bankewalletservice/momo/uploadimage.aspx");
+      
+
+        RoleTransfer = AppUtils.CheckRolesPermission("pages/bankewalletservice/momo/account.transfer.aspx");
+        if (!RoleTransfer)
+        {
+            
+            divTransfer.Visible = false;
+        }
         if (!IsPostBack)
         {
             init();
@@ -81,6 +100,18 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         if (_Momo == null)
         {
             Response.Redirect(Resources.Url.MomoAccount);
+        }
+        if(_Momo.StatusDetection==1)
+        {
+            lbDetech.Text = "Đã Detech";
+        }
+        if (_Momo.StatusDetection == 0)
+        {
+            lbDetech.Text = "Đợi Detech";
+        }
+        if (_Momo.StatusDetection == -1)
+        {
+            lbDetech.Text = "Chưa Detech";
         }
         txtMomoId.Text = _Momo.MomoId;
         txtMomoName.Text = _Momo.MomoName;
@@ -155,140 +186,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
 
         lblBalanceWeb.Text = _Momo.BalanceTotal.ToString("N0");
 
-        //imge
-        var lstProfileImage = new List<MomoProfileImage>();
-
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "1",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "2",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "3",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "4",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "5",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "6",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "7",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "8",
-            Detection = ""
-        });
-        if (!string.IsNullOrEmpty(_Momo.ProfileImage))
-        {
-            try
-            {
-                lstProfileImage = serializer.Deserialize<List<MomoProfileImage>>(_Momo.ProfileImage);
-
-            }
-            catch
-            {
-
-            }
-        }
-        if (lstProfileImage[0].Base64.Contains("/cmspay"))
-        {
-            img1.ImageUrl = lstProfileImage[0].Base64;
-        }
-        else
-        {
-            img1.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[0].Base64);
-        }
-
-        if (lstProfileImage[1].Base64.Contains("/cmspay"))
-        {
-            img2.ImageUrl = lstProfileImage[1].Base64;
-        }
-        else
-        {
-            img2.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[1].Base64);
-        }
-
-        if (lstProfileImage[2].Base64.Contains("/cmspay"))
-        {
-            img3.ImageUrl = lstProfileImage[2].Base64;
-        }
-        else
-        {
-            img3.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[2].Base64);
-        }
-
-        if (lstProfileImage[3].Base64.Contains("/cmspay"))
-        {
-            img4.ImageUrl = lstProfileImage[3].Base64;
-        }
-        else
-        {
-            img4.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[3].Base64);
-        }
-
-        if (lstProfileImage[4].Base64.Contains("/cmspay"))
-        {
-            img5.ImageUrl = lstProfileImage[4].Base64;
-        }
-        else
-        {
-            img5.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[4].Base64);
-        }
-
-        if (lstProfileImage[5].Base64.Contains("/cmspay"))
-        {
-            img6.ImageUrl = lstProfileImage[5].Base64;
-        }
-        else
-        {
-            img6.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[5].Base64);
-        }
-
-        if (lstProfileImage[6].Base64.Contains("/cmspay"))
-        {
-            img7.ImageUrl = lstProfileImage[6].Base64;
-        }
-        else
-        {
-            img7.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[6].Base64);
-        }
-
-        if (lstProfileImage[7].Base64.Contains("/cmspay"))
-        {
-            img8.ImageUrl = lstProfileImage[7].Base64;
-        }
-        else
-        {
-            img8.ImageUrl = "data:image/jpeg;base64," + ImgResize(lstProfileImage[7].Base64);
-        }
+        
 
     }
 
@@ -439,247 +337,11 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         _Momo.Solution = drpSolution.SelectedValue;
 
 
-        var lstProfileImage = new List<MomoProfileImage>();
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "1",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "2",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "3",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "4",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "5",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "6",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "7",
-            Detection = ""
-        });
-        lstProfileImage.Add(new MomoProfileImage
-        {
-            Base64 = "/cmspay/content/noimage.png",
-            ImgName = "8",
-            Detection = ""
-        });
-        if (!string.IsNullOrEmpty(_Momo.ProfileImage))
-        {
-            try
-            {
-                lstProfileImage = serializer.Deserialize<List<MomoProfileImage>>(_Momo.ProfileImage);
-
-            }
-            catch
-            {
-            }
-        }
-
-
-        if (fileUpload1.HasFile)
-        {
-            if (fileUpload1.FileName.Contains(".jpg") || fileUpload1.FileName.Contains(".png") || fileUpload1.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[0].ImgName = "1";
-
-
-                lstProfileImage[0].Base64 = ConvertBase64(fileUpload1.FileContent);
-            }
-
-        }
-        else
-        {
-            if (hdimg1.Value == "0")
-            {
-                lstProfileImage[0].Base64 = "/cmspay/content/noimage.png";
-                lstProfileImage[0].Detection = "";
-            }
-
-
-        }
-        if (fileUpload2.HasFile)
-
-        {
-            if (fileUpload2.FileName.Contains(".jpg") || fileUpload2.FileName.Contains(".png") || fileUpload2.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[1].ImgName = "2";
-
-                lstProfileImage[1].Base64 = ConvertBase64(fileUpload2.FileContent);
-            }
-
-        }
-        else
-        {
-            if (hdimg2.Value == "0")
-            {
-                lstProfileImage[1].Detection = "";
-                lstProfileImage[1].Base64 = "/cmspay/content/noimage.png";
-            }
-
-
-        }
-        if (fileUpload3.HasFile)
-        {
-            if (fileUpload3.FileName.Contains(".jpg") || fileUpload3.FileName.Contains(".png") || fileUpload3.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[2].ImgName = "3";
-
-                lstProfileImage[2].Base64 = ConvertBase64(fileUpload3.FileContent);
-
-            }
-
-        }
-        else
-        {
-            if (hdimg3.Value == "0")
-            {
-                lstProfileImage[2].Detection = "";
-                lstProfileImage[2].Base64 = "/cmspay/content/noimage.png";
-            }
-
-
-        }
-        if (fileUpload4.HasFile)
-        {
-            if (fileUpload4.FileName.Contains(".jpg") || fileUpload4.FileName.Contains(".png") || fileUpload4.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[3].ImgName = "4";
-
-                lstProfileImage[3].Base64 = ConvertBase64(fileUpload4.FileContent);
-            }
-
-        }
-        else
-        {
-            if (hdimg4.Value == "0")
-            {
-                lstProfileImage[3].Base64 = "/cmspay/content/noimage.png";
-                lstProfileImage[3].Detection = "";
-            }
-
-        }
-
-        if (fileUpload5.HasFile)
-        {
-            if (fileUpload5.FileName.Contains(".jpg") || fileUpload5.FileName.Contains(".png") || fileUpload5.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[4].ImgName = "5";
-
-
-                lstProfileImage[4].Base64 = ConvertBase64(fileUpload5.FileContent);
-            }
-
-        }
-        else
-        {
-            if (hdimg5.Value == "0")
-            {
-                lstProfileImage[4].Base64 = "/cmspay/content/noimage.png";
-                lstProfileImage[4].Detection = "";
-            }
-
-        }
-        if (fileUpload6.HasFile)
-
-        {
-            if (fileUpload6.FileName.Contains(".jpg") || fileUpload6.FileName.Contains(".png") || fileUpload6.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[5].ImgName = "6";
-
-                lstProfileImage[5].Base64 = ConvertBase64(fileUpload6.FileContent);
-            }
-
-        }
-        else
-        {
-            if (hdimg6.Value == "0")
-            {
-                lstProfileImage[5].Base64 = "/cmspay/content/noimage.png";
-                lstProfileImage[5].Detection = "";
-
-            }
-
-        }
-        if (fileUpload7.HasFile)
-        {
-            if (fileUpload7.FileName.Contains(".jpg") || fileUpload7.FileName.Contains(".png") || fileUpload7.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[6].ImgName = "7";
-
-                lstProfileImage[6].Base64 = ConvertBase64(fileUpload7.FileContent);
-
-            }
-
-        }
-        else
-        {
-            if (hdimg7.Value == "0")
-            {
-
-
-                lstProfileImage[6].Base64 = "/cmspay/content/noimage.png";
-                lstProfileImage[6].Detection = "";
-            }
-
-        }
-        if (fileUpload8.HasFile)
-        {
-            if (fileUpload8.FileName.Contains(".jpg") || fileUpload8.FileName.Contains(".png") || fileUpload8.FileName.Contains(".jpeg"))
-            {
-
-                lstProfileImage[7].ImgName = "8";
-
-                lstProfileImage[7].Base64 = ConvertBase64(fileUpload8.FileContent);
-            }
-
-        }
-        else
-        {
-            if (hdimg8.Value == "0")
-            {
-                lstProfileImage[7].Base64 = "/cmspay/content/noimage.png";
-
-                lstProfileImage[7].Detection = "";
-            }
-        }
-        //_Momo.Detection = "";
-        _Momo.ProfileImage = serializer.Serialize(lstProfileImage);
-        if (chkIsActive.Checked)
-        {
-            _Momo.StatusDetection = 0;
-        }
+        
+        //if (chkIsActive.Checked)
+        //{
+        //    _Momo.StatusDetection = 0;
+        //}
         _Momo.Update();
         NotifyMomo(_Momo.MomoId, _Momo.Status);
         //Log User

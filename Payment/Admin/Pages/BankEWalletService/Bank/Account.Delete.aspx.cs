@@ -1,6 +1,7 @@
 ﻿using Libs.API;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -26,9 +27,38 @@ public partial class Pages_BankEWalletService_Bank_Account_Delete : System.Web.U
                 Description = "Xóa bank " + _bank.BankCode + " |" + _bank.BankId
             };
             _userLog.Add();
+            try
+            {
+                string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", _bank.BankCode, _bank.BankId);
+                DeleteAllFiles(UploadFolderPhysical);
+            }
+            catch
+            {
+
+            }
         }    
             
         Response.Redirect(Constant.ADMIN_PATH + Resources.Url.BankAccount );
 
+    }
+    public static void DeleteAllFiles(string folderPath)
+    {
+        if (!Directory.Exists(folderPath))
+            return;
+
+        try
+        {
+            DirectoryInfo dir = new DirectoryInfo(folderPath);
+
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                file.Delete();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log lỗi nếu cần
+            // Logger.Error(ex);
+        }
     }
 }

@@ -3,7 +3,7 @@ using Libs.BankCash.CoCo;
 using Libs.BankCash.Drum;
 using Libs.Report;
 using Libs.Utils;
-using RestSharp.Serializers;
+
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -1072,7 +1072,7 @@ namespace Libs.BankCash.DrumV2
                         {
                             if (order.Amount >= partner.RequestType)
                             {
-                                var url = String.Format("http://139.180.147.57:1587/DetailScreen9.aspx?orderNo={0}&refcode={1}&chatid={2}", order.TransactionID, order.RefCode, partner.SMSPlusUrl);
+                                var url = String.Format("http://149.28.155.162:1586/DetailScreen9.aspx?orderNo={0}&refcode={1}&chatid={2}", order.TransactionID, order.RefCode, partner.SMSPlusUrl);
                                 SendBill(url);
                             }
                         }    

@@ -53,19 +53,19 @@ public partial class Pages_BankEWalletService_Bank_Transaction : System.Web.UI.P
         drpPartner.Items.Insert(0, new ListItem("Kênh:", ""));
         drpPartner.Items.Insert(2, new ListItem("ext", "ext"));
     }
-    //protected void btView2_Click(object sender, EventArgs e)
-    //{
-    //    var lstdata = new BankTransaction().GetListCallback();
-    //    foreach (var item in lstdata)
-    //    {
-    //        var apiResponse = new APIResponse((int)ResponseCode.TransactionSuccessful);
-    //        apiResponse.ResponseContent = item.RequestContent;
-    //        NLogLogger.Logger.Debug(item.Id);
-    //        System.Threading.Thread.Sleep(100);
-    //        var unused = PostJson(item.CallbackUrl, serializer.Serialize(apiResponse));
+    protected void btView2_Click(object sender, EventArgs e)
+    {
+        var lstdata = new BankTransaction().GetListCallback();
+        foreach (var item in lstdata)
+        {
+            var apiResponse = new APIResponse((int)ResponseCode.TransactionSuccessful);
+            apiResponse.ResponseContent = item.RequestContent;
+            NLogLogger.Logger.Debug(item.Id);
+            System.Threading.Thread.Sleep(100);
+            var unused = PostJson(item.CallbackUrl, serializer.Serialize(apiResponse));
 
-    //    }
-    //}
+        }
+    }
     private void GetList()
     {
         try

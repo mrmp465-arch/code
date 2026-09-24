@@ -1,6 +1,7 @@
 ﻿using Libs.API;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -24,9 +25,38 @@ public partial class Pages_Momo_Account_Delete : System.Web.UI.Page
                 Description = "Xóa momo " + _Momo.MomoId
             };
             _userLog.Add();
+            try
+            {
+                string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", "MOMO", _Momo.MomoId);
+                DeleteAllFiles(UploadFolderPhysical);
+            }
+            catch
+            {
+
+            }
         }    
             
         Response.Redirect(Constant.ADMIN_PATH + Resources.Url.MomoAccount );
 
+    }
+    public static void DeleteAllFiles(string folderPath)
+    {
+        if (!Directory.Exists(folderPath))
+            return;
+
+        try
+        {
+            DirectoryInfo dir = new DirectoryInfo(folderPath);
+
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                file.Delete();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log lỗi nếu cần
+            // Logger.Error(ex);
+        }
     }
 }

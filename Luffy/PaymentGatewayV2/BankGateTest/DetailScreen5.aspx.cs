@@ -27,7 +27,7 @@ namespace BankGateTest
                     await BillScreenshotBot.CaptureBillAndSendTelegramAsync(
                   botToken: "123456:ABC...",
                   chatId: chatid,
-                  url: "https://info.topapp.bizPages/Detail.aspx?orderNo=" + orderNo,
+                  url: "https://info.topapp.biz/Pages/Detail.aspx?orderNo=" + orderNo,
                   billSelector: "#bill",
                   caption: refcode 
               );

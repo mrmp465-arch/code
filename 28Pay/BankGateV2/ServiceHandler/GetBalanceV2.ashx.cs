@@ -3,6 +3,7 @@ using Libs.Utils;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
@@ -22,7 +23,20 @@ namespace BankGateV2.ServiceHandler
             var signature = HttpContext.Current.Request.QueryString["signature"];
             var type = HttpContext.Current.Request.QueryString["type"];
 
-            
+            if (string.IsNullOrEmpty(partnerCode))
+            {
+                var jsonString = String.Empty;
+                var result = string.Empty;
+                using (var inputStream = new StreamReader(context.Request.InputStream))
+                {
+                    jsonString = inputStream.ReadToEnd();
+                }
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                var request = javaScriptSerializer.Deserialize<RequestBalance>(jsonString);
+                partnerCode = request.partnerCode;
+                signature = request.signature;
+                type = request.type;
+            }
             var partner = new Partners().GetCache(partnerCode);
             //Kiểm tra _Partner tồn tại hoặc Active không
             if (partner == null || partner.Status == 0)
@@ -56,6 +70,14 @@ namespace BankGateV2.ServiceHandler
         {
             public long Balance { get; set; }
 
+
+        }
+        public class RequestBalance
+        {
+            public string partnerCode { get; set; }
+
+            public string type { get; set; }
+            public string signature { get; set; }
 
         }
         public bool IsReusable

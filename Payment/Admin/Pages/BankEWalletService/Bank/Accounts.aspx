@@ -223,7 +223,7 @@
 
                                             <td><%#Eval("BankCode") %></td>
                                             <%--<td><%#Eval("BankAccount") %></td>--%>
-                                            <td><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountEdit %>?id=<%#Eval("Id") %>" title="<%#Eval("StopScanAt") %>"><%#Eval("BankName") %></a></td>
+                                            <td><a style="<%#GetSolutionStyle(Eval("Computer")) %>" href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountEdit %>?id=<%#Eval("Id") %>" title="<%#Eval("StopScanAt") %>"><%#Eval("BankName") %></a></td>
                                             <td><%#Eval("BankId") %></td>
                                             <%--<td><%#Convert.ToInt32(Eval("BalanceDayIn")).ToString("N0").Replace(",", ".") %></td>--%>
                                             <td><%#Convert.ToInt64(Eval("BalanceDayIn")).ToString("N0") %></td>
