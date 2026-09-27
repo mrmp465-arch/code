@@ -31,6 +31,8 @@ namespace Libs.API
         public string Ip { get; set; }
         public string Source { get; set; }
 
+        public string IpBalance { get; set; }
+
         public int Withdraw { get; set; }
         public Users()
         {
@@ -135,7 +137,7 @@ namespace Libs.API
         public void Update()
         {
             DBHelper db = new DBHelper(Configs.VPGAPIConnectionStrings);
-            SqlParameter[] pars = new SqlParameter[15];
+            SqlParameter[] pars = new SqlParameter[16];
             pars[0] = new SqlParameter("@ReturnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
             pars[1] = new SqlParameter("@UserID", UserID);
             pars[2] = new SqlParameter("@UserName", UserName);
@@ -151,6 +153,8 @@ namespace Libs.API
             pars[12] = new SqlParameter("@Ip", Ip);
             pars[13] = new SqlParameter("@Source", Source);
             pars[14] = new SqlParameter("@Withdraw", Withdraw);
+            pars[15] = new SqlParameter("@IpBalance", IpBalance);
+            
             db.ExecuteNonQuerySP("sp_Users_Update", pars);
             ReturnValue = Convert.ToInt32(pars[0].Value);
         } 

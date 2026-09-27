@@ -38,7 +38,7 @@ namespace BankGateV2.ServiceHandler
             }
             if (string.IsNullOrEmpty(partnerCode))
             {
-                context.Response.Write("usring http get wwith parm x-form: partnerCode,type,signature");
+                context.Response.Write("string http get wwith param x-form: partnerCode,type,signature");
                 return;
             }
             var partner = new Partners().GetCache(partnerCode);
@@ -51,6 +51,16 @@ namespace BankGateV2.ServiceHandler
                 return;
             }
             var usser = new Users().GetByUserName(partnerCode);
+            if (!string.IsNullOrEmpty(usser.IpBalance))
+
+            {
+                if (!usser.IpBalance.Contains(IPAddress.Get()))
+                {
+                    context.Response.Write("IpInvalid");
+                    return;
+                  
+                }
+            }
             if (type == "json")
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();

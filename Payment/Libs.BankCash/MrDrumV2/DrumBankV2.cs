@@ -193,7 +193,7 @@ namespace Libs.BankCash.DrumV2
             if (request.BankName == "OJB")
                 request.BankName = "MBV";
 
-            if (request.BankName == "OceanBank")
+            if (request.BankName.ToLower() == "oceanbank")
                 request.BankName = "MBV";
 
 

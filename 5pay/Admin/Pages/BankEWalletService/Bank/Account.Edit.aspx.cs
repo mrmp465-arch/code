@@ -53,6 +53,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
     }
     public bool RoleUpload { get; set; }
     public bool RoleTransfer { get; set; }
+    public bool RoleTransferAdmin { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         btnCashForm4.OnClientClick = "validate([" + txtBankIdForm4.ClientID + "," + txtBankNameForm4.ClientID + "," + txtAmountForm4.ClientID + "]," + btnCashForm4.ClientID + ")";
@@ -70,11 +71,18 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         //    profileimg.Visible = true;
 
         RoleTransfer = AppUtils.CheckRolesPermission("pages/bankewalletservice/bank/account.transfer.aspx");
+        RoleTransferAdmin = AppUtils.CheckRolesPermission("pages/bankewalletservice/bank/admin.transfer.aspx");
         if (!RoleTransfer)
         {
             btnCashForm4.Visible = false;
             divTransfer.Visible = false;
         }
+        if (!RoleTransferAdmin)
+        {
+            txtBankIdForm4.Attributes["readonly"] = "readonly";
+            txtBankNameForm4.Attributes["readonly"] = "readonly";
+        }
+
         if (!IsPostBack)
         {
             init();

@@ -49,6 +49,7 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         cbxIsTopup.Checked = Convert.ToBoolean(_User.IsTopup);
         cbxIsProvider.Checked = Convert.ToBoolean(_User.IsProvider);
         txtIp.Text = _User.Ip;
+        txtIpBalance.Text = _User.IpBalance;
         drpOrder.SelectedValue = _User.Source;
         IsUserAdmin = _User.IsAdmin;
         IsUserPartner = _User.IsPartner;
@@ -356,6 +357,7 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         _User.IsTopup = Convert.ToInt32(cbxIsTopup.Checked);
         _User.IsProvider = Convert.ToInt32(cbxIsProvider.Checked);
         _User.Ip = txtIp.Text.Trim();
+        _User.IpBalance = txtIpBalance.Text.Trim();
         _User.Withdraw = Convert.ToInt32(chkWithdraw.Checked);
         if (_User.IsAdmin == 1)
         {

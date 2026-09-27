@@ -498,10 +498,10 @@ public partial class Default : System.Web.UI.Page
     {
 
         if (partnercode.Contains("sn1"))
-            return true;
+            return false;
 
         if (partnercode.Contains("b23"))
-            return true;
+            return false;
         return false;
     }
     protected void ExportTran2_Click(object sender, EventArgs e)

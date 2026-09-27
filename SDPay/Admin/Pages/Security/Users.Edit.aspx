@@ -54,7 +54,7 @@
                 <li><a href="#sales-chart-partner" data-toggle="tab">Đối tác</a></li>
 
                 <%}%>
-                <%if ( RoleUpadte)
+                <%if (RoleUpadte)
                     {%>
                 <li><a href="#sales-roles" data-toggle="tab">Chức năng quản trị</a></li>
                 <%}%>
@@ -187,6 +187,12 @@
 
                         </div>
                         <div class="form-group">
+                            <label for="txtIp">Ip API số dư</label>
+                            <asp:TextBox ID="txtIpBalance" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
+                            <small>Danh sách IP Cách nhau bằng dấu phẩy</small>
+
+                        </div>
+                        <div class="form-group">
                             <label for="txtIp">User xác nhận</label>
                             <asp:TextBox ID="txtUserConfirm" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
                             <small>Danh sách user Cách nhau bằng dấu phẩy</small>
@@ -275,7 +281,7 @@
                             <asp:TextBox ID="txtRewardBANKOUTTRANFER" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
 
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="txtDiscountMOMO">Chiết khấu momo </label>
                             <asp:HiddenField ID="hdDiscountMOMO" runat="server" />
                             <asp:TextBox ID="txtDiscountMOMO" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
@@ -285,7 +291,7 @@
                             <asp:HiddenField ID="hdDiscountMOMOOUT" runat="server" />
                             <asp:TextBox ID="txtDiscountMOMOOUT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="txtDiscountVTT">Reward Momo </label>
                             <asp:TextBox ID="txtRewardMOMO" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
@@ -298,11 +304,11 @@
                             <asp:HiddenField ID="hdDiscountVTT" runat="server" />
                             <asp:TextBox ID="txtDiscountVTT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="txtDiscountVTT">Chiếu khấu VINA </label>
                             <asp:TextBox ID="txtDiscountVNP" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="txtDiscountVTT">Chiếu khấu MOBI </label>
                             <asp:TextBox ID="txtDiscountVMS" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
