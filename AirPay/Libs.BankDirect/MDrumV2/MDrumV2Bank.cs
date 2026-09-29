@@ -1365,7 +1365,7 @@ namespace Libs.BankDirect.MDrumV2
                 var ck = getck(order.PartnerCode, order.BankCode);
 
                 var rw = getrw(order.PartnerCode, order.BankCode);
-                order.Fee = Convert.ToInt64(callback.Amount * ck / 100);
+                order.Fee = (long)(callback.Amount * ck / 100);
 
                 datacb.Fee = order.Fee;
 

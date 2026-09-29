@@ -219,6 +219,7 @@ namespace Libs.BankCash.DrumV2
 
             if (request.BankName == "OceanBank")
                 request.BankName = "MBV";
+
             if (request.BankName == "Oceanbank")
                 request.BankName = "MBV";
 

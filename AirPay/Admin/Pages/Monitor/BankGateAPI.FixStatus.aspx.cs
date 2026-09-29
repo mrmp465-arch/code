@@ -162,7 +162,9 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
             _BankGateAPI.BankAccountNumber = txtBankAccountNumber.Text;
             var ck = getck(_BankGateAPI.PartnerCode, _BankGateAPI.BankCode);
             var rw = getrw(_BankGateAPI.PartnerCode, _BankGateAPI.BankCode);
-            _BankGateAPI.Fee= Convert.ToInt64(_BankGateAPI.TotalAmount * ck / 100);
+            _BankGateAPI.Fee = (long)(_BankGateAPI.TotalAmount * ck / 100);
+
+
             _BankGateAPI.Reward = Convert.ToInt64(_BankGateAPI.TotalAmount * rw / 100);
            // var partner = new Partners().GetCache(order.PartnerCode);
             //if (!string.IsNullOrEmpty(partner.SMSCommand))
