@@ -863,10 +863,10 @@ namespace Libs.BankDirect.MDrumV2
         }
         public APIResponse Order(APITransaction transaction)
         {
-            if (DateTime.Now.Hour == 23 && DateTime.Now.Minute >= 58)
-            {
-                return new APIResponse((int)ResponseCode.SystemMaintain);
-            }
+            //if (DateTime.Now.Hour == 23 && DateTime.Now.Minute >= 58)
+            //{
+            //    return new APIResponse((int)ResponseCode.SystemMaintain);
+            //}
             try
             {
 

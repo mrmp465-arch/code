@@ -25,6 +25,7 @@ public partial class Pages_Monitor_Config : System.Web.UI.Page
         txtMinBankCashAmount.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("MinBankCashAmount")).DataValue;
         txtMinMomoCashAmount.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("MinMomoCashAmount")).DataValue;
         txtMomoLimitAmoutCash.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("MomoLimitAmoutCash")).DataValue;
+        txtMomoActiveAccount.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("MomoActiveAccount")).DataValue;
         txtBlockAccount.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("BlockAccount")).DataValue;
 
 
@@ -83,6 +84,7 @@ public partial class Pages_Monitor_Config : System.Web.UI.Page
         systemDataConfig.Update("MinMomoCashAmount", txtMinMomoCashAmount.Text);
         systemDataConfig.Update("MinBankCashAmount", txtMinBankCashAmount.Text);
         systemDataConfig.Update("MomoLimitAmoutCash", txtMomoLimitAmoutCash.Text);
+        systemDataConfig.Update("MomoActiveAccount", txtMomoActiveAccount.Text);
         systemDataConfig.DeleteCache();
 
         var _userLog = new UserLog

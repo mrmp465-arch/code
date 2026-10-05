@@ -246,6 +246,12 @@
                             <asp:TextBox ID="txtMomoLimitAmoutCash" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
+                     <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="txtName">Số tài khoản momo active</label>
+                            <asp:TextBox ID="txtMomoActiveAccount" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
 
                     <!-- /.col -->
                 </div>

@@ -101,11 +101,7 @@ namespace Libs.BankCash.DrumV2
             //{
             //    return new APIResponse((int)ResponseCode.SystemMaintain);
             //}
-            if (DateTime.Now.Hour == 0 && DateTime.Now.Minute <= 1 && transaction.PartnerCode != "cn02")
-            {
-
-                return new APIResponse((int)ResponseCode.SystemMaintain);
-            }
+           
             if (request.Type == "momocash")
             {
                 request.BankName = "MOMO";
@@ -292,7 +288,9 @@ namespace Libs.BankCash.DrumV2
             if (blockacount.Contains(request.BankAccountNumber))
             {
 
-                return new APIResponse((int)ResponseCode.BankAccountInvalid);
+                var resultaccount = new APIResponse((int)ResponseCode.BankAccountInvalid);
+                resultaccount.Description = "Tài khoản nhận không hợp lệ hoặc nghi vấn lừa đảo";
+                return resultaccount;
             }
 
 

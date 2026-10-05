@@ -225,8 +225,8 @@
                                             <asp:ListItem Text="Chọn giải pháp:" Value=""></asp:ListItem>
                                             <asp:ListItem Text="APIV2" Value="APIV2"></asp:ListItem>
                                             <asp:ListItem Text="APIV3" Value="APIV3"></asp:ListItem>
-                                            <asp:ListItem Text="APIV4" Value="APIV4"></asp:ListItem>
-                                            <asp:ListItem Text="API" Value="API"></asp:ListItem>
+                                           <%-- <asp:ListItem Text="APIV4" Value="APIV4"></asp:ListItem>
+                                            <asp:ListItem Text="API" Value="API"></asp:ListItem>--%>
                                         </asp:DropDownList>
                                     </div>
                                     <div class="form-group">

@@ -133,7 +133,7 @@
                             <asp:TextBox ID="txtBankPrefix" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
-                     <div style="clear: both"></div>
+                    <div style="clear: both"></div>
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="txtBankPrefix">Block Accounts</label>
@@ -297,7 +297,12 @@
                             <asp:TextBox ID="txtMomoLimitAmoutCash" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
-
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="txtName">Số tài khoản momo active</label>
+                            <asp:TextBox ID="txtMomoActiveAccount" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
                     <!-- /.col -->
                 </div>
                 <!-- /.row -->
@@ -312,26 +317,26 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <script>
-        function checkAll(obj1) {
-            var returnVal = undefined;
-            if (obj1.checked == true) {
+function checkAll(obj1) {
+    var returnVal = undefined;
+    if (obj1.checked == true) {
 
-                returnVal = confirm("Bạn có muốn chọn tất cả?");
-                if (returnVal) {
-                    $(this).attr("checked", true);
-                    $(".CheckAll input").attr("checked", true);
-                }
-            }
-            else {
-
-                returnVal = confirm("Bạn có muốn Hủy chọn tất cả?");
-                if (returnVal) {
-                    $(this).attr("checked", false);
-                    $(".CheckAll input").attr("checked", false);
-                }
-            }
-
-
+        returnVal = confirm("Bạn có muốn chọn tất cả?");
+        if (returnVal) {
+            $(this).attr("checked", true);
+            $(".CheckAll input").attr("checked", true);
         }
-    </script>
+    }
+    else {
+
+        returnVal = confirm("Bạn có muốn Hủy chọn tất cả?");
+        if (returnVal) {
+            $(this).attr("checked", false);
+            $(".CheckAll input").attr("checked", false);
+        }
+    }
+
+
+}
+</script>
 </asp:Content>

@@ -145,10 +145,9 @@
                                 <span class="input-group-addon" style="padding: 5px;">Giải pháp</span>
                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control select2">
                                     <asp:ListItem Text="Tất cả" Value=""></asp:ListItem>
-                                    <asp:ListItem Text="APIV2" Value="APIV2"></asp:ListItem>
-                                    <asp:ListItem Text="APIV3" Value="APIV3"></asp:ListItem>
-                                    <asp:ListItem Text="APIV4" Value="APIV4"></asp:ListItem>
-                                    <asp:ListItem Text="API" Value="API"></asp:ListItem>
+                                    <asp:ListItem Text="Quét His" Value="APIV2"></asp:ListItem>
+                                    <asp:ListItem Text="Notify" Value="APIV3"></asp:ListItem>
+                                   
 
 
                                 </asp:DropDownList>
@@ -181,9 +180,12 @@
                         <div class="col-xs-12 col-sm-6 col-md-2">
                             <asp:Button ID="btApp" runat="server" OnClientClick="return CheckApp()" CssClass="btn btn-info" OnClick="btAppClick" Text="Chuyển tiền"></asp:Button>
                             &nbsp;&nbsp;
-                            <asp:Button ID="btApp2" runat="server" OnClientClick="return CheckApp2()" CssClass="btn btn-info" OnClick="btApp2Click" Text="Bật"></asp:Button>
-                            &nbsp;&nbsp;<asp:Button ID="Button1" runat="server" OnClientClick="return CheckApp3()" CssClass="btn btn-info" OnClick="btApp3Click" Text="Save ảnh"></asp:Button>
+                          
+                            &nbsp;&nbsp;<asp:Button ID="Button1" runat="server" OnClientClick="return CheckApp3()" CssClass="btn btn-info" OnClick="btApp3Click" Text="Save ảnh" Visible="false"></asp:Button>
                         </div>
+                         <div class="col-xs-12 col-sm-6 col-md-2" style="float:right">
+                               <asp:Button ID="btApp2" runat="server" OnClientClick="return CheckApp2()" CssClass="btn btn-info" OnClick="btApp2Click" Text="Bật"></asp:Button>
+                             </div>
                     </div>
 
                     <!-- /.box-<div style="clear: both"></div>header -->

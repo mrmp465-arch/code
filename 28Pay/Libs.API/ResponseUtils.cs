@@ -225,8 +225,7 @@ namespace Libs.API
                 case (int)ResponseCode.BankAccountInvalid:
                     return "Bank Account Invalid";
 
-                case (int)ResponseCode.BankCodeInvalid:
-                    return "Bank Code Invalid";
+              c
                 default:
                     return "";
             }

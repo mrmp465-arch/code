@@ -175,19 +175,19 @@
 
                         </div>
                         <div class="form-group">
-                            <label for="txtIp">Login Whitelist Ip</label>
+                            <label for="txtIp">Login Whitelist Ip (IP để login CMS)</label>
                             <asp:TextBox ID="txtIp" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
                             <small>Danh sách IP Cách nhau bằng dấu phẩy</small>
 
                         </div>
                         <div class="form-group">
-                            <label for="txtIp">API Whitelist Ip</label>
+                            <label for="txtIp">API Whitelist Ip (IP cho api bankin,bankout) </label>
                             <asp:TextBox ID="txtAPIIP" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
                             <small>Danh sách IP Cách nhau bằng dấu phẩy</small>
 
                         </div>
                         <div class="form-group">
-                            <label for="txtIp">Ip API số dư</label>
+                            <label for="txtIp">Ip API số dư (IP cho api get số dư )</label>
                             <asp:TextBox ID="txtIpBalance" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
                             <small>Danh sách IP Cách nhau bằng dấu phẩy</small>
 

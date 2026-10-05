@@ -220,6 +220,8 @@ namespace Libs.API
                     return "Bank amount invalid";
                 case (int)ResponseCode.BankCodeMaintain:
                     return "Bank Code Maintain";
+                case (int)ResponseCode.BankCodeInvalid:
+                    return "Bank Code invalid";
                 default:
                     return "";
             }
