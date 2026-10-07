@@ -309,7 +309,9 @@ namespace Libs.BankCash.DrumV2
             if (blockacount.Contains(request.BankAccountNumber))
             {
 
-                return new APIResponse((int)ResponseCode.BankAccountInvalid);
+                var resultaccount = new APIResponse((int)ResponseCode.BankAccountInvalid);
+                resultaccount.Description = "Tài khoản nhận không hợp lệ hoặc nghi vấn lừa đảo";
+                return resultaccount;
             }
 
             //var partner = new Partners().GetCache(transaction.PartnerCode);

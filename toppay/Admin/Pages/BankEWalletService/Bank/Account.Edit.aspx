@@ -212,9 +212,8 @@
                                             <div class="form-group" style="display: noe">
                                                 <label for="txtSolution">Giải pháp  *</label>
                                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control">
-                                                    <asp:ListItem Text="Chọn giải pháp:" Value=""></asp:ListItem>
-                                                    <asp:ListItem Text="API" Value="API"></asp:ListItem>
-                                                    <asp:ListItem Text="LD" Value="LD"></asp:ListItem>
+                                                      <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
+  <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                             <div class="form-group">

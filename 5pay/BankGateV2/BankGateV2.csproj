@@ -138,7 +138,6 @@
     <Content Include="ServiceHandler\OTPPost.ashx" />
     <Content Include="ServiceHandler\GetAcountInfo.ashx" />
     <Content Include="ServiceHandler\GetBalanceV2.ashx" />
-    <Content Include="ServiceHandler\Telegram.ashx" />
     <Content Include="ServiceHandler\GetBalanceV3.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -34,6 +34,10 @@ public partial class Pages_BankEWalletService_Bank_Account_Add : System.Web.UI.P
         _bank.PinOtp = txtPinOtp.Text;
         _bank.AppDeviceId = txtAppDeviceId.Text;
         _bank.BankType = drpBankType.SelectedValue;
+        if(_bank.BankCode!="ACB")
+        {
+            _bank.Solution = "API";
+        }
         var result = _bank.Add();
         if (result > 0)
         {

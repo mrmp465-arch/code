@@ -198,12 +198,13 @@
                                                 <asp:TextBox ID="txtBankPass" TextMode="Password" runat="server" CssClass="form-control" placeholder="Mật khẩu"></asp:TextBox>
                                             </div>
 
-                                            <div class="form-group" style="display: none">
+                                            <div class="form-group" >
                                                 <label for="txtSolution">Giải pháp  *</label>
                                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control">
                                                     <asp:ListItem Text="Chọn giải pháp:" Value=""></asp:ListItem>
-                                                    <asp:ListItem Text="API" Value="API"></asp:ListItem>
-                                                    <asp:ListItem Text="LD" Value="LD"></asp:ListItem>
+                                                   
+                                                    <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
+                                                     <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                             <div class="form-group">
@@ -404,24 +405,24 @@
                     /*  UnLoading();*/
                 }
             });
-        }
+}
 
 
 
 
-        //$(document).ready(function () {
-        //    $('.base64-img').on('click', function () {
-        //        var src = $(this).children('img').first().attr('src');
-        //        $('#zoom-img').attr('src', src);
-        //        $('#zoom-modal').css('display', 'flex'); // sho
-        //    });
+//$(document).ready(function () {
+//    $('.base64-img').on('click', function () {
+//        var src = $(this).children('img').first().attr('src');
+//        $('#zoom-img').attr('src', src);
+//        $('#zoom-modal').css('display', 'flex'); // sho
+//    });
 
-        //    $('#zoom-modal').on('click', function () {
-        //        $(this).hide();
-        //    });
-        //});
+//    $('#zoom-modal').on('click', function () {
+//        $(this).hide();
+//    });
+//});
 
-    </script>
+</script>
     <style>
         input[type=file] {
             font-size: 10px;

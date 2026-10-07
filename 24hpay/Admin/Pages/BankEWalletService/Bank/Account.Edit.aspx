@@ -71,7 +71,7 @@
                                             <div class="callout callout-success" id="calloutForm4" runat="server" visible="False">
                                                 <p id="resTextForm4" runat="server"><i>Bạn đã rút tiền thành công.</i></p>
                                             </div>
-                                            <div class="form-group" style="display:none">
+                                            <div class="form-group" style="display: none">
                                                 <label for="drpBankCode4">Chọn từ tài khoản riêng *</label>
 
                                                 <asp:DropDownList ID="drpBankCode4" runat="server" CssClass="form-control select2">
@@ -191,9 +191,8 @@
                                     <div class="form-group">
                                         <label for="txtSolution">Giải pháp  *</label>
                                         <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control">
-                                            <asp:ListItem Text="Chọn giải pháp:" Value=""></asp:ListItem>
-                                            <asp:ListItem Text="API" Value="API"></asp:ListItem>
-                                            <asp:ListItem Text="LD" Value="LD"></asp:ListItem>
+                                            <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
+                                            <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
                                         </asp:DropDownList>
                                     </div>
                                     <div class="form-group">
@@ -366,7 +365,7 @@
 
                 var result = this.value.split("-");
                 $("#<%= drpBankCodeForm4.ClientID%>").val(result[0]);
-         $("#<%= txtBankNameForm4.ClientID%>").val(result[1]);
+                $("#<%= txtBankNameForm4.ClientID%>").val(result[1]);
                  $("#<%= txtBankIdForm4.ClientID%>").val(result[2]);
              }
 

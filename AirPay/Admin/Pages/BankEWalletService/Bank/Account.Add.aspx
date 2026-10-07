@@ -116,9 +116,8 @@
                         <div class="form-group">
                             <label for="txtSolution">Giải pháp  *</label>
                             <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control" required>
-                                <%-- <asp:ListItem Text="Chọn giải pháp:" Value=""></asp:ListItem>--%>
-                                <asp:ListItem Text="API" Value="API" Selected="True"></asp:ListItem>
-                                <asp:ListItem Text="LD" Value="LD"></asp:ListItem>
+                                <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
+                                <asp:ListItem Text="Bản mới" Value="APIV2" Selected="True"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                         <div class="form-group">
@@ -168,12 +167,12 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('#TableResponsive').DataTable({
-                responsive: true
-                , "autoWidth": false, "paging": false, "searching": false, "info": false, "ordering": false
-            });
-            new $.fn.dataTable.FixedHeader(table);
-        });
-    </script>
+$(document).ready(function () {
+    var table = $('#TableResponsive').DataTable({
+        responsive: true
+        , "autoWidth": false, "paging": false, "searching": false, "info": false, "ordering": false
+    });
+    new $.fn.dataTable.FixedHeader(table);
+});
+</script>
 </asp:Content>

@@ -83,8 +83,8 @@ public class Telegram : IHttpHandler
                         if (checkorder != null)
                         {
 
-                            SendTeleV4(resObj.message.chat.id.ToString(), "Giao dịch thành công | Transaction Successful | 交易成功", message_id);
-                            
+                            SendTeleV4(resObj.message.chat.id.ToString(), "Giao dịch thành công | Transaction success | 交易成功 => " + checkorder.Amount.ToString("N0").Replace(".", ","), message_id);
+
                             return;
                         }
 
@@ -99,8 +99,8 @@ public class Telegram : IHttpHandler
                         }
                         if (trans.Status >= 1)
                         {
-                            SendTeleV4(resObj.message.chat.id.ToString(), "Giao dịch thành công | Transaction Successful | 交易成功", message_id);
-                            
+                            SendTeleV4(resObj.message.chat.id.ToString(), "Giao dịch thành công | Transaction success | 交易成功 => " + trans.Amount.ToString("N0").Replace(".", ","), message_id);
+
                             return;
                         }
                         else
@@ -208,8 +208,8 @@ public class Telegram : IHttpHandler
                             //    ResponseContent = javaScriptSerializer.Serialize(checkorder)
                             //};
                             SendTeleV4(resObj.message.chat.id.ToString(), "Lệnh out thành công | Payout Successful | 出款成功 ", message_id);
-                           
-                           
+
+
 
                             return;
                         }
@@ -226,7 +226,7 @@ public class Telegram : IHttpHandler
                         if (trans.Status >= 1)
                         {
                             SendTeleV4(resObj.message.chat.id.ToString(), "Lệnh out thành công | Payout Successful | 出款成功 ", message_id);
-                           
+
 
                             return;
                         }

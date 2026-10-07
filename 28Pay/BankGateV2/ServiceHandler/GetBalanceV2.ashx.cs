@@ -23,6 +23,14 @@ namespace BankGateV2.ServiceHandler
             var signature = HttpContext.Current.Request.QueryString["signature"];
             var type = HttpContext.Current.Request.QueryString["type"];
 
+            if (!string.IsNullOrEmpty(signature))
+            {
+                if (string.IsNullOrEmpty(partnerCode))
+                {
+                    partnerCode = context.Request.Headers["x-api-code"];
+                }
+            }
+
             if (string.IsNullOrEmpty(partnerCode))
             {
                 var jsonString = String.Empty;
@@ -32,10 +40,21 @@ namespace BankGateV2.ServiceHandler
                     jsonString = inputStream.ReadToEnd();
                 }
                 JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
-                var request = javaScriptSerializer.Deserialize<RequestBalance>(jsonString);
-                partnerCode = request.partnerCode;
-                signature = request.signature;
-                type = request.type;
+                if (!string.IsNullOrEmpty(jsonString))
+                {
+                    var request = javaScriptSerializer.Deserialize<RequestBalance>(jsonString);
+
+                    partnerCode = request.partnerCode;
+                    signature = request.signature;
+                    type = request.type;
+                }
+
+            }
+
+            if (string.IsNullOrEmpty(partnerCode))
+            {
+                context.Response.Write("using http get with param x-form: partnerCode,type,signature");
+                return;
             }
             var partner = new Partners().GetCache(partnerCode);
             //Kiểm tra _Partner tồn tại hoặc Active không

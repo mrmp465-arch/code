@@ -36,7 +36,10 @@ public partial class Pages_BankEWalletService_Bank_Account_Add : System.Web.UI.P
         _bank.BankType = drpBankType.SelectedValue;
         _bank.CloudPhoneId = txtCloudPhoneId.Text;
         _bank.Note = txtNote.Text;
-
+        if (_bank.BankCode != "ACB")
+        {
+            _bank.Solution = "API";
+        }
         var result = _bank.Add();
 
 

@@ -219,13 +219,14 @@ namespace Libs.API
                 case (int)ResponseCode.UndefinedError:
                     return "Error undefined";
                 case (int)ResponseCode.BankAmountInvalid:
-                    return "Bank amount invalid";
+                    return "Bank amount Invalid";
                 case (int)ResponseCode.BankCodeMaintain:
                     return "Bank Code Maintain";
                 case (int)ResponseCode.BankAccountInvalid:
                     return "Bank Account Invalid";
 
-              c
+                case (int)ResponseCode.BankCodeInvalid:
+                    return "Bank Code Invalid";
                 default:
                     return "";
             }
