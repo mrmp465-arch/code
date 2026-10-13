@@ -43,7 +43,7 @@ namespace BankGateV2.ServiceHandler
                         bankCode = Regex.Replace(bankCode, @"[^a-zA-Z0-9]", "");
                         bankId = Regex.Replace(bankId, @"[^a-zA-Z0-9]", "");
 
-                        string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", bankCode, bankId);
+                        string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", bankCode, bankId);
                         var index = 1;
                         if (bank.BankCode == "VPB")
                         {

@@ -24,7 +24,7 @@ public class DeleteVideo : IHttpHandler
             fileName = Path.GetFileName(fileName);
             var bankCode = AppUtils.RequestCode("bankcode");
             var bankId = AppUtils.RequestCode("bankId");
-            string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", bankCode, bankId);
+            string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", bankCode, bankId);
          
 
             string filePath = Path.Combine(UploadFolderPhysical, fileName);

@@ -27,7 +27,7 @@ public partial class Pages_Momo_Account_Delete : System.Web.UI.Page
             _userLog.Add();
             try
             {
-                string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", "MOMO", _Momo.MomoId);
+                string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", "MOMO", _Momo.MomoId);
                 DeleteAllFiles(UploadFolderPhysical);
             }
             catch

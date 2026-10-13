@@ -47,7 +47,7 @@
 
                 <% if (AppUtils.IsAdmin)
                     { %>
-                <div class="box">
+                <div class="box" runat="server" id="dvNap">
                     <div class="box-header with-border">
                         <h3 class="box-title">Tạo lệnh nạp tiền</h3>
                     </div>
@@ -67,11 +67,12 @@
 
 
                             </div>
+                           
                             <div class="col-md-3">
 
                                 <label for="txtName" class="col-md-4" style="margin-top: 8px; padding: 0 5px">Số tiền nhận</label>
 
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <asp:TextBox ID="txtAmount2" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                                 </div>
                                 <label id="textMoneyVND2" class="control-label col-md-3" style="margin-top: 8px">
@@ -85,7 +86,7 @@
 
                                 <label for="txtName" class="col-md-4" style="margin-top: 8px; padding: 0 5px">Số tiền cộng</label>
 
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <asp:TextBox ID="txtAmount" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                                 </div>
                                 <label id="textMoneyVND" class="control-label col-md-3" style="margin-top: 8px">
@@ -109,7 +110,7 @@
 
                             </div>
                             <div class="col-md-1">
-                                <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary pull-right" OnClick="btAdd_Click2" Text="Tạo lệnh"></asp:Button>
+                                <asp:Button ID="Button1" runat="server" CssClass="btn btn-primary pull-right"  OnClientClick="return confirm('Bạn có chắc muốn tạo lệnh không?');"  OnClick="btAdd_Click2" Text="Tạo lệnh"></asp:Button>
 
                             </div>
                             <!-- /.col -->
@@ -143,7 +144,7 @@
                             <asp:DropDownList ID="drpPartner" runat="server" CssClass="form-control select2">
                             </asp:DropDownList>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-2">
+                        <div class="col-xs-12 col-sm-6 col-md-2" style="display:none">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <asp:CheckBox runat="server" ID="cbByUsdt" Checked="false" />
@@ -224,8 +225,8 @@
                                             <td><%#Eval("UserName")%></td>
                                             <% } %>
 
-                                            <td><%#Convert.ToInt64(Eval("Money")).ToString("N0").Replace(",", ".") %></td>
-                                            <td><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(",", ".") %></td>
+                                            <td><%#Convert.ToInt64(Eval("Money")).ToString("N0").Replace(".", ",") %></td>
+                                            <td><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
                                             <td><%# Eval("Note") %></td>
 
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}") %>  </td>

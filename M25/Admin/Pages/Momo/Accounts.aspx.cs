@@ -193,7 +193,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 //{
                 //    try
                 //    {
-                //        string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", "MOMO", _Bank.MomoId);
+                //        string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", "MOMO", _Bank.MomoId);
                 //        if (!Directory.Exists(UploadFolderPhysical))
                 //        {
                 //            Directory.CreateDirectory(UploadFolderPhysical);
@@ -256,7 +256,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                
                     try
                     {
-                        string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", "MOMO", _Bank.MomoId);
+                        string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", "MOMO", _Bank.MomoId);
                         if (!Directory.Exists(UploadFolderPhysical))
                         {
                             Directory.CreateDirectory(UploadFolderPhysical);

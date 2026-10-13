@@ -29,7 +29,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Delete : System.Web.U
             _userLog.Add();
             try
             {
-                string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", _bank.BankCode, _bank.BankId);
+                string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", _bank.BankCode, _bank.BankId);
                 DeleteAllFiles(UploadFolderPhysical);
             }
             catch

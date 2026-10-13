@@ -18,13 +18,26 @@ using System.Data;
 public partial class Pages_Security_UserDeposit : System.Web.UI.Page
 {
     public string UrlHistory;
+    public bool IsDL { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.UserDeposit);
         Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
         Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         btView.Text = Resources.Pay.View;
-       
+        if (AppUtils.IsAdmin)
+        {
+            if (!AppUtils.CheckRolesPermission("pages/security/userdepositadd.aspx"))
+                dvNap.Visible = false;
+        }
+        if (AppUtils.IsTopup)
+        {
+            var partnerlist = new Partners().GetList();
+            if (partnerlist.Exists(x => x.SMSUrl == AppUtils.UserName))
+            {
+                IsDL = true;
+            }
+        }
         if (!IsPostBack)
         {
             init();
@@ -79,7 +92,7 @@ public partial class Pages_Security_UserDeposit : System.Web.UI.Page
         if (AppUtils.IsAdmin)
         {
             drpPartner.Items.Insert(0, new ListItem("Tài khoản:", ""));
-            drpTop.SelectedValue = "500";
+            drpTop.SelectedValue = "100";
         }
         else
         {
@@ -152,7 +165,7 @@ public partial class Pages_Security_UserDeposit : System.Web.UI.Page
                 return;
 
             }
-            TelegramClient.SendTeleV2("-4762440012", "Tạo lệnh nạp tiền  " + amount.ToString("#,#").Replace(",", ".") + " từ user " + AppUtils.UserName + " Mã lệnh " + result.ToString());
+            TelegramClient.SendTeleV2("-5291354169", "Tạo lệnh nạp tiền  " + amount.ToString("#,#").Replace(",", ".") + " từ user " + AppUtils.UserName + " Mã lệnh " + result.ToString());
             AlertSuccesss.Text = "Tạo lệnh thành công";
             Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#MAlertSuccess').modal()}); ", true);
 
@@ -248,28 +261,36 @@ public partial class Pages_Security_UserDeposit : System.Web.UI.Page
         {
             var lstDataBank= new UserDeposit().GetList(top, name, status, fromDate, requestTime);
            
-            if (cbByUsdt.Checked == true)
-            {
-                lstDataBank = lstDataBank.Where(m => m.UserName =="cn02").ToList();
+            //if (cbByUsdt.Checked == true)
+            //{
+            //    lstDataBank = lstDataBank.Where(m => m.UserName =="cn02").ToList();
 
-            }
+            //}
             rptList.DataSource = lstDataBank;
             //NLogLogger.Info(new string[] { "BindData", "BindData", requestTime.ToString(), fromDate.ToString() });
             rptList.DataBind();
-            var lstDataBanksu = lstDataBank.Where(m => m.Status == 1 && m.UserName == "cn02" &&  m.Amount/m.Money>20000);
-            long Money = lstDataBanksu.Sum(x => x.Money);
-            long Amount = lstDataBanksu.Sum(x => x.Amount);
-            if(Money>0)
-            {
-                int rate = (int)(Amount / Money);
-                lblTotalReport.Text = String.Format("{0} : {1} - {2} : {3} - {4} : {5} - {6} : {7}", "Số lệnh nạp", lstDataBanksu.Count(), "Số tiền VND ", Amount.ToString("N0").Replace(".", ","), "Số usdt", Money, "Tỷ giá trung bình", rate);
+            //var lstDataBanksu = lstDataBank.Where(m => m.Status == 1 && m.UserName == "cn02");
+            //long Money = lstDataBanksu.Sum(x => x.Money);
+            //long Amount = lstDataBanksu.Sum(x => x.Amount);
+            //if(Money>0)
+            //{
+            //    int rate = (int)(Amount / Money);
+            //    lblTotalReport.Text = String.Format("{0} : {1} - {2} : {3} - {4} : {5} - {6} : {7}", "Số lệnh nạp", lstDataBanksu.Count(), "Số tiền VND ", Amount.ToString("N0").Replace(".", ","), "Số usdt", Money, "Tỷ giá trung bình", rate);
 
-            }
+            //}
 
         }
         else
         {
             name = AppUtils.UserName;
+
+            if (!AppUtils.IsPartner && !IsDL)
+            {
+
+
+                var lstPartner = new Partners().GetListByUserId(AppUtils.UserID);
+                name = lstPartner.FirstOrDefault().Name;
+            }
             rptList.DataSource = new UserDeposit().GetList(top, name, status, fromDate, requestTime);
             rptList.DataBind();
             var user = new Users().GetByUserName(name);

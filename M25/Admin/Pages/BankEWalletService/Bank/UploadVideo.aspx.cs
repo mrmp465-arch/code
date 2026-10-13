@@ -231,7 +231,7 @@ public partial class Pages_BankEWalletService_Bank_UploadVideo : System.Web.UI.P
         bankCode = Regex.Replace(bankCode, @"[^a-zA-Z0-9]", "");
         bankId = Regex.Replace(bankId, @"[^a-zA-Z0-9]", "");
 
-        string UploadFolderPhysical = Path.Combine(@"Z:\FASTPAY", bankCode, bankId);
+        string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", bankCode, bankId);
 
         if (!Directory.Exists(UploadFolderPhysical))
         {
