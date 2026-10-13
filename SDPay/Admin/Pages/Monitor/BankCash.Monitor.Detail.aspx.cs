@@ -37,7 +37,7 @@ public partial class Pages_Monitor_BankCash_Monitor_Detail : System.Web.UI.Page
 
         _BankCash = _BankCash.Get();
 
-        if (_BankCash.Status == 1 || _BankCash.Status == -1)
+        if (_BankCash.Status == 1 || _BankCash.Status == -1|| _BankCash.Status == -357)
         {
             lnCallback.Visible = true;
         }

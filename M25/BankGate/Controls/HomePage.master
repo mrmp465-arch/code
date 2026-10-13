@@ -1,0 +1,30 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="HomePage.master.cs" Inherits="Controls_HomePage" %>
+<%@ Register Src="~/Controls/Header.ascx" TagName="HeaderControl" TagPrefix="uc" %>
+<%@ Register Src="~/Controls/Footer.ascx" TagName="FooterControl" TagPrefix="uc" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>VGG Payment - Cổng thanh toán</title>
+    <link rel="shortcut icon" href="/bankgate/resources/images/favicon.ico">
+	<link href="/bankgate/resources/styles/style.css" type="text/css" rel="stylesheet" />
+    <link href="/bankgate/resources/styles/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link href="/bankgate/resources/styles/978.css" type="text/css" rel="stylesheet" />
+    <link href="/bankgate/resources/styles/style1.css" type="text/css" rel="stylesheet" />
+    <script src="/bankgate/resources/js/jquery-1.8.1.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+</head>
+<body>
+    <form id="form1" runat="server">
+	<div class="bg_left">
+        <uc:HeaderControl runat="server" ID="HeaderControl" />
+        
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+        
+        <uc:FooterControl runat="server" ID="FooterControl" />
+    </div><!--END bg_left-->
+    </form>
+</body>
+</html>

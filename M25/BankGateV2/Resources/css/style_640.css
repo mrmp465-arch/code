@@ -1,0 +1,47 @@
+@media only screen and (max-width: 640px), only screen and (max-device-width: 640px) {
+a.banner_game img{
+	float: right;
+	height: auto;
+	width: 40%;
+	margin-left: 1%;
+	margin-top: 3%;
+}
+li.col_box1{
+	width:25%;
+	color:#4a4a4a;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:40px;
+	margin-right: 5%;
+	text-align: right;
+	}
+li.col_box2{
+	width:70%;
+	color:#FF0004;
+	font-size:14px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:40px;
+	}
+li.col_box2 input{
+	float:left;
+	height:38px;
+	border:solid 1px #c4c4c4;
+	border-radius:4px;
+	padding:0 2%;
+	width:80%;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:37px;
+	}
+ul.bank li a span img {
+    display: none;
+    position: absolute;
+    width: 20%;
+    height: auto;
+    top: -15%;
+    right: -5px;
+}
+}

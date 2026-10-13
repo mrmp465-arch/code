@@ -1,0 +1,140 @@
+﻿@using CMS.Data.DTO
+@{
+    ViewBag.Title = "Danh sách người dùng";
+    List<Users> ListUser = ViewBag.UserList;
+    Users CurrentUser = ViewBag.CurrentUser;
+}
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Subheader-->
+    <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
+        <div class="container-fluid ">
+            <!--begin::Details-->
+            <div class="filter-inline mr-2">
+                <!--begin::Title-->
+                <div class="filter-form mb-2  align-items-center">
+                    <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">@ViewBag.Title</h5>
+                </div>
+                <!--end::Title-->
+                <!--begin::Separator-->
+                <!--end::Separator-->
+                <!--begin::Search Form-->
+                <div class="filter-form mb-2 ">
+
+                    <form class="ml-5">
+                        <div class="input-group input-group-sm input-group-solid" style="max-width: 175px">
+                            <input type="text" class="form-control" id="txtEmail" placeholder="Tìm kiếm...">
+
+                        </div>
+                    </form>
+                </div>
+                <div class="filter-form mb-2  ">
+
+                    <form class="ml-5">
+
+                        <div class="input-group input-group-sm input-group-solid" style="max-width: 175px">
+
+                            <select class="form-control" id="ddlActive">
+                                <option value="-1">--Trạng thái--</option>
+                                <option value="1">Hoạt Động</option>
+                                <option value="0">Không Hoạt Động</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="float-right filter-form  align-items-end">
+
+                    <!--begin::Button-->
+                    <a href="@Url.Action("AddUserInfo")" class="float-right mb-2 btn btn-light-primary font-weight-bold py-2 px-5 ml-2">Thêm mới</a>
+                    <!--end::Button-->
+
+                </div>
+                <!--end::Search Form-->
+
+            </div>
+            <!--end::Details-->
+            <!--begin::Toolbar-->
+            <!--end::Toolbar-->
+        </div>
+    </div>
+    <!--end::Subheader-->
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Card-->
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-loaded" id="kt_datatable" style="position: static; zoom: 1;">
+
+                        </div>
+                    </div>
+
+                    <div class="datatable-pager datatable-paging-loaded" id="pager">
+                    </div>
+
+                </div>
+
+            </div>
+            <!--end::Card-->
+
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            GetList(1);
+            var parameters = {
+            };
+            $("#form").keypress(function (event) {
+                if (event.which == 13) {
+                    GetList(1);
+                }
+            });
+            $("#btnSearch").click(function () {
+                GetList(1);
+            });
+            $("#ddlActive").change(function () {
+                GetList(1);
+            });
+            $("#ddlUser").change(function () {
+                GetList(1);
+            });
+            function GetList(currentPage) {
+                parameters = {
+                    isActive: $('#ddlActive :selected').val(),
+                    email: $("#txtEmail").val(),
+                    //createdUser: $("#ddlUser").val(),
+                    currentPage: currentPage
+                };
+                btnSearch(currentPage);
+            };
+            function btnSearch(currentPage) {
+
+                var urlRequestAns =  "@Url.Action("ListUsers")";
+                $.ajax({
+                    type: 'GET',
+                    url: urlRequestAns,
+                    data: parameters,
+                    success: function (data) {
+                        $("#kt_datatable").html(data);
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+
+        });
+
+</script>
+
+

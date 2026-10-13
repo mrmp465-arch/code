@@ -1,0 +1,47 @@
+@media only screen and (max-width: 414px), only screen and (max-device-width: 414px) {
+a.banner_game img {
+    float: right;
+    height: auto;
+    width: 40%;
+    margin-left: 1%;
+    margin-top: 2%;
+}	
+.step_block ul li{
+	display: inline-block;
+	margin: 0 .5%;
+	width: 31.5%;
+	height: 50px;
+	background: #dcdcdc;
+	border-radius: 5px;
+}
+.step_block ul li p {
+    display: block;
+    font-family: 'Conv_UTM Alter Gothic', Tahoma, Geneva, sans-serif;
+    color: #4a4a4a;
+    line-height: 45px;
+    font-size: .7rem;
+    text-transform: uppercase;
+}
+.step_block ul li p strong{
+	font-size: .9rem;
+}
+li.col_box2 input {
+    float: left;
+    height: 38px;
+    border: solid 1px #c4c4c4;
+    border-radius: 4px;
+    padding: 0 2%;
+    width: 90%;
+    font-size: 12px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: bold;
+    line-height: 37px;
+}
+ul.bank li {
+    display: inline-block;
+    width: 22%;
+    height: auto;
+    margin: 0 1%;
+    margin-bottom: 10px;
+}
+}

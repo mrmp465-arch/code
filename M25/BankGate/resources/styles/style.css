@@ -1,0 +1,31 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Segoe UI", "Segoe UI Light";
+	font-size: 14px;
+	background: url(/bankgate/resources/images/bg2.png)  right 180px no-repeat #eef0f0;
+}
+
+.bg_left {
+	background: url(/bankgate/resources/images/bg3.png) left bottom no-repeat;
+}
+
+img {
+	border: none;
+}
+
+a {
+	color: #1191d0;
+	text-decoration: none;
+}
+ ul,li {
+	margin: 0;
+	padding: 0;	
+}
+
+::selection{color:#fff; background: #8dc73f;}
+::-moz-selection{color:#fff; background: #8dc73f;} 

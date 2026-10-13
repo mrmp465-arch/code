@@ -1,0 +1,68 @@
+﻿
+@using CMS.Data.DTO
+@model List<UsersLog>
+
+<table class="datatable-table ">
+    <thead class="datatable-head">
+        <tr class="datatable-row" style="left: 0px;">
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">ErrorTime</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">User</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">FunctionCode</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Mô tả</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">ClientIP</th>
+        </tr>
+    </thead>
+    @if (Model.Count > 0)
+    {
+        <tbody class="datatable-body" style="">
+            @foreach (var obj in Model)
+            {
+                <tr class="datatable-row" style="left: 0px;">
+                    <td class="datatable-cell">@string.Format("{0:dd/MM/yyyy HH:mm}", obj.LogTime)</td>
+                    <td class="datatable-cell">@obj.UserName</td>
+                    <td class="datatable-cell">@obj.FunctionCode</td>
+                    <td class="datatable-cell"style="text-align:left!important">@obj.Description</td>
+                    <td class="datatable-cell">@obj.ClientIP</td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>
+<script type="text/javascript">
+        $(document).ready(function () {
+            var PageOnSize = '@ViewBag.PageSize';
+            var CurrentPage = '@ViewBag.CurrentPage';
+
+            $("#pager").pager({
+                pagenumber: CurrentPage,
+                pagecount: Math.ceil('@ViewBag.TotalRecord' / PageOnSize),
+                buttonClickCallback: function (page) { BindDataRequest(page); }
+            });
+            function BindDataRequest(currentPage) {
+                var params = {
+                    'FromDate': $("#fromDate").val(),
+                    'ToDate': $("#toDate").val(),
+                    
+                    'currentPage': currentPage,
+                    'pageSize': PageOnSize
+                };
+                params.currentPage = currentPage;
+                var urlRequestAns = "@Url.Action("ListUserLog")";
+                Utils.Loading();
+                $.ajax({
+                    type: 'GET',
+                    url: urlRequestAns,
+                    data: params,
+                    success: function (data) {
+                        $("#UserLogPartial").html(data);
+                        Utils.UnLoading();
+                    },
+                    error: function () {
+                        Utils.UnLoading();
+                    }
+                });
+            };
+
+        });
+</script>
+

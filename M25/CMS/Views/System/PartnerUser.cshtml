@@ -1,0 +1,64 @@
+﻿@using CMS.Data.DTO
+@using Libs.API
+@model List<CMS.Data.DTO.UserPartner>
+@{
+
+    List<Partners> PartnerList = ViewBag.PartnerList;
+
+}
+<div class="row" id="ContentPopUp">
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header"><span class="glyphicon"></span>Phân quyền đối tác : @ViewBag.UserName </div>
+            <div class="box-body">
+
+                <div class="table-responsive">
+                    <div class="form-group row">
+                        @foreach (var cate in PartnerList)
+                        {
+                            if (Model.Exists(x => x.PartnerId == cate.PartnerID))
+                            {
+                                <div class="col-xxl-4">
+                                    <input name="checkcar" type="checkbox" class="chkRole" onclick="delRole('@Model.FirstOrDefault(x => x.PartnerId == cate.PartnerID).UserPartnerId');" checked />  @cate.PartnerCode
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-xxl-4">
+                                    <input name="checkcar" type="checkbox" class="chkRole" onclick="setRole('@ViewBag.UserId','@cate.PartnerID','@cate.PartnerCode');" />  @cate.PartnerCode
+                                </div>
+                            }
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog {
+        width: 80% !important;
+        height: 98% !important;
+        max-width:700px;
+    }
+</style>
+<script>
+    function setRole(userId, partnerId, partnerCode) {
+       $.post('@Url.Action("UserSetPartner", "System")',
+                    { "userId": userId, "partnerId": partnerId, "partnerCode": partnerCode },
+                               function (data) {
+
+                               });
+
+    }
+    function delRole(userpartnerId) {
+        $.post('@Url.Action("UserDelPartner", "System")',
+            { "userpartnerId": userpartnerId},
+                               function (data) {
+
+                               });
+
+    }
+</script>

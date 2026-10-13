@@ -1,0 +1,72 @@
+﻿@using Libs.Report
+@using Libs.API
+@using CMS.Utility
+@model List<CardAPILog>
+
+<table class="datatable-table ">
+    <thead class="datatable-head">
+        <tr class="datatable-row" style="left: 0px;">
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">TransId</th>
+
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Đối tác</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">RefCode</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Seri</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Pin</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Mệnh giá </th>
+
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Loại thẻ</th>
+            @if (ViewBag.UserType == 1 || ViewBag.UserType == 4)
+            {
+                <th class="datatable-cell-left datatable-cell datatable-cell-sort"> Provider </th>
+            }
+
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Time</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">LastTime</th>
+            <th class="datatable-cell-left datatable-cell datatable-cell-sort">Trạng thái</th>
+            @*<th class="datatable-cell-left datatable-cell datatable-cell-sort">Chức năng</th>*@
+        </tr>
+    </thead>
+    <tbody class="datatable-body" style="">
+        @if (Model.Count > 0)
+        {
+            foreach (var obj in Model)
+            {
+
+        <tr class="datatable-row" style="left: 0px;">
+
+            <td class="datatable-cell"><div class="font-weight-bold">@obj.TransactionID </div></td>
+            <td class="datatable-cell">@obj.PartnerCode</td>
+            <td class="datatable-cell">@obj.RequestNo</td>
+            <td class="datatable-cell">@obj.CardSerial</td>
+            <td class="datatable-cell">@obj.CardCode</td>
+
+            <td class="datatable-cell">@StringUtils.InsertCommaNoStyle(obj.Amount.ToString())/@StringUtils.InsertCommaNoStyle(obj.AmountUser.ToString())</td>
+            <td class="datatable-cell">@obj.CardType</td>
+            @if (ViewBag.UserType == 1 || ViewBag.UserType == 4)
+            {
+                <td> @obj.Provider </td>
+            }
+            <td class="datatable-cell">@string.Format("{0:dd/MM/yyyy HH:mm:ss}", obj.CreatTime)</td>
+            <td class="datatable-cell">@string.Format("{0:dd/MM/yyyy HH:mm:ss}", obj.LastTime)</td>
+            <td class="datatable-cell">@obj.Status</td>
+            @*<td class="datatable-cell">
+                <a href="javascript:" onclick="ViewLog('@(Encrypt.Base64Encode(obj.TransactionID))')">Xem</a>
+
+            </td>*@
+        </tr>
+
+            }
+        }
+    </tbody>
+</table>
+<script>
+    function BindDataRequest() {
+        return;
+    }
+    function ViewLog(id) {
+        var url = "/Card/ViewLog/" + id;
+        var confirmFunc = BindDataRequest();
+        Utils.PopupManager(url, confirmFunc);
+    }
+    
+</script>

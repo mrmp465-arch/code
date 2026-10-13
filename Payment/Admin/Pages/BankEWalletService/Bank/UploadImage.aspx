@@ -32,7 +32,7 @@
                     <div class="nav-tabs-custom">
                         <!-- Tabs within a box -->
                         <ul class="nav nav-tabs pull-right ui-sortable-handle" id="accountTabs">
-                              <li class=""><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankUploadVideo%>?id=<%=Id%>">Video</a> </li>
+                            <li class=""><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankUploadVideo%>?id=<%=Id%>">Video</a> </li>
                             <li class="active"><a href="#account-Ảnh" data-toggle="tab">Ảnh</a></li>
                             <li class=""><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountEdit%>?id=<%=Id%>#balance-info">Chuyển tiền</a></li>
                             <li><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountEdit%>?id=<%=Id%>#account-info">Thông tin tài khoản</a></li>
@@ -55,13 +55,22 @@
                                     </div>
                                     <br />
                                     <br />
-                                    <b>Lưu ý up ảnh cho VPB</b>
-                                    <h5>- Ảnh nhìn thẳng: từ 1 đến 4</h5>
-                                    <h5>- Ảnh ngẩng mặt: ảnh 5 </h5>
-                                    <h5>- Ảnh cúi mặt: ảnh 6 </h5>
-                                    <h5>- Ảnh quay trái: ảnh 7 </h5>
-                                    <h5>- Ảnh quay phải: ảnh 8 </h5>
-                                    <h5>- Kích thước ảnh :1080x1440 </h5>
+                                    <asp:Panel runat="server" ID="pnVPB" Visible="false">
+                                        <b>Lưu ý up ảnh cho VPB</b>
+                                        <h5>- Ảnh nhìn thẳng: từ 1 đến 4</h5>
+                                        <h5>- Ảnh ngẩng mặt: ảnh 5 </h5>
+                                        <h5>- Ảnh cúi mặt: ảnh 6 </h5>
+                                        <h5>- Ảnh quay trái: ảnh 7 </h5>
+                                        <h5>- Ảnh quay phải: ảnh 8 </h5>
+                                        <h5>- Kích thước ảnh :1080x1440 </h5>
+                                    </asp:Panel>
+                                    <asp:Panel runat="server" ID="pnACB" Visible="false">
+                                        <b>Lưu ý up ảnh cho ACB</b>
+                                        <h5>- Ảnh bình thường: ảnh 1 </h5>
+                                        <h5>- Ảnh gần: ảnh 2 </h5>
+                                        
+                                    </asp:Panel>
+
                                 </div>
                                 <div class="col-md-9">
                                     <blockquote id="profileimg" runat="server" style="border-color: blue" visible="true">
@@ -175,7 +184,7 @@
                                         <asp:Button ID="btAdd" runat="server" Text="Cập nhật" CssClass="btn btn-info " OnClick="btAdd_Click"></asp:Button>
                                         &nbsp;
                                          <asp:Button ID="btSave" runat="server" Text="Save DB" CssClass="btn btn-info " OnClick="btSave_Click"></asp:Button>
-                                         &nbsp;
+                                        &nbsp;
                                         <asp:Button ID="btCancel" runat="server" Text="Hủy" CausesValidation="false" CssClass="btn btn-default pull-right" OnClick="btCancel_Click"></asp:Button>
                                     </div>
                                 </div>
@@ -256,13 +265,13 @@
         function deleteimg6() {
             if (confirm("Bạn có muỗn xóa ảnh?")) {
                 $("#<%=img6.ClientID %>").attr("src", "/cmspay/content/noimage.png");
-                $("#<%=hdimg6.ClientID %>").val("0");
-            }
+        $("#<%=hdimg6.ClientID %>").val("0");
+    }
 
-        }
-        function deleteimg7() {
-            if (confirm("Bạn có muỗn xóa ảnh?")) {
-                $("#<%=img7.ClientID %>").attr("src", "/cmspay/content/noimage.png");
+}
+function deleteimg7() {
+    if (confirm("Bạn có muỗn xóa ảnh?")) {
+        $("#<%=img7.ClientID %>").attr("src", "/cmspay/content/noimage.png");
                 $("#<%=hdimg7.ClientID %>").val("0");
             }
 
@@ -282,32 +291,32 @@
         $("#<%=img8.ClientID %>").height($("#<%=img8.ClientID %>").width() / 3 * 4);
         $("#<%=img7.ClientID %>").height($("#<%=img7.ClientID %>").width() / 3 * 4);
         $("#<%=img6.ClientID %>").height($("#<%=img6.ClientID %>").width() / 3 * 4);
-        $("#<%=img5.ClientID %>").height($("#<%=img5.ClientID %>").width() / 3 * 4);
+$("#<%=img5.ClientID %>").height($("#<%=img5.ClientID %>").width() / 3 * 4);
 
 
-        //$(document).ready(function () {
-        //    $('.base64-img').on('click', function () {
-        //        var src = $(this).children('img').first().attr('src');
-        //        $('#zoom-img').attr('src', src);
-        //        $('#zoom-modal').css('display', 'flex'); // sho
-        //    });
+//$(document).ready(function () {
+//    $('.base64-img').on('click', function () {
+//        var src = $(this).children('img').first().attr('src');
+//        $('#zoom-img').attr('src', src);
+//        $('#zoom-modal').css('display', 'flex'); // sho
+//    });
 
-        //    $('#zoom-modal').on('click', function () {
-        //        $(this).hide();
-        //    });
-        //});
-        $(document).ready(function () {
-            $('.base64-img').each(function () {
-                var imgSrc = $(this).find('img').attr('src');
-                $(this).attr('href', imgSrc);
-            });
-        });
-        $(document).ready(function () {
-            $(".base64-img").fancybox({
+//    $('#zoom-modal').on('click', function () {
+//        $(this).hide();
+//    });
+//});
+$(document).ready(function () {
+    $('.base64-img').each(function () {
+        var imgSrc = $(this).find('img').attr('src');
+        $(this).attr('href', imgSrc);
+    });
+});
+$(document).ready(function () {
+    $(".base64-img").fancybox({
 
-            });
-        });
-    </script>
+    });
+});
+</script>
     <style>
         input[type=file] {
             font-size: 10px;

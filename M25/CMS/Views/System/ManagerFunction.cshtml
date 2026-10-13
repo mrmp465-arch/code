@@ -1,0 +1,122 @@
+﻿@model CMS.Data.DTO.UserFunction
+@{
+    ViewBag.Title = "Danh sách chức năng";
+}
+
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
+            <div class="container-fluid ">
+                <!--begin::Details-->
+                <div class="filter-inline mr-2">
+                    <!--begin::Title-->
+                    <div class="filter-form mb-2  align-items-center">
+                        <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">@ViewBag.Title</h5>
+                    </div>
+                    <!--end::Title-->
+                    <!--begin::Separator-->
+                    <!--end::Separator-->
+                    <!--begin::Search Form-->
+                    <div class="filter-form mb-2 ">
+
+                        <div class="input-group input-group-sm input-group-solid" style="max-width: 175px">
+                            <input type="text" id="txtEmail" class="form-control" placeholder="Nhập từ khóa">
+
+                        </div>
+                    </div>
+                    <div class="filter-form label-form mb-2 ml-5" >
+
+
+
+                        <select class="form-control" id="ddlActive">
+                            <option value="-1">Lấy tất cả</option>
+                            <option value="0">Không Hoạt Động</option>
+                            <option value="1" selected="selected">Hoạt Động</option>
+                        </select>
+
+
+                    </div>
+                    
+                    <div class="float-right filter-form  align-items-end">
+
+                        <!--begin::Button-->
+                        <!--end::Button-->
+                        <!--begin::Button-->
+                        <a href="@Url.Action("AddFunction")" class="float-right mb-2 btn btn-light-primary font-weight-bold py-2 px-5 ml-2">Thêm mới</a>
+                        <!--end::Button-->
+                        <a href="javascript:;" id="btnSearch" class="float-right mb-2 btn btn-success font-weight-bold py-2 px-5 ml-2">Tìm kiếm</a>
+                    </div>
+                    <!--end::Search Form-->
+
+                </div>
+                <!--end::Details-->
+                <!--begin::Toolbar-->
+                <!--end::Toolbar-->
+            </div>
+        </div>
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container">
+                <!--begin::Card-->
+                <div id="FunctionPartial">
+                    @Html.Action("ListFunction", "System")
+                </div>
+                
+
+                       
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var parameters = {
+        };
+        $("#form").keypress(function (event) {
+            if (event.which == 13) {
+                $("#btnSearch").click();
+            }
+        });
+        $("#btnSearch").click(function () {
+            GetList(1);
+        });
+        $("#ddlActive").change(function () {
+            GetList(1);
+        });
+        $("#btnCreate").click(function () {
+            ViewDataFunction(0);
+        });
+        function GetList(currentPage) {
+            parameters = {
+                functionName: $("#txtFunctionName").val(),
+                isActive: $('#ddlActive').val(),
+                currentPage: 1
+            };
+            btnSearch(currentPage);
+        };
+        function btnSearch(currentPage) {
+            Utils.Loading();
+            var urlRequestAns = "@Url.Action("ListFunction")";
+            $.ajax({
+                type: 'GET',
+                url: urlRequestAns,
+                data: parameters,
+                success: function (data) {
+                    $("#FunctionPartial").html(data);
+                    Utils.UnLoading();
+                },
+                error: function () {
+                    alert("error load fail !");
+                    Utils.UnLoading();
+                }
+            });
+        }
+
+    });
+
+</script>

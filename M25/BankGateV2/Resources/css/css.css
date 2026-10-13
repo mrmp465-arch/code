@@ -1,0 +1,391 @@
+﻿@charset "utf-8";
+html, body, div, span, applet, obpop_rject, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+ol, ul, li {
+	list-style: none;
+	margin: 0;
+	padding: 0
+}
+a {
+	font-family: Tahoma, Geneva, sans-serif;
+	transition: color 0.15s linear 0s;
+	-ms-transition: color 0.15s linear 0s;
+	-moz-transition: color 0.15s linear 0s;
+	-webkit-transition: color 0.15s linear 0s;
+	-o-transition: color 0.15s linear 0s;
+}
+a:link {
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+a:active {
+	text-decoration: none;
+}
+img {
+	border: 0 none;
+}
+.fl {
+	float: left !important;
+}
+.fr {
+	float: right !important;
+}
+.mr0 {
+	margin-right: 0px !important;
+}
+.mt10 {
+	margin-top: 10px !important;
+}
+.mt20 {
+	margin-top: 20px !important;
+}
+.mt0 {
+	margin-top: 0px !important;
+}
+.mb2 {
+	margin-bottom: 2px !important;
+}
+.mb20 {
+	margin-bottom: 20px !important;
+}
+.pb0 {
+	padding-bottom: 0px !important;
+}
+.pl0 {
+	padding-left: 0px !important;
+}
+.pr0 {
+	padding-right: 0px !important;
+}
+.pb15 {
+	padding-bottom: 15px !important;
+}
+.bd0 {
+	border: none !important;
+}
+body {
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+	position:relative;
+	padding-bottom: 30px;
+	background: #E7E7E7;
+}
+.top_bar{
+	display: block;
+	width: 100%;
+	height: 90px;
+	padding: 10px 0;
+	background: #ffc20e;
+	-webkit-box-shadow: 0px 6px 11px 0px rgba(0, 0, 0, 0.31);
+-moz-box-shadow:    0px 6px 11px 0px rgba(0, 0, 0, 0.31);
+box-shadow:         0px 6px 11px 0px rgba(0, 0, 0, 0.31);
+	position: relative;
+	z-index: 2;
+}
+.top_bar_detail{
+	display: block;
+	width: 1000px;
+	height: 100%;
+	margin: 0 auto;
+}
+a.logo_game img{
+	float: left;
+	height: 100%;
+	width: auto;
+}
+a.banner_game img{
+	float: right;
+	height: 100%;
+	width: auto;
+	margin-left: 10px;
+}
+.noti{
+	display:block;
+	height:35px;
+	padding:10px 3%;
+	background: #fff;
+	background-image:url(../images/icon_noti.png);
+	background-position:2% 10px;
+	background-repeat:no-repeat;
+	padding-left:6%;
+	line-height:35px;
+	color:#4a4a4a;
+	font-size:12px;
+	font-family: Tahoma, Geneva, sans-serif;
+	}	
+.step_block{
+	display: block;
+	width: 100%;
+	height: 50px;
+	padding: 10px 0;
+	background: #1f1f1f;
+	border-bottom: solid 2px #ffc20e;
+	margin-bottom: 20px;
+}
+.step_block ul{
+	display: block;
+	width: 1000px;
+	margin: 0 auto;
+	text-align: center;
+}
+.step_block ul li{
+	display: inline-block;
+	margin: 0 1%;
+	width: 30.5%;
+	height: 50px;
+	background: #dcdcdc;
+	border-radius: 5px;
+}
+.step_block ul li p{
+	display: block;
+	font-family:'Conv_UTM Alter Gothic', Tahoma, Geneva, sans-serif;
+	color: #4a4a4a;
+	line-height: 45px;
+	font-size: 24px;
+	text-transform: uppercase;
+}
+.step_block ul li p strong{
+	font-size: 36px;
+}
+.step_block ul li.active{
+	background: #ffc20e;	
+}
+.form_1{
+	display: block;
+	width: 960px;
+	margin: 0 auto;
+    border: solid 1px #c4c4c4;
+    border-radius: 5px;
+	padding: 20px;
+	background: #fff;
+	-webkit-box-shadow: 0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+-moz-box-shadow:    0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+box-shadow:         0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+}
+.form_2{
+	display: block;
+	width: 960px;
+	margin: 0 auto;
+    border: solid 1px #c4c4c4;
+    border-radius: 5px;
+	padding: 20px;
+	background: #fff;
+	-webkit-box-shadow: 0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+-moz-box-shadow:    0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+box-shadow:         0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+}
+.form_3{
+	display: block;
+	width: 960px;
+	margin: 0 auto;
+    border: solid 1px #c4c4c4;
+    border-radius: 5px;
+	padding: 20px;
+	background: #fff;
+	-webkit-box-shadow: 0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+-moz-box-shadow:    0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+box-shadow:         0px 1px 11px 0px rgba(0, 0, 0, 0.75);
+}
+.form_1 h2{
+	display: block;
+    margin-bottom: 10px;
+    color: #1f1f1f;
+    font-size: 24px;
+    text-transform: uppercase;
+    font-family:'Conv_UTM Alter Gothic', Tahoma, Geneva, sans-serif;
+    font-weight: normal;
+}
+.form_2 h2{
+	display: block;
+    margin-bottom: 10px;
+    color: #1f1f1f;
+    font-size: 24px;
+    text-transform: uppercase;
+    font-family:'Conv_UTM Alter Gothic', Tahoma, Geneva, sans-serif;
+    font-weight: normal;
+}
+ul.col_box{
+	display:block;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	width: 100%;
+	max-width: 600px;
+	}	
+ul.col_box li{
+	float:left;
+	height:40px;
+	}
+li.col_box1{
+	width:35%;
+	color:#4a4a4a;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:40px;
+	margin-right: 5%;
+	text-align: right;
+	}
+li.col_box2{
+	width:60%;
+	color:#FF0004;
+	font-size:14px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:40px;
+	}
+li.col_box1 span{
+	color:#df0000;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:40px;
+	}
+li.col_box2 input{
+	float:left;
+	height:38px;
+	border:solid 1px #c4c4c4;
+	border-radius:4px;
+	padding:0 2%;
+	width:96%;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	line-height:37px;
+	}
+p.text_cpn{
+	display: block;
+	color:#4a4a4a;
+	font-size:14px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight:bold;
+	text-align: center;
+}
+p.erro{
+	color: #FF0004;
+	text-align: center;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	font-weight: normal;
+	font-style: italic;
+	line-height: 12px;
+}
+ul.col_bt{
+	display: block;
+	width: 100%;
+	max-width: 400px;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 10px;
+}
+ul.col_bt li{
+	display: inline-block;
+	margin: 0 1%;
+	width: 47%;
+}
+ul.col_bt li a {
+    display: block;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 5px;
+    color: #1f1f1f;
+    font-size: 24px;
+    text-transform: uppercase;
+    font-family: 'Conv_UTM Alter Gothic', Tahoma, Geneva, sans-serif;
+    background: #ffc20e;
+    text-align: center;
+}
+a.bt_cancel{
+    background: #dcdcdc !important;
+    color: #4a4a4a !important;
+}
+.y_tit {
+    display: block;
+    background: #ffc20e;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 15px;
+    color: #1f1f1f;
+    font-size: 12px;
+    font-family: Tahoma, Geneva, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+ul.bank{
+	display:block;
+	margin-bottom:20px;
+	/*text-align: center;*/
+	}
+ul.bank li{
+	display: inline-block;
+	width:17%;
+	height:auto;
+	margin: 0 1%;
+	margin-bottom:10px;
+	}
+ul.bank li a{
+	display:block;
+	width:96%;
+	height:auto;
+	border: solid 2px #dcdcdc;
+	text-align:center;
+	padding:10px 2%;
+	color:#4a4a4a;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	border-radius: 5px;
+	font-weight: bold;
+	position: relative;
+	}
+ul.bank li img{
+	display: block;
+	width: 90%;
+	/*height: auto;*/
+	margin: 0 auto;
+	margin-bottom: 10px;
+}
+ul.bank li a:hover, ul.bank li a.active{
+	border: solid 2px #ffc20e;
+	border-radius:5px;
+	}
+ul.bank li a span img{
+	display: none;
+	position: absolute;
+	width: 20%;
+	height: auto;
+	top: -20%;
+	right: -10px;
+}
+ul.bank li a.active span img{
+	display: block;
+}
+@font-face {
+	font-family: 'Roboto-Condensed';
+	src: url('../fonts/Roboto-Condensed.eot');
+	src: local('☺'), url('../fonts/Roboto-Condensed.woff') format('woff'), url('../fonts/Roboto-Condensed.ttf') format('truetype'), url('../fonts/Roboto-Condensed.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Conv_UTM Alter Gothic';
+	src: url('../fonts/UTM Alter Gothic.eot');
+	src: local('☺'), url('../fonts/UTM Alter Gothic.woff') format('woff'), url('../fonts/UTM Alter Gothic.ttf') format('truetype'), url('../fonts/UTM Alter Gothic.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

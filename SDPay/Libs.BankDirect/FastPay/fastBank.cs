@@ -228,7 +228,7 @@ namespace Libs.BankDirect.FastPay
                             AccountName = orderResponse.BankAccountName,
                         };
                         orderRes.Url = orderResponse.Url;
-                        orderRes.QRCode =orderResponse.Url;
+                        orderRes.QRCode =orderResponse.QRCode;
                         string jsonContent = JsonConvert.SerializeObject(orderRes, new JsonSerializerSettings
                         {
                             StringEscapeHandling = StringEscapeHandling.Default

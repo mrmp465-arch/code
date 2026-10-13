@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:impl="http://interfaces.itopup.vnptepay.vn" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:intf="http://interfaces.itopup.vnptepay.vn" targetNamespace="http://interfaces.itopup.vnptepay.vn" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://interfaces.itopup.vnptepay.vn">
+      <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <xsd:complexType name="SignOutResult">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BalanceResult">
+        <xsd:sequence>
+          <xsd:element name="dataValue" type="xsd:long" />
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="transID" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SignInResult">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="token" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CheckTargetObject">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="providerCode" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CategoryObject">
+        <xsd:sequence>
+          <xsd:element name="categoryId" type="xsd:int" />
+          <xsd:element name="categoryName" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCategoryObject">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="intf:CategoryObject[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CategoryListObject">
+        <xsd:sequence>
+          <xsd:element name="categoryList" nillable="true" type="intf:ArrayOfCategoryObject" />
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ProviderObject">
+        <xsd:sequence>
+          <xsd:element name="providerCode" nillable="true" type="xsd:string" />
+          <xsd:element name="providerID" type="xsd:int" />
+          <xsd:element name="providerName" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfProviderObject">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="intf:ProviderObject[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ProviderListObject">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="providerList" nillable="true" type="intf:ArrayOfProviderObject" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ProductObject">
+        <xsd:sequence>
+          <xsd:element name="productId" type="xsd:int" />
+          <xsd:element name="productName" nillable="true" type="xsd:string" />
+          <xsd:element name="productValue" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfProductObject">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="intf:ProductObject[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ProductListObject">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="productList" nillable="true" type="intf:ArrayOfProductObject" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOf_xsd_int">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="xsd:int[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="LevelResult">
+        <xsd:sequence>
+          <xsd:element name="dataValue" nillable="true" type="intf:ArrayOf_xsd_int" />
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ProductInfo">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="productID" type="xsd:int" />
+          <xsd:element name="productLogo" nillable="true" type="xsd:base64Binary" />
+          <xsd:element name="productMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="productName" nillable="true" type="xsd:string" />
+          <xsd:element name="productValue" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CheckProducts">
+        <xsd:sequence>
+          <xsd:element name="message" nillable="true" type="xsd:string" />
+          <xsd:element name="productId" type="xsd:int" />
+          <xsd:element name="productName" nillable="true" type="xsd:string" />
+          <xsd:element name="status" type="xsd:int" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCheckProducts">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="intf:CheckProducts[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CheckProductsDetail">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+          <xsd:element name="productId" type="xsd:int" />
+          <xsd:element name="quantity" type="xsd:int" />
+          <xsd:element name="status" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCheckProductsDetail">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="intf:CheckProductsDetail[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ChangePasswordResult">
+        <xsd:sequence>
+          <xsd:element name="errorCode" type="xsd:int" />
+          <xsd:element name="errorMessage" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="partnerCheckProductRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="categoryId" type="xsd:int" />
+    <wsdl:part name="providerId" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="partnerGetListProviderOfCategoryRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="categoryId" type="xsd:int" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="checkTargetAccountRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="session" type="xsd:string" />
+    <wsdl:part name="targetAcount" type="xsd:string" />
+    <wsdl:part name="providerCode" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="signOutRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="signInAsPartnerResponse">
+    <wsdl:part name="signInAsPartnerReturn" type="intf:SignInResult" />
+  </wsdl:message>
+  <wsdl:message name="partnerCheckProductDetailResponse">
+    <wsdl:part name="partnerCheckProductDetailReturn" type="intf:ArrayOfCheckProductsDetail" />
+  </wsdl:message>
+  <wsdl:message name="getProductInformationRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="productID" type="xsd:int" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="queryBalanceResponse">
+    <wsdl:part name="queryBalanceReturn" type="intf:BalanceResult" />
+  </wsdl:message>
+  <wsdl:message name="checkTargetAccountResponse">
+    <wsdl:part name="checkTargetAccountReturn" type="intf:CheckTargetObject" />
+  </wsdl:message>
+  <wsdl:message name="partnerCheckProductDetailRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="token" type="xsd:string" />
+    <wsdl:part name="checkProducts" type="intf:ArrayOfCheckProductsDetail" />
+  </wsdl:message>
+  <wsdl:message name="requestHandleResponse">
+    <wsdl:part name="requestHandleReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="partnerChangePasswordResponse">
+    <wsdl:part name="partnerChangePasswordReturn" type="intf:ChangePasswordResult" />
+  </wsdl:message>
+  <wsdl:message name="checkPhoneNumberResponse">
+    <wsdl:part name="checkPhoneNumberReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="partnerGetListCategoriesRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="requestHandleRequest">
+    <wsdl:part name="requestData" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="signOutResponse">
+    <wsdl:part name="signOutReturn" type="intf:SignOutResult" />
+  </wsdl:message>
+  <wsdl:message name="signInAsPartnerRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="password" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getListValueLevelsResponse">
+    <wsdl:part name="getListValueLevelsReturn" type="intf:LevelResult" />
+  </wsdl:message>
+  <wsdl:message name="checkPhoneNumberRequest">
+    <wsdl:part name="phoneNumber" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="partnerGetListProductOfCategoryServiceProviderResponse">
+    <wsdl:part name="partnerGetListProductOfCategoryServiceProviderReturn" type="intf:ProductListObject" />
+  </wsdl:message>
+  <wsdl:message name="partnerGetListCategoriesResponse">
+    <wsdl:part name="partnerGetListCategoriesReturn" type="intf:CategoryListObject" />
+  </wsdl:message>
+  <wsdl:message name="partnerChangePasswordRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="oldPassword" type="xsd:string" />
+    <wsdl:part name="newPassword" type="xsd:string" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="partnerGetListProviderOfCategoryResponse">
+    <wsdl:part name="partnerGetListProviderOfCategoryReturn" type="intf:ProviderListObject" />
+  </wsdl:message>
+  <wsdl:message name="getProductInformationResponse">
+    <wsdl:part name="getProductInformationReturn" type="intf:ProductInfo" />
+  </wsdl:message>
+  <wsdl:message name="partnerGetListProductOfCategoryServiceProviderRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="categoryId" type="xsd:int" />
+    <wsdl:part name="providerId" type="xsd:int" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getListValueLevelsRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="checkConnectionResponse">
+    <wsdl:part name="checkConnectionReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="checkConnectionRequest" />
+  <wsdl:message name="queryBalanceRequest">
+    <wsdl:part name="username" type="xsd:string" />
+    <wsdl:part name="requestID" type="xsd:string" />
+    <wsdl:part name="token" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="partnerCheckProductResponse">
+    <wsdl:part name="partnerCheckProductReturn" type="intf:ArrayOfCheckProducts" />
+  </wsdl:message>
+  <wsdl:portType name="TopupInterface">
+    <wsdl:operation name="signOut" parameterOrder="username token">
+      <wsdl:input name="signOutRequest" message="intf:signOutRequest" />
+      <wsdl:output name="signOutResponse" message="intf:signOutResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="checkConnection">
+      <wsdl:input name="checkConnectionRequest" message="intf:checkConnectionRequest" />
+      <wsdl:output name="checkConnectionResponse" message="intf:checkConnectionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="queryBalance" parameterOrder="username requestID token">
+      <wsdl:input name="queryBalanceRequest" message="intf:queryBalanceRequest" />
+      <wsdl:output name="queryBalanceResponse" message="intf:queryBalanceResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="signInAsPartner" parameterOrder="username password">
+      <wsdl:input name="signInAsPartnerRequest" message="intf:signInAsPartnerRequest" />
+      <wsdl:output name="signInAsPartnerResponse" message="intf:signInAsPartnerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="checkPhoneNumber" parameterOrder="phoneNumber">
+      <wsdl:input name="checkPhoneNumberRequest" message="intf:checkPhoneNumberRequest" />
+      <wsdl:output name="checkPhoneNumberResponse" message="intf:checkPhoneNumberResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="checkTargetAccount" parameterOrder="username session targetAcount providerCode">
+      <wsdl:input name="checkTargetAccountRequest" message="intf:checkTargetAccountRequest" />
+      <wsdl:output name="checkTargetAccountResponse" message="intf:checkTargetAccountResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="partnerGetListCategories" parameterOrder="username token">
+      <wsdl:input name="partnerGetListCategoriesRequest" message="intf:partnerGetListCategoriesRequest" />
+      <wsdl:output name="partnerGetListCategoriesResponse" message="intf:partnerGetListCategoriesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="partnerGetListProviderOfCategory" parameterOrder="username categoryId token">
+      <wsdl:input name="partnerGetListProviderOfCategoryRequest" message="intf:partnerGetListProviderOfCategoryRequest" />
+      <wsdl:output name="partnerGetListProviderOfCategoryResponse" message="intf:partnerGetListProviderOfCategoryResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="partnerGetListProductOfCategoryServiceProvider" parameterOrder="username categoryId providerId token">
+      <wsdl:input name="partnerGetListProductOfCategoryServiceProviderRequest" message="intf:partnerGetListProductOfCategoryServiceProviderRequest" />
+      <wsdl:output name="partnerGetListProductOfCategoryServiceProviderResponse" message="intf:partnerGetListProductOfCategoryServiceProviderResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getListValueLevels" parameterOrder="username token">
+      <wsdl:input name="getListValueLevelsRequest" message="intf:getListValueLevelsRequest" />
+      <wsdl:output name="getListValueLevelsResponse" message="intf:getListValueLevelsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getProductInformation" parameterOrder="username productID token">
+      <wsdl:input name="getProductInformationRequest" message="intf:getProductInformationRequest" />
+      <wsdl:output name="getProductInformationResponse" message="intf:getProductInformationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="partnerCheckProduct" parameterOrder="username token categoryId providerId">
+      <wsdl:input name="partnerCheckProductRequest" message="intf:partnerCheckProductRequest" />
+      <wsdl:output name="partnerCheckProductResponse" message="intf:partnerCheckProductResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="partnerCheckProductDetail" parameterOrder="username token checkProducts">
+      <wsdl:input name="partnerCheckProductDetailRequest" message="intf:partnerCheckProductDetailRequest" />
+      <wsdl:output name="partnerCheckProductDetailResponse" message="intf:partnerCheckProductDetailResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="partnerChangePassword" parameterOrder="username oldPassword newPassword token">
+      <wsdl:input name="partnerChangePasswordRequest" message="intf:partnerChangePasswordRequest" />
+      <wsdl:output name="partnerChangePasswordResponse" message="intf:partnerChangePasswordResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="requestHandle" parameterOrder="requestData">
+      <wsdl:input name="requestHandleRequest" message="intf:requestHandleRequest" />
+      <wsdl:output name="requestHandleResponse" message="intf:requestHandleResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TopupInterfaceSoapBinding" type="intf:TopupInterface">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="signOut">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="signOutRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="signOutResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkConnection">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="checkConnectionRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="checkConnectionResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="queryBalance">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="queryBalanceRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="queryBalanceResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="signInAsPartner">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="signInAsPartnerRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="signInAsPartnerResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkPhoneNumber">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="checkPhoneNumberRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="checkPhoneNumberResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="checkTargetAccount">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="checkTargetAccountRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="checkTargetAccountResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerGetListCategories">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="partnerGetListCategoriesRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="partnerGetListCategoriesResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerGetListProviderOfCategory">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="partnerGetListProviderOfCategoryRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="partnerGetListProviderOfCategoryResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerGetListProductOfCategoryServiceProvider">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="partnerGetListProductOfCategoryServiceProviderRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="partnerGetListProductOfCategoryServiceProviderResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getListValueLevels">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getListValueLevelsRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getListValueLevelsResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProductInformation">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getProductInformationRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getProductInformationResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerCheckProduct">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="partnerCheckProductRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="partnerCheckProductResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerCheckProductDetail">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="partnerCheckProductDetailRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="partnerCheckProductDetailResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="partnerChangePassword">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="partnerChangePasswordRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="partnerChangePasswordResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="requestHandle">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="requestHandleRequest">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="requestHandleResponse">
+        <wsdlsoap:body use="encoded" namespace="http://interfaces.itopup.vnptepay.vn" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TopupInterfaceService">
+    <wsdl:port name="TopupInterface" binding="intf:TopupInterfaceSoapBinding">
+      <wsdlsoap:address location="http://haloship.imediatech.com.vn:8087/ItopupService2.0_IMD/services/TopupInterface" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

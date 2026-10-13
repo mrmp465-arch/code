@@ -1,0 +1,57 @@
+﻿@using Libs.Report
+@using Libs.API
+@using CMS.Utility
+@{
+    List<String> lstCardType = ViewBag.lstCardType;
+    List<int> Time = ViewBag.Time;
+}
+@model List<CardAPILogReport>
+<table class="datatable-table ">
+    <thead class="datatable-head">
+        <tr class="datatable-row" style="left: 0px;">
+            <th rowspan="2" class="datatable-cell-left datatable-cell datatable-cell-sort">Time</th>
+            <th style="text-align: center;" class="datatable-cell-left datatable-cell datatable-cell-sort" colspan="@(lstCardType.Count())">Loại thẻ</th>
+            <th rowspan="2" class="datatable-cell-left datatable-cell datatable-cell-sort"><b>Tổng</b></th>
+        </tr>
+        <tr class="datatable-row" style="left: 0px;">
+            @foreach (var card in lstCardType)
+            {
+                <th class="datatable-cell-left datatable-cell datatable-cell-sort">@card</th>
+            }
+
+        </tr>
+
+    </thead>
+    <tbody class="datatable-body" style="">
+        @foreach (var t in Time)
+        {
+            <tr class="datatable-row" style="left: 0px;">
+                <td class="datatable-cell"><b>@t</b></td>
+                @foreach (var card in lstCardType)
+                {
+                    if (Model.Exists(x => x.Time == t && x.CardType == card))
+                    {
+                        <td class="datatable-cell">@Model.FirstOrDefault(x => x.Time == t && x.CardType == card).TotalAmount.ToString("N0").Replace(",", ".")</td>
+                    }
+                    else
+                    {
+                        <td class="datatable-cell">0</td>
+                    }
+                }
+
+                <td><b>@Model.Where(x => x.Time == t).Sum(a => a.TotalAmount).ToString("N0").Replace(",", ".")</b></td>
+
+            </tr>
+        }
+        <tr class="datatable-row" style="left: 0px;">
+            <td class="datatable-cell"><b>Tổng</b></td>
+            @foreach (var card in lstCardType)
+            {
+                <td class="datatable-cell">
+                    <b>@Model.Where(x => x.CardType == card).Sum(a => a.TotalAmount).ToString("N0").Replace(",", ".")</b>
+                </td>
+            }
+            <td class="datatable-cell"><b>@Model.Sum(a => a.TotalAmount).ToString("N0").Replace(",", ".")</b></td>
+        </tr>
+    </tbody>
+</table>

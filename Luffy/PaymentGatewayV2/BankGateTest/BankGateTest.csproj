@@ -138,6 +138,8 @@
     <Content Include="BankTranfer.aspx" />
     <Content Include="DetailScreen.aspx" />
     <Content Include="DetailScreen10.aspx" />
+    <Content Include="DetailScreen11.aspx" />
+    <Content Include="DetailScreen12.aspx" />
     <Content Include="DetailScreen2.aspx" />
     <Content Include="DetailScreen3.aspx" />
     <Content Include="DetailScreen4.aspx" />
@@ -212,6 +214,20 @@
     </Compile>
     <Compile Include="DetailScreen10.aspx.designer.cs">
       <DependentUpon>DetailScreen10.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DetailScreen11.aspx.cs">
+      <DependentUpon>DetailScreen11.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DetailScreen11.aspx.designer.cs">
+      <DependentUpon>DetailScreen11.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DetailScreen12.aspx.cs">
+      <DependentUpon>DetailScreen12.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DetailScreen12.aspx.designer.cs">
+      <DependentUpon>DetailScreen12.aspx</DependentUpon>
     </Compile>
     <Compile Include="DetailScreen2.aspx.cs">
       <DependentUpon>DetailScreen2.aspx</DependentUpon>

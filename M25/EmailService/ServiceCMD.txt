@@ -1,0 +1,2 @@
+﻿sc create PaymentFailOver binpath= D:\WINSERVICE\PaymentFailover\WService.exe start= auto
+sc create PaymentAutoBuy binpath= D:\WINSERVICE\PaymentAutoBuy\WService.exe start= auto
