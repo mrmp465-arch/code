@@ -651,7 +651,9 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
                 item.TransactionID = bank.TransactionID;
                 item.CreatedTime = bank.CreatedTime.ToString("dd/MM/yyyy HH:mm:ss");
                 item.LastTime = bank.LastTime.ToString("dd/MM/yyyy HH:mm:ss");
-                item.ReceiveAccount = string.Format("{0}-{1}-{2}-{3}", bank.BankCode, bank.BankAccountNumber, bank.BankAccountName, bank.Note);
+                item.ReceiveAccount = string.Format("{0}-{1}-{2}-{3}", bank.BankCode, MaskString(bank.BankAccountNumber), MaskString2(bank.BankAccountName), bank.Note);
+                if (AppUtils.IsAdmin)
+                    item.ReceiveAccount = string.Format("{0}-{1}-{2}-{3}", bank.BankCode, bank.BankAccountNumber, bank.BankAccountName, bank.Note);
                 item.TranferAccount = bank.Mobile;
                 item.Amount = Convert.ToInt32(bank.TotalAmount);
                 item.Fee = bank.Fee;
@@ -949,5 +951,59 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
         return "";
 
 
+    }
+    public string MaskString(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return value;
+
+        // Dưới 5 ký tự: chỉ hiện tối đa 3 ký tự cuối
+        if (value.Length < 5)
+        {
+            int visible = Math.Min(3, value.Length);
+
+            return new string('*', value.Length - visible)
+                 + value.Substring(value.Length - visible);
+        }
+
+        // Đúng 5 ký tự: hiện 1 đầu + 3 cuối
+        if (value.Length == 5)
+        {
+            return value.Substring(0, 1)
+                 + "*"
+                 + value.Substring(value.Length - 3);
+        }
+
+        // 6 - 7 ký tự: hiện 1 đầu + 4 cuối
+        if (value.Length <= 7)
+        {
+            return value.Substring(0, 1)
+                 + new string('*', value.Length - 5)
+                 + value.Substring(value.Length - 4);
+        }
+
+        // Trên 7 ký tự: hiện 3 đầu + 4 cuối
+        return value.Substring(0, 3)
+             + new string('*', value.Length - 7)
+             + value.Substring(value.Length - 4);
+    }
+    public string MaskString2(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return value;
+
+        // Dưới 5 ký tự: chỉ hiện tối đa 3 ký tự cuối
+        if (value.Length <= 5)
+        {
+            int visible = Math.Min(3, value.Length);
+
+            return new string('*', value.Length - visible)
+                 + value.Substring(value.Length - visible);
+        }
+
+        // Từ 5 ký tự trở lên: hiện 2 đầu + phần che + 3 cuối
+        return value.Substring(0, 2)
+             + new string('*', value.Length - 5)
+             + value.Substring(value.Length - 3);
     }
 }

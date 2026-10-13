@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="<%=Constant.ADMIN_PATH %>Content/bower_components/morris.js/morris.css">
     <link rel="stylesheet" href="<%=Constant.ADMIN_PATH %>Content/bower_components/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -17,7 +18,7 @@
         </ol>
     </section>
     <asp:Panel ID="PanelContent" runat="server">
-
+             
         <section class="content">
             <!-- Info boxes -->
 
@@ -34,7 +35,7 @@
                 <div class="col-md-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Tạo giao dịch momo</h3>
+                            <h3 class="box-title">Tạo giao dịch nạp bank</h3>
                         </div>
 
                         <!-- /.box-header -->
@@ -50,13 +51,13 @@
                                 <div class="col-md-12">
                                     Lưu ý: mỗi một lệnh chỉ được chuyển tiền 1 lần.
                                     <br />
-                                    Chuyển thành công cần ấn nút tạo lệnh để lấy thông tin mới. Số tiền tối đa là 5.000.000
+                                    Chuyển thành công cần ấn nút tạo lệnh để lấy thông tin mới
                                 </div>
                                 <br />
                                 <div style="clear: both; margin-bottom: 20px;"></div>
                                 <div class="col-md-3">
 
-                                    <asp:TextBox ID="txtAmount" type="number" step="5000000" runat="server" CssClass="form-control" placeholder="Số tiền cần nạp" Text="5000000"></asp:TextBox>
+                                    <asp:TextBox ID="txtAmount" type="number"  runat="server" CssClass="form-control" placeholder="Số tiền cần nạp" Text="1000000"></asp:TextBox>
                                 </div>
                                 <label id="textMoneyVND" class="control-label col-md-2" style="margin-top: 8px">
                                     &nbsp;
@@ -67,56 +68,7 @@
                             </div>
                             <br />
 
-                            <div class="form-group" style="height: 295px; margin-top: 15px">
-                                <div id="dvBankInfo" runat="server" visible="false">
-                                    <div class="row">
-
-                                        <div class="col-md-3">
-                                            <div style="display: none">
-                                                <input class="form-control" readonly="readonly" id="name" value="<%=MomoName %>" />
-                                                <input class="form-control" readonly="readonly" id="account" value="<%=MomoId %>" />
-                                            </div>
-                                            <div style="margin-top: 20px; margin-left: 45px;">
-                                                <dt>Tài khoản</dt>
-                                                <dd>
-
-                                                    <asp:Label ID="lbAccountNumber" runat="server" Text=""></asp:Label>
-                                                    &nbsp;
-                                                    <button type="button" class="btn" data-clipboard-target="#account>">
-                                                        <i class="fas fa-copy" onclick="copyStringToClipboard('account')"></i>
-                                                    </button>
-                                                </dd>
-                                                <br />
-                                                <dt>Tên tài khoản</dt>
-                                                <dd>
-
-                                                    <asp:Label ID="lbAccountName" runat="server" Text=""></asp:Label>&nbsp;
-                                                    <button type="button" class="btn" data-clipboard-target="#name>">
-                                                        <i class="fas fa-copy" onclick="copyStringToClipboard('name')"></i>
-                                                    </button>
-                                                </dd>
-                                                <br />
-                                                <dt>Địa chỉ</dt>
-                                                <dd>
-
-                                                    <asp:Label ID="lbInfo" runat="server" Text=""></asp:Label>
-                                                </dd>
-                                                <br />
-
-
-                                            </div>
-
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div style="width: 300px; margin-left: 0px;">
-                                                <asp:Image ID="qrCode" runat="server" Width="200" />
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -136,6 +88,9 @@
 
     <script type="text/javascript" src="<%=Constant.ADMIN_PATH %>Content/bower_components/select2/dist/js/select2.full.min.js"></script>
     <script src="<%=Constant.ADMIN_PATH %>Content/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+   
+    
+           
     <script type="text/javascript">
         function copyStringToClipboard(id) {
             var str = document.getElementById(id).value;
@@ -167,6 +122,7 @@
 
 
     </script>
+       
     <script type="text/javascript">
 
 
@@ -327,37 +283,48 @@
                     break;
             }
             return KetQua;
-        }
+}
+
+
+$("#<%=txtAmount.ClientID %>").keyup(function () {
+    var val = $(this).val();
+    if (val) {
+
+        val = unformat(val, 0);
+        $(this).val(val);
+
+        var price = parseInt(val);
+        //var textMoneyVND = DocTienBangChu(price) + " đồng";
+        var formatMoneyVNDVal = price.formatMoney(0, '', '.') + "";
+        $("#textMoneyVND").html(formatMoneyVNDVal);
+    }
+}).blur(function () {
+    var val = $(this).val();
+    if (val) {
+
+        val = unformat(val, 0);
+        $(this).val(val);
+
+        var price = parseInt(val);
+        //var textMoneyVND = DocTienBangChu(price) + " đồng";
+        var formatMoneyVNDVal = price.formatMoney(0, '', '.') + "";
+        $("#textMoneyVND").html(formatMoneyVNDVal);
+    }
+});
+$("#<%=txtAmount.ClientID %>").change(function () {
+    var val = $(this).val();
+    if (val) {
+
+        val = unformat(val, 0);
+        $(this).val(val);
+
+        var price = parseInt(val);
+        var formatMoneyVNDVal = price.formatMoney(0, '', '.') + "";
+        $("#textMoneyVND").html(formatMoneyVNDVal);
+    }
+});
     </script>
-    <script type="text/javascript">
-
-        var refreshPageInterval = 120;
-
-        setInterval("countDownPageRefresh()", 1000);//1 s gọi 1 lần
-        $(document).mouseover(function () {
-            funcResetRefreshPageInterval();
-        });
-        $(window).scroll(function () {
-            funcResetRefreshPageInterval();
-        });
-        window.onkeypress = funcResetRefreshPageInterval;
-        function funcResetRefreshPageInterval() {
-            refreshPageInterval = 120;
-        }
-        function countDownPageRefresh() {
-            refreshPageInterval = refreshPageInterval - 1;
-            //console.log(refreshPageInterval);
-
-            if (refreshPageInterval <= 0) {
-                funcResetRefreshPageInterval();
-
-                location.reload();
-
-            }
-        }
-
-    </script>
-
+   
     <style>
         .text-gate {
             color: #e12d2c;

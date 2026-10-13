@@ -114,12 +114,12 @@
                                 <asp:TextBox CssClass="form-control" ID="txtMobile" runat="server"></asp:TextBox>
                             </div>
                         </div>
-                         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-     <div class="input-group">
-         <span class="input-group-addon">Tk chuyển</span>
-         <asp:TextBox CssClass="form-control" ID="txtMobile2" runat="server"></asp:TextBox>
-     </div>
- </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Tk chuyển</span>
+                                <asp:TextBox CssClass="form-control" ID="txtMobile2" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
                         <% } %>
                         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
                             <div class="input-group">
@@ -139,7 +139,7 @@
                                 <asp:TextBox CssClass="form-control txtCreatTime" ID="txtCreatTime" runat="server"></asp:TextBox>
                             </div>
                         </div>
-                         <div class="col-xs-12 col-sm-6 col-md-2">
+                        <div class="col-xs-12 col-sm-6 col-md-2">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <asp:CheckBox runat="server" ID="cbAuto" Checked="False" />
@@ -164,13 +164,13 @@
                         <% if (AppUtils.IsAdmin)
                             {%>
                         <div class="pull-left" style="padding: 10px">
-                             <asp:Button ID="btApp2" runat="server" OnClientClick="return CheckApp2()" CssClass="btn btn-success" OnClick="btApp2Click" Text="Đơn đúng" Visible="true"></asp:Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <asp:Button ID="btApp2" runat="server" OnClientClick="return CheckApp2()" CssClass="btn btn-success" OnClick="btApp2Click" Text="Đơn đúng" Visible="true"></asp:Button>&nbsp;&nbsp;&nbsp;&nbsp;
 
                         </div>
 
                         <div class="pull-right" style="padding: 10px" runat="server" id="dvApp">
-                           
-                           <asp:Button ID="btCancel" runat="server" OnClientClick="return CheckCanel()" CssClass="btn btn-default " OnClick="btCancelClick" Text="Hủy đơn"></asp:Button>
+
+                            <asp:Button ID="btCancel" runat="server" OnClientClick="return CheckCanel()" CssClass="btn btn-default " OnClick="btCancelClick" Text="Hủy đơn"></asp:Button>
                         </div>
                         <% } %>
                         <table class="table table-striped" id="TableResponsive">
@@ -230,24 +230,35 @@
                                             <% } %>
 
                                             <td><%#Eval("RefCode") %></td>
+
+                                            <% if (!AppUtils.IsAdmin )
+                                                { %>
+
                                             <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
                                                 <br />
-                                                <%= Resources.Pay.AccountNumber%>: <b><%#Eval("BankAccountNumber") %> </b>
+                                                <%= Resources.Pay.AccountNumber%>: <b><%# MaskString(Eval("BankAccountNumber").ToString() )%> </b>
                                                 <br />
-                                                <%= Resources.Pay.AccountName%>: <b><%#Eval("BankAccountName")%></b>
-                                                <%-- <asp:Panel ID="pnNote" runat="server" Visible='<%# Eval("Note").ToString() != ""  %>'>
+                                                <%= Resources.Pay.AccountName%>: <b><%#MaskString(Eval("BankAccountName").ToString())%></b>
 
-                                                    <%= Resources.Pay.Content%>:  <b><%#Eval("Note")%></b>
-                                                </asp:Panel>--%>
 
                                             </td>
+                                            <%}
+                                            else {  %>
+
+                                            <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
+                                                <br />
+                                                <%= Resources.Pay.AccountNumber%>: <b><%# Eval("BankAccountNumber").ToString() %> </b>
+                                                <br />
+                                                <%= Resources.Pay.AccountName%>: <b><%#Eval("BankAccountName").ToString()%></b>
+
+
+                                            </td>
+                                            <%}%>
                                             <td><%#Eval("Mobile") %></td>
-                                            <td <%#GetAmountStyle(Eval("Amount"))%>> <%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
+                                            <td <%#GetAmountStyle(Eval("Amount"))%>><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
                                             <td><%#Convert.ToInt64(Eval("Fee")).ToString("N0").Replace(".", ",") %></td>
-                                            <%-- <% if (AppUtils.UserName.Contains("admin"))
-                                                { %>
- <td><%#Convert.ToInt64(Eval("Reward")).ToString("N0").Replace(".", ",") %></td>
- <% } %>--%>
+
+
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td><%#Eval("LastTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td>
@@ -274,7 +285,7 @@
                                                     { %>
                                                 |
                                            <%--     <asp:LinkButton ID="lnCallback" runat="server" OnCommand="Callback_Command" CommandName="Callback" OnClientClick="return confirm('Bạn có muốn thực hiện?')" CommandArgument='<%#Eval("TransactionID")%>' Visible='<%# Eval("Status").ToString() == "0"||Eval("Status").ToString() == "-3"||Eval("Status").ToString() == "-4"  %>'> [Đơn đúng] </asp:LinkButton>--%>
-                                                 <asp:HyperLink
+                                                <asp:HyperLink
                                                     ID="lnbill"
                                                     CssClass="lightbox"
                                                     NavigateUrl='<%# "https://info.airapp.me/Pages/Detail.aspx?orderNo=" + Eval("TransactionID") %>'
@@ -313,7 +324,7 @@
     <script type="text/javascript" src="<%=Constant.ADMIN_PATH %>Content/bower_components/select2/dist/js/select2.full.min.js"></script>
 
     <script src="<%=Constant.ADMIN_PATH %>Content/fancybox2.1.5/jquery.fancybox.pack.js"></script>
-<link href="<%=Constant.ADMIN_PATH %>Content/fancybox2.1.5/jquery.fancybox.css" rel="stylesheet" />
+    <link href="<%=Constant.ADMIN_PATH %>Content/fancybox2.1.5/jquery.fancybox.css" rel="stylesheet" />
 
     <script type="text/javascript">
 
@@ -339,7 +350,7 @@
         })
         
     </script>
-     <script type="text/javascript">
+    <script type="text/javascript">
 
          var refreshPageInterval = 30;
 
@@ -368,7 +379,7 @@
              }
          }
 
-     </script>
+    </script>
     <script>
         $(function () {
             $(".lightbox").fancybox({
@@ -378,7 +389,7 @@
                 fitToView: true
             });
         });
-</script>
+    </script>
     <script type="text/javascript">
         function checkAll(obj1) {
             var returnVal = undefined;

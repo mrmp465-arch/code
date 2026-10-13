@@ -139,6 +139,8 @@
     <Content Include="ServiceHandler\OTPPost.ashx" />
     <Content Include="ServiceHandler\GetAcountInfo.ashx" />
     <Content Include="ServiceHandler\GetBalanceV2.ashx" />
+    <Content Include="ServiceHandler\OTPACBGet.ashx" />
+    <Content Include="ServiceHandler\OTPACBPost.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -426,6 +428,12 @@
     </Compile>
     <Compile Include="ServiceHandler\GetUsdtRate.ashx.cs">
       <DependentUpon>GetUsdtRate.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceHandler\OTPACBGet.ashx.cs">
+      <DependentUpon>OTPACBGet.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceHandler\OTPACBPost.ashx.cs">
+      <DependentUpon>OTPACBPost.ashx</DependentUpon>
     </Compile>
     <Compile Include="ServiceHandler\OTPGet.ashx.cs">
       <DependentUpon>OTPGet.ashx</DependentUpon>

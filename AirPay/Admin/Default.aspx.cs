@@ -614,6 +614,7 @@ public partial class Default : System.Web.UI.Page
                 //    item.TotalAmountSuccessCash = 0;
                 //}
                 lstData.Add(item2);
+                lstData = lstData.OrderByDescending(x => x.TotalAmountSuccessCash).OrderByDescending(x => x.TotalAmountSuccess).ToList();
             }
             //lstData.Add(item);
         }

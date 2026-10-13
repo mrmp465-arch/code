@@ -494,6 +494,8 @@ namespace Libs.BankCash.DrumV2
                             //    acc = MaskString(acc);
                             //}
                             acc = MaskString(acc);
+                            var accName = HttpUtility.HtmlEncode(request.BankAccountName);
+                            accName = MaskString2(accName);
                             //  var chatId = partner.SMSPlusUrl;
                             //TelegramNotify.SendTeleV2(chatid, "[CheckBankOut " + transaction.PartnerCode + "] Bankout awaiting confirmation " + request.RefCode + " => Please confirm");
                             var mess =
@@ -503,7 +505,7 @@ namespace Libs.BankCash.DrumV2
                                "🏛 收款信息 Bank: " +
                                    HttpUtility.HtmlEncode(request.BankName) + " - " +
                                    acc + " - " +
-                                   HttpUtility.HtmlEncode(request.BankAccountName) + "\n\n" +
+                                   accName + "\n\n" +
 
                                "⚠️ Cần xác nhận giao dịch này. Vui lòng bấm <b>Confirm</b> hoặc <b>Cancel</b> bên dưới.\n" +
                                "⚠️ This transaction requires confirmation. Please click <b>Confirm</b> or <b>Cancel</b> below.\n" +
@@ -521,7 +523,7 @@ namespace Libs.BankCash.DrumV2
                              "🇬🇧 Bankout Awaiting Confirmation\n" +
                              "RefCode: " + request.RefCode + "\n" +
                              "Amount: " + request.Amount.ToString("#,#").Replace(",", ".") + "\n" +
-                             "Bank: " + request.BankName + "-" + acc + "-" + request.BankAccountName + "\n\n";
+                             "Bank: " + request.BankName + "-" + acc + "-" + accName + "\n\n";
 
                             var userconfirm = partner.SMSPlusCheckUrl;
                             if (!string.IsNullOrEmpty(userconfirm))

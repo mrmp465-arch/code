@@ -85,7 +85,7 @@
 
                         <% if (AppUtils.IsAdmin)
                             { %>
-                        <div class="col-xs-12 col-sm-6 col-md-2" >
+                        <div class="col-xs-12 col-sm-6 col-md-2">
                             <asp:DropDownList ID="drpProvider" runat="server" CssClass="form-control ">
                             </asp:DropDownList>
                         </div>
@@ -234,19 +234,34 @@
                                             <% } %>
 
                                             <td><%#Eval("RefCode") %></td>
+
+                                            <% if (!AppUtils.IsAdmin)
+                                            { %>
+
                                             <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
                                                 <br />
-                                                <%= Resources.Pay.AccountNumber%>: <b><%#Eval("BankAccountNumber") %> </b>
+                                                <%= Resources.Pay.AccountNumber%>: <b><%# MaskString(Eval("BankAccountNumber").ToString() )%> </b>
                                                 <br />
-                                                <%= Resources.Pay.AccountName%>: <b><%#Eval("BankAccountName")%></b>
-                                                <%-- <asp:Panel ID="pnNote" runat="server" Visible='<%# Eval("Note").ToString() != ""  %>'>
+                                                <%= Resources.Pay.AccountName%>: <b><%#MaskString(Eval("BankAccountName").ToString())%></b>
 
-                                                    <%= Resources.Pay.Content%>:  <b><%#Eval("Note")%></b>
-                                                </asp:Panel>--%>
 
                                             </td>
+                                            <%}
+                                            else
+                                            {  %>
+
+                                            <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
+                                                <br />
+                                                <%= Resources.Pay.AccountNumber%>: <b><%# Eval("BankAccountNumber").ToString() %> </b>
+                                                <br />
+                                                <%= Resources.Pay.AccountName%>: <b><%#Eval("BankAccountName").ToString()%></b>
+
+
+                                            </td>
+                                            <%}%>
+
                                             <td><%#Eval("Mobile") %></td>
-                                            <td <%#GetAmountStyle(Eval("Amount"))%>> <%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
+                                            <td <%#GetAmountStyle(Eval("Amount"))%>><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
                                             <td><%#Convert.ToInt64(Eval("Fee")).ToString("N0").Replace(".", ",") %></td>
                                             <%-- <% if (AppUtils.UserName.Contains("admin"))
                                                 { %>

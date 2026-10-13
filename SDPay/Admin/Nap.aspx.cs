@@ -19,31 +19,32 @@ using System;
 
 public partial class Nap : System.Web.UI.Page
 {
-    string urlService = "http://127.0.0.1:1592/bankin/getmomo.ashx";
+    string urlService = "http://127.0.0.1:1592/bankin/order.ashx";
     JavaScriptSerializer serializer = new JavaScriptSerializer();
-    public string QR{ get; set; }
-    
+    public string QR { get; set; }
+
     public string MomoId { get; set; }
     public string MomoName
     {
         get; set;
     }
+    public string url = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (AppUtils.CheckRolesPermission("add.aspx"))
+        if (AppUtils.CheckRolesPermission("nap.aspx"))
         {
-           
         }
         else
         {
-            PanelContent.Visible = false;
+
+            HttpContext.Current.Response.Redirect(Constant.ADMIN_PATH + Resources.Url.Default);
         }
         Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
         Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         if (!IsPostBack)
         {
             Init();
-            /BindData();
+
             //GetListBankLog();
 
         }
@@ -86,7 +87,7 @@ public partial class Nap : System.Web.UI.Page
             //        balance += item.Balance;
             //    }
             //}
-           
+
         }
         //btView.Text = Resources.Pay.View;
         ////{
@@ -108,81 +109,20 @@ public partial class Nap : System.Web.UI.Page
         //txtEndTime.Text = DateTime.Now.ToString("MM/dd/yyyy");
         //txtBeginTime.Text = DateTime.Now.ToString("MM/dd/yyyy");
 
-      
+
     }
-    //protected void BindData()
-    //{
-    //    try
-    //    {
-    //        DateTime begintime = AppUtils.DateTimeParseExact(txtBeginTime.Text);
-    //        DateTime endtime = AppUtils.DateTimeParseExact(txtEndTime.Text);
-    //        endtime = endtime.AddDays(1).AddMilliseconds(-1);
-    //        string partnerCodes = drpPartner2.SelectedValue;
-          
-           
-    //        if (AppUtils.IsPartner && !AppUtils.IsAdmin)
-    //        {
 
-    //            if (string.IsNullOrEmpty(partnerCodes))
-    //            {
-    //                var lstPartner = new Partners().GetListByUserId(AppUtils.UserID);
-    //                if (lstPartner != null && lstPartner.Count > 0)
-    //                {
-    //                    partnerCodes = string.Join(",", lstPartner.Select(e => e.PartnerCode).ToArray());
-    //                }
-    //            }
-
-    //        }
-    //        var lstDataBank = new BankGateAPI().ReportDashboard(partnerCodes, begintime, endtime);
-         
-    //        var lstData = new List<BankDashboardReport>();
-    //        var item = new BankDashboardReport();
-    //        item.Type = "MOMO";
-
-    //        if (lstDataBank.Exists(x => x.Type == 1))
-    //        {
-    //            var data = lstDataBank.FirstOrDefault(x => x.Type == 1);
-    //            item.TotalFee = data.TotalFee;
-    //            item.TotalTrans = data.TotalTrans;
-    //            item.TotalTransSuccess = data.TotalTransSuccess;
-    //            item.TotalAmountSuccess = data.TotalAmountSuccess;
-    //        }
-    //        else
-    //        {
-    //            item.TotalFee = 0;
-    //            item.TotalTrans = 0;
-    //            item.TotalTransSuccess = 0;
-    //            item.TotalAmountSuccess = 0;
-    //        }
-            
-    //        lstData.Add(item);
-            
-    //        rptListBank.DataSource = lstData;
-    //        rptListBank.DataBind();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        NLogLogger.Info(ex.Message);
-    //        Response.Redirect(Constant.ADMIN_PATH + "500.html");
-    //    }
-    //}
-    //protected void btView_Click(object sender, EventArgs e)
-    //{
-        
-    //    BindData();
-       
-    //}
     public string GetInOut(object TotalTrans, object TotalTranSucess)
     {
         var totalTrans = long.Parse(TotalTrans.ToString());
         var totalTranSucess = long.Parse(TotalTranSucess.ToString());
 
-        
+
         return (totalTrans - totalTranSucess).ToString("#,#").Replace(".", ",");
     }
     protected void btAdd_Click(object sender, EventArgs e)
     {
-        var partner = new Partners().GetCache(AppUtils.UserName.Replace("nap", ""));
+        var partner = new Partners().GetCache(AppUtils.UserName);
         Order(partner.PartnerCode, partner.PublicKey);
     }
     //private void GetListBankLog()
@@ -195,20 +135,23 @@ public partial class Nap : System.Web.UI.Page
     //    rpBanklog.DataSource = _BankGateAPI.GetTable(50, AppUtils.UserName.Replace("nap",""), string.Empty, fromDate, requestTime, null, string.Empty, string.Empty, string.Empty, string.Empty, null, string.Empty, 1);
     //    rpBanklog.DataBind();
     //}
+
+
     private void Order(string partnerCode, string partnerKey)
     {
 
         if (string.IsNullOrEmpty(txtAmount.Text))
             return;
-        var requestContent = new RequestData()
+        var requestContent = new OrderRequest()
         {
 
-
-            RequestTime = "random",
+            Amount = int.Parse(txtAmount.Text),
+            CallbackUrl = "",
+            RefCode = partnerCode + DateTime.Now.ToString("MMddHHmmss"),
+            BankCode = "random",
             PartnerCode = partnerCode,
         };
-
-        var signature = Encrypts.MD5(partnerCode + "random" + partnerKey);
+        var signature = Encrypts.MD5(partnerCode + "random" + requestContent.Amount + requestContent.RefCode + requestContent.CallbackUrl + partnerKey);
         requestContent.Signature = signature;
         NLogLogger.Info(new string[] { "Bank Test", "Requst Core", urlService, serializer.Serialize(requestContent) });
         var serviceResponse = PostJson(urlService, serializer.Serialize(requestContent));
@@ -216,21 +159,25 @@ public partial class Nap : System.Web.UI.Page
         var resObj = serializer.Deserialize<APIResponse>(serviceResponse);
         if (resObj.ResponseCode > 0)
         {
-            var orderResponse = serializer.Deserialize<MomoAccount>(resObj.ResponseContent);
-            dvBankInfo.Visible = true;
-            //lbAccountName.Text = orderResponse.BankAccountName;
-            lbAccountNumber.Text = orderResponse.MomoId;
-            MomoId= orderResponse.MomoId;
-            MomoName = orderResponse.MomoName;
-            
-            lbAccountName.Text = orderResponse.MomoName;
-            qrCode.Width = 200;
-            qrCode.ImageUrl = orderResponse.QR;
+            var orderResponse = serializer.Deserialize<OrderResponse>(resObj.ResponseContent);
+            url = orderResponse.Url;
+            Page.ClientScript.RegisterStartupScript(
+                this.GetType(),
+                "Script",
+                "PopupManager('" + url + "');",
+                true
+            );
             //GetListBankLog();
         }
         else
         {
-
+            Page.ClientScript.RegisterClientScriptBlock(
+                 this.GetType(),
+                 "Script",
+                 "$(document).ready(function() { alert('" + resObj.Description + "'); });",
+                 true
+             );
+            return;
         }
 
 
@@ -278,6 +225,7 @@ public partial class Nap : System.Web.UI.Page
         public string BankName { get; set; }
         //public int Amount { get; set; }
         public string OrderNo { get; set; }
+        public string Url { get; set; }
         //public int Timeout { get; set; }
     }
     public class MomoAccount

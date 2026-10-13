@@ -21,7 +21,7 @@ namespace BankGateV2.ServiceHandler
             //context.Response.ContentType = "text/plain";
             var accNo = HttpContext.Current.Request.QueryString["accNo"];
            
-            NLogLogger.Info(new string[] { "OTPGet", "ProcessRequest", accNo });
+            //NLogLogger.Info(new string[] { "OTPGet", "ProcessRequest", accNo });
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             var isOTP = false;
 
