@@ -64,7 +64,8 @@
                                     <asp:ListItem Text="6" Value="6"></asp:ListItem>
                                     <asp:ListItem Text="7" Value="7"></asp:ListItem>
                                     <asp:ListItem Text="8" Value="8"></asp:ListItem>
-
+                                    <asp:ListItem Text="9" Value="9"></asp:ListItem>
+                                    <asp:ListItem Text="10" Value="10"></asp:ListItem>
                                     <asp:ListItem Text="All" Value="0"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
@@ -195,7 +196,7 @@
                                             <td><%#Eval("Id") %></td>
                                             <td style="<%#GetSolutionStyle(Eval("Solution")) %>"><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.MomoAccountEdit %>?id=<%#Eval("Id") %>" title="<%#Eval("StopScanAt") %>"><%#Eval("MomoName") %>
                                                
-                                                </a></td>
+                                            </a></td>
                                             <td><%#Eval("MomoId") %></td>
                                             <%--<td><%#Convert.ToInt32(Eval("BalanceDayIn")).ToString("N0").Replace(",", ".") %></td>--%>
                                             <td><%#Convert.ToInt64(Eval("BalanceDayIn")).ToString("N0") %></td>
@@ -371,16 +372,16 @@
                         UnLoading();
                     }
                 });
-            }
+    }
 
-        }
-        $(document).ready(function () {
-            $(".cbxStatus").click(function () {
-                UpdateBank($(this).attr("title"));
-            });
-            //$(".lbstatus").click(function () {
-            //    StopBank($(this).attr("title"));
-            //});
-        });
-    </script>
+}
+$(document).ready(function () {
+    $(".cbxStatus").click(function () {
+        UpdateBank($(this).attr("title"));
+    });
+    //$(".lbstatus").click(function () {
+    //    StopBank($(this).attr("title"));
+    //});
+});
+</script>
 </asp:Content>

@@ -113,7 +113,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
         int page = int.Parse(ddlPage.SelectedValue);
         if (page > 0)
-            data = data.Skip((page - 1) * 200).Take(200).ToList();
+            data = data.Skip((page - 1) * 100).Take(100).ToList();
 
         rptList.DataSource = data;
         rptList.DataBind();

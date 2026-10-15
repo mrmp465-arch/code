@@ -30,8 +30,8 @@
                                 <span class="input-group-addon" style="padding: 5px;">Loại GD</span>
                                 <asp:DropDownList ID="drpType" runat="server" CssClass="form-control ">
                                     <asp:ListItem Text="Loại GD" Value="0"></asp:ListItem>
-                                    <asp:ListItem Text="Bank" Value="1"></asp:ListItem>
-                                   
+                                    <asp:ListItem Text="Bank" Value="1" Selected="True"></asp:ListItem>
+                                     <asp:ListItem Text="Momo" Value="2" ></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>

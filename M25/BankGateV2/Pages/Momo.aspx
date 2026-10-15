@@ -169,7 +169,7 @@
                                     <!--<img id="qr_image" src="" />-->
                                     <h3 id="countdown" style="color: crimson;"></h3>
                                     <!--<p class="mb-1 px-3 lngvi" style="color: #4e73df">Sử dụng app <strong>momo</strong> quét mã, và hãy chắc chắn rằng bạn điền <strong id="note_message"></strong> vào ô lời nhắn</p>-->
-                                   <%-- <a class="btn btn-success" style="color: white" href="<%=LinkOpenApp %>" id="deeplink">Ấn để mở Momo</a>--%>
+                                    <a class="btn btn-success" style="color: white" href="<%=LinkOpenApp %>" id="deeplink">Ấn để mở Momo</a>
                                 </div>
                                 <div class="col-lg-7" style="padding-top: 1rem; text-align: center;">
 
@@ -327,30 +327,30 @@
 </script>
 <script type="text/javascript">
 
-    var refreshPageInterval = 30;
+var refreshPageInterval = 30;
 
-    setInterval("countDownPageRefresh()", 1000);//1 s gọi 1 lần
-    $(document).mouseover(function () {
+setInterval("countDownPageRefresh()", 5000);//1 s gọi 1 lần
+$(document).mouseover(function () {
+    funcResetRefreshPageInterval();
+});
+$(window).scroll(function () {
+    funcResetRefreshPageInterval();
+});
+window.onkeypress = funcResetRefreshPageInterval;
+function funcResetRefreshPageInterval() {
+    refreshPageInterval = 30;
+}
+function countDownPageRefresh() {
+    refreshPageInterval = refreshPageInterval - 5;
+    //console.log(refreshPageInterval);
+
+    if (refreshPageInterval <= 0) {
         funcResetRefreshPageInterval();
-    });
-    $(window).scroll(function () {
-        funcResetRefreshPageInterval();
-    });
-    window.onkeypress = funcResetRefreshPageInterval;
-    function funcResetRefreshPageInterval() {
-        refreshPageInterval = 30;
+
+
+        location.reload();
     }
-    function countDownPageRefresh() {
-        refreshPageInterval = refreshPageInterval - 1;
-        //console.log(refreshPageInterval);
-
-        if (refreshPageInterval <= 0) {
-            funcResetRefreshPageInterval();
-
-
-            location.reload();
-        }
-    }
+}
 
 </script>
 

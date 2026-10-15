@@ -176,9 +176,9 @@ namespace Libs.BankDirect.FastPay
                     PartnerCode = Apikey,
                 };
                 requestData.Signature = signature;
-                NLogLogger.Info(new string[] { "fast", "Order Request", urlService , serializer.Serialize(requestData)});
+               // NLogLogger.Info(new string[] { "fast", "Order Request", urlService , serializer.Serialize(requestData)});
                 var response = Task.Run(async () => await MDrumBankLib.PostTask(urlService, serializer.Serialize(requestData))).Result;
-                NLogLogger.Info(new string[] { "fast", "Order Response", response });
+                //NLogLogger.Info(new string[] { "fast", "Order Response", response });
 
                
 
@@ -228,7 +228,7 @@ namespace Libs.BankDirect.FastPay
                             AccountName = orderResponse.BankAccountName,
                         };
                         orderRes.Url = orderResponse.Url;
-                        orderRes.QRCode =orderResponse.QRCode;
+                        orderRes.QRCode = "data:image/png;base64,"+ orderResponse.QRCode.Replace(" ","+");
                         string jsonContent = JsonConvert.SerializeObject(orderRes, new JsonSerializerSettings
                         {
                             StringEscapeHandling = StringEscapeHandling.Default
