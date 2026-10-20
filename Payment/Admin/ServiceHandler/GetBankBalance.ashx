@@ -21,7 +21,17 @@ public class GetBankBalance : IHttpHandler
         //context.Response.ContentType = "text/plain";
         //context.Response.Write("Hello World");
         var data = new PostGetHelper().GetFromQueryString<InputData>();
-        var result = GetBalanceBank(data.BankCode, data.BankId);
+        var result = "";
+        if (data.BankCode == "Momo")
+
+        {
+
+
+             result = GetBalanceMomo( data.BankId);
+        }
+        else {
+            result = GetBalanceBank(data.BankCode, data.BankId);
+        }
         context.Response.Write(result);
     }
 
@@ -49,6 +59,29 @@ public class GetBankBalance : IHttpHandler
             return Convert.ToInt64(resObj.ResponseContent).ToString("N0");
         }
         return "-1";
+    }
+    private string GetBalanceMomo(string momoId)
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+        var requesData = new RequestData()
+        {
+            CommandCode = "BALANCE_GET",
+            RequestContent = momoId
+        };
+
+        var res = Task.Run(async () => await CallbackJson("http://127.0.0.1:9002/MomoService.ashx", serializer.Serialize(requesData))).Result;
+        var resObj = serializer.Deserialize<APIResponse>(res);
+        if (resObj != null && resObj.ResponseCode == (int)ResponseCode.TransactionSuccessful)
+        {
+            return Convert.ToInt64(resObj.ResponseContent).ToString("N0");
+        }
+        else
+        {
+
+            return "-1";
+        }
+
     }
     public static async Task<string> CallbackJson(string url, string postData)
     {

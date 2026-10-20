@@ -111,6 +111,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             return;
 
         }
+        NLogLogger.Info(new string[] { "withdraw", AppUtils.UserName, GetIP() });
         TelegramClient.SendTeleV2("-1003758147588", "Tạo lệnh rút tiền  " + amount.ToString("#,#").Replace(",", ".") + " từ user " + AppUtils.UserName + " Mã lệnh " + result.ToString());
         AlertSuccesss.Text = Resources.Pay.SuccessOrder;
         Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#MAlertSuccess').modal()}); ", true);
@@ -635,6 +636,68 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
 
         }
         return bank;
+    }
+    public static string GetIP()
+    {
+        string IP = "";
+        //return IP;
+        if (HttpContext.Current.Request.ServerVariables["HTTP_CLIENT_IP"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_CLIENT_IP"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_X_CLUSTER_CLIENT_IP"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_X_CLUSTER_CLIENT_IP"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED_FOR"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED_FOR"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (IP == "")
+        {
+            IP = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+        }
+        if (IP.Contains(","))
+            return IP.Split(',')[0].Trim();
+
+
+        return IP;
     }
     //protected void drpPartner_SelectedIndexChanged(object sender, EventArgs e)
     //{

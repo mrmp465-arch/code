@@ -97,7 +97,8 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
         var lstProviders = providers.GetListByUserId(_User.UserID);
         AppUtils.ProviderUser = lstProviders;
 
-        NLogLogger.Info(new string[] { "SignIn", AppUtils.UserName, "Providers", serializer.Serialize(lstProviders), "IsProvider: " + _User.IsProvider });
+        NLogLogger.Info(new string[] { "SignIn", AppUtils.UserName, "Providers", serializer.Serialize(lstProviders), "IsProvider: " + _User.IsProvider, GetIP() });
+
 
         string url = Request["u"];
         url = url == null ? Constant.ADMIN_PATH + "" : url;

@@ -382,7 +382,47 @@
 
         }
        
+this.DocumentHeght = function () {
+    return $(document).height();
+};
+this.GetFullHeight = function () {
+    return parseInt($(document).scrollTop() + $('html').height());
+};
+this.DocumentWidth = function () { return $(document).width(); };
+this.WindowHeight = function () { return $(window).height(); };
+this.WindowWidth = function () { return $(window).width(); };
+function Loading() {
+    //this.UnLoading();
+    var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
+    $("#<%=lblBalanceMomo.ClientID %>").html(html);
 
+};
+function UnLoading() {
+    $('#LoadingContainer').remove();
+
+};
+if ($("#<%=lblBalanceMomo.ClientID %>").html() != "-1") {
+    var params = {
+        BankCode: 'Momo',
+        BankId: $("#<%=txtMomoId.ClientID %>").val(),
+
+    };
+    Loading();
+    $.ajax({
+        type: 'GET',
+        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+        data: params,
+        success: function (data) {
+            /*UnLoading();*/
+            $("#<%=lblBalanceMomo.ClientID %>").html(data);
+
+        },
+        error: function () {
+            $("#<%=lblBalanceMomo.ClientID %>").html("");
+            /*  UnLoading();*/
+        }
+    });
+}
 
         //$(document).ready(function () {
         //    $('.base64-img').on('click', function () {

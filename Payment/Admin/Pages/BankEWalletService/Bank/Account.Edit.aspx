@@ -364,7 +364,8 @@
                 }
             }
 
-        }
+}
+
         this.DocumentHeght = function () {
             return $(document).height();
         };
@@ -405,7 +406,7 @@
                     /*  UnLoading();*/
                 }
             });
-}
+          }
 
 
 

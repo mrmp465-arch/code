@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Khoai;
+using Libs.Utils;
+using RestSharp;
+using RestSharp.Serializers;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -12,8 +16,6 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Khoai;
-using Libs.Utils;
 using static BankGateTest.Card;
 
 namespace BankGateTest
@@ -27,12 +29,61 @@ namespace BankGateTest
         string partnerCode = "pp";
         string serviceCode = "cardtelco";
         string commandCode = "usecard";
-       
+
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
         protected void Page_Load(object sender, EventArgs e)
         {
             //string qrData = "00020101021226530010vn.zalopay01064503190203001031813906273727886981838620010A00000072701320006970454011899ZP25195O143493990208QRIBFTTA52047399530370454061620005802VN6304D15A";
             //ParseMoMoQR(qrData);
-            SendConfirmMessage("-4886123515", "2");
+            //SendConfirmMessage("-4886123515", "2");
+            var number = HttpContext.Current.Request.QueryString["number"]; ;
+            for (var i = 0; i < int.Parse(number); i++)
+            {
+                Order();
+                System.Threading.Thread.Sleep(100);
+
+            }
+        }
+        private static readonly HttpClient client = new HttpClient();
+        public void Order()
+        {
+            string url = "http://127.0.0.1:9002/BankService.ashx";
+
+            var requestData = new RequestData2()
+            {
+                PartnerCode = "all",
+                CommandCode = "GET_ORDER",
+                Source = "qx88",
+                RequestContent = "100000",
+                Signature = ""
+            };
+            var bankrequest = new RequestBank
+            {
+                Amount =100000,
+                BankCode = "ACB"
+            };
+            
+            requestData.RequestContent = serializer.Serialize(bankrequest);
+            var result = PostJson(url, serializer.Serialize(requestData));
+            NLogLogger.Info(new string[] { "Order", result });
+        }
+        public class RequestBank
+        {
+            public string BankCode { get; set; }
+            public int Amount { get; set; }
+
+        }
+        public class RequestData2
+        {
+            public string PartnerCode { get; set; }
+            public string ServiceCode { get; set; }
+            public string CommandCode { get; set; }
+            public string RequestContent { get; set; }
+
+            public string Source { get; set; }
+
+
+            public string Signature { get; set; }
         }
 
         public static void SendConfirmMessage(string chatId, string requestId)

@@ -162,7 +162,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
                 btnSenOtpSms.Enabled = false;
                 pnLogin.Visible = true;
 
-                lblBalanceMomo.Text = GetBalanceMomo(txtMomoId.Text).ToString("N0");
+                //lblBalanceMomo.Text = GetBalanceMomo(txtMomoId.Text).ToString("N0");
                 if (_Momo.StatusExtra == -6 || _Momo.StatusExtra == -7 || _Momo.StatusExtra == -8)
                 {
                     loginStatus.Attributes["style"] = "border-color: red";
