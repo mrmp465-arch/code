@@ -24,6 +24,17 @@ public partial class Pages_Momo_AccountCash : System.Web.UI.Page
     protected void btAdd_Click(object sender, EventArgs e)
     {
         var obj = new BankAccountCash();
+        if (string.IsNullOrEmpty(txtAccountName.Text) || string.IsNullOrEmpty(txtAccountNumber.Text) || string.IsNullOrEmpty(drpBankCode.SelectedValue))
+        {
+
+            Page.ClientScript.RegisterClientScriptBlock(
+                this.GetType(),
+                "Script",
+                "$(document).ready(function() { alert('Vui lòng nhập đủ thông tin'); });",
+                true
+            );
+            return;
+        }
         obj.BankCode = drpBankCode.SelectedValue;
         obj.AccountName = txtAccountName.Text.Trim();
         obj.AccountNumber = txtAccountNumber.Text.Trim();

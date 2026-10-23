@@ -1,21 +1,23 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Libs.API;
+using Libs.Utils;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IdentityModel.Protocols.WSTrust;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Libs.API;
-using System.Data;
-using Libs.Utils;
-using System.Web.Script.Serialization;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Text;
-using System.Drawing.Imaging;
-using System.Drawing;
-using System.IO;
 
 
 public partial class Pages_Momo_Accounts : System.Web.UI.Page
@@ -36,6 +38,19 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
             init();
             BindData();
         }
+        if (IsPostBack)
+        {
+            string eventTarget = Request["__EVENTTARGET"];
+            string eventArgument = Request["__EVENTARGUMENT"];
+
+            if (eventTarget == "UpdateAll")
+            {
+
+
+                btApp6Click();
+            }
+
+        }
     }
     protected void BindData()
     {
@@ -44,10 +59,10 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
         var _user = new Users().Get(AppUtils.UserID);
 
-        if (_user.Source != "inhouse")
-        {
-            data = data.Where(x => x.Source == _user.Source).ToList();
-        }
+        //if (_user.Source != "m25")
+        //{
+        //    data = data.Where(x => x.Source == _user.Source).ToList();
+        //}
 
         var status = int.Parse(drpStatus.SelectedValue);
         //if (status == -2)
@@ -100,6 +115,11 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         if (statusDetech > -2)
             data = data.Where(x => x.StatusDetection == statusDetech).ToList();
 
+
+        var statusOver = int.Parse(drpOver.SelectedValue);
+        if (statusOver > 0)
+            data = data.Where(x => x.StatusOver == statusOver & x.Status == 1).ToList();
+
         if (!string.IsNullOrEmpty(drpSolution.SelectedValue))
         {
             data = data.Where(x => x.Solution == drpSolution.SelectedValue).ToList();
@@ -135,7 +155,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
         int page = int.Parse(ddlPage.SelectedValue);
         if (page > 0)
-            data = data.Skip((page - 1) * 200).Take(200).ToList();
+            data = data.Skip((page - 1) * 100).Take(100).ToList();
 
         rptList.DataSource = data;
         rptList.DataBind();
@@ -186,44 +206,121 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 {
                     _Bank.Status = 1;
                     _Bank.Update();
-                    NotifyMomo(_Bank.MomoId, _Bank.Status);
+                    if (_Bank.Solution == "APIV3")
+                        NotifyMomo(_Bank.MomoId, _Bank.Status);
                 }
-                //save file ra
-                //if(!string.IsNullOrEmpty(_Bank.ProfileImage))
-                //{
-                //    try
-                //    {
-                //        string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", "MOMO", _Bank.MomoId);
-                //        if (!Directory.Exists(UploadFolderPhysical))
-                //        {
-                //            Directory.CreateDirectory(UploadFolderPhysical);
 
-                //        }
-                //        var lstProfileImage = serializer.Deserialize<List<MomoProfileImage>>(_Bank.ProfileImage);
-                //        for (var id = 0; id < 8; id++)
-                //        {
-                //            if (lstProfileImage[id].Base64.Length>1000)
-                //            {
-                //                SaveUploadImageBase(lstProfileImage[id].Base64, UploadFolderPhysical, id+ 1);
-                //                lstProfileImage[id].Base64 = "";
-                //                lstProfileImage[id].ImgName = (id+1)+".jpg";
-                //            }    
-
-
-                //        }
-                //        _Bank.ProfileImage = serializer.Serialize(lstProfileImage);;
-                //        _Bank.Update();
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        NLogLogger.Info(new string[] { "CMS", "Exeption savefile", ex.Message });
-                //    }
-                //}    
 
             }
         }
         Response.Redirect("/cmspay/pages/momo/accounts.aspx");
     }
+    //tat
+    protected void btApp4Click(object sender, EventArgs e)
+
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+        for (int i = 0; i < rptList.Items.Count; i++)
+        {
+            var _Partner = new Partners();
+            CheckBox cbx = (CheckBox)rptList.Items[i].FindControl("cbxStatus2");
+            Label TransactionID = (Label)rptList.Items[i].FindControl("ID");
+            if (cbx.Checked)
+            {
+                string MomoId = TransactionID.Text;
+                var _Bank = new MomoAccounts();
+                _Bank = _Bank.Get(MomoId);
+                if (_Bank.Status == 1)
+                {
+                    _Bank.Status = 0;
+                    _Bank.Update();
+                    if (_Bank.Solution == "APIV3")
+                        NotifyMomo(_Bank.MomoId, _Bank.Status);
+                }
+
+
+            }
+        }
+        Response.Redirect("/cmspay/pages/momo/accounts.aspx");
+    }
+    //quet
+    protected void btApp5Click(object sender, EventArgs e)
+
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+        for (int i = 0; i < rptList.Items.Count; i++)
+        {
+            var _Partner = new Partners();
+            CheckBox cbx = (CheckBox)rptList.Items[i].FindControl("cbxStatus2");
+            Label TransactionID = (Label)rptList.Items[i].FindControl("ID");
+            if (cbx.Checked)
+            {
+                string MomoId = TransactionID.Text;
+                var _Bank = new MomoAccounts();
+                _Bank = _Bank.Get(MomoId);
+                int Id = _Bank.Id;
+                _Bank.StopScanAt_Update(Id, DateTime.Now.AddMinutes(10));
+
+
+                if (_Bank.Solution == "APIV3")
+                {
+                    var url = "http://127.0.0.1:9003/MomoService.ashx";
+
+                    var requesData = new
+                    {
+                        CommandCode = "TRANS_SCAN",
+                        RequestContent = _Bank.MomoId,
+                    };
+                    var res = Task.Run(async () => await CallbackJson(url, serializer.Serialize(requesData))).Result;
+                }
+
+
+            }
+        }
+        Response.Redirect("/cmspay/pages/momo/accounts.aspx");
+    }
+    protected void btApp6Click()
+
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+
+        for (int i = 0; i < rptList.Items.Count; i++)
+        {
+            var _Partner = new Partners();
+            CheckBox cbx = (CheckBox)rptList.Items[i].FindControl("cbxStatus2");
+            Label TransactionID = (Label)rptList.Items[i].FindControl("ID");
+            if (cbx.Checked)
+            {
+                string MomoId = TransactionID.Text;
+                var _Bank = new MomoAccounts();
+                _Bank = _Bank.Get(MomoId);
+                int Id = _Bank.Id;
+                if (Convert.ToInt32(txtBalanceMaxDay.Text) > 0)
+                    _Bank.BalanceMaxDay = Convert.ToInt32(txtBalanceMaxDay.Text);
+                if (Convert.ToInt32(txtBalanceMaxMonth.Text) > 0)
+                    _Bank.BalanceMaxMonth = Convert.ToInt32(txtBalanceMaxMonth.Text);
+                if (!string.IsNullOrEmpty(drpType2.SelectedValue))
+                    _Bank.Type = drpType2.SelectedValue;
+
+                if (!string.IsNullOrEmpty(drpSolution2.SelectedValue))
+                    _Bank.Solution = drpSolution2.SelectedValue;
+
+                _Bank.Update();
+                System.Threading.Thread.Sleep(100);
+                if (drpSolution2.SelectedValue == "APIV2")
+                {
+                    NotifyMomo(_Bank.MomoId, 0);
+                }
+
+
+            }
+        }
+        Response.Redirect("/cmspay/pages/momo/accounts.aspx");
+    }
+    
     public string GetDate(object createDate)
     {
         if (createDate != null)
@@ -251,93 +348,93 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 string MomoId = TransactionID.Text;
                 var _Bank = new MomoAccounts();
                 _Bank = _Bank.Get(MomoId);
-                
+
                 //save file ra
-               
-                    try
+
+                try
+                {
+                    string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", "MOMO", _Bank.MomoId);
+                    if (!Directory.Exists(UploadFolderPhysical))
                     {
-                        string UploadFolderPhysical = Path.Combine(@"Z:\M25PAY", "MOMO", _Bank.MomoId);
-                        if (!Directory.Exists(UploadFolderPhysical))
-                        {
-                            Directory.CreateDirectory(UploadFolderPhysical);
+                        Directory.CreateDirectory(UploadFolderPhysical);
 
-                        }
-                        var lstProfileImage = new List<MomoProfileImage>();
-
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-                        lstProfileImage.Add(new MomoProfileImage
-                        {
-                            Base64 = "/cmspay/content/noimage.png",
-                            ImgName = "",
-                            Detection = "",
-                        });
-
-                        if (!string.IsNullOrEmpty(_Bank.ProfileImage))
-                        {
-                            lstProfileImage = serializer.Deserialize<List<MomoProfileImage>>(_Bank.ProfileImage);
-                        }
-
-                       
-                        for (var id = 0; id < 8; id++)
-                        {
-                            var fileindex = id+1;
-                            string filePath1 = Path.Combine(UploadFolderPhysical, fileindex+".jpg");
-                            if (File.Exists(filePath1))
-                            {
-                               
-                                lstProfileImage[id].ImgName = fileindex+".jpg";
-                                lstProfileImage[id].Base64 = "";
-                            }
-                        }
-                        _Bank.ProfileImage = serializer.Serialize(lstProfileImage); ;
-                        _Bank.Update();
                     }
-                    catch (Exception ex)
+                    var lstProfileImage = new List<MomoProfileImage>();
+
+                    lstProfileImage.Add(new MomoProfileImage
                     {
-                        NLogLogger.Info(new string[] { "CMS", "Exeption savefile", ex.Message });
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+                    lstProfileImage.Add(new MomoProfileImage
+                    {
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+                    lstProfileImage.Add(new MomoProfileImage
+                    {
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+                    lstProfileImage.Add(new MomoProfileImage
+                    {
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+                    lstProfileImage.Add(new MomoProfileImage
+                    {
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+                    lstProfileImage.Add(new MomoProfileImage
+                    {
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+                    lstProfileImage.Add(new MomoProfileImage
+                    {
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+                    lstProfileImage.Add(new MomoProfileImage
+                    {
+                        Base64 = "/cmspay/content/noimage.png",
+                        ImgName = "",
+                        Detection = "",
+                    });
+
+                    if (!string.IsNullOrEmpty(_Bank.ProfileImage))
+                    {
+                        lstProfileImage = serializer.Deserialize<List<MomoProfileImage>>(_Bank.ProfileImage);
                     }
-                
+
+
+                    for (var id = 0; id < 8; id++)
+                    {
+                        var fileindex = id + 1;
+                        string filePath1 = Path.Combine(UploadFolderPhysical, fileindex + ".jpg");
+                        if (File.Exists(filePath1))
+                        {
+
+                            lstProfileImage[id].ImgName = fileindex + ".jpg";
+                            lstProfileImage[id].Base64 = "";
+                        }
+                    }
+                    _Bank.ProfileImage = serializer.Serialize(lstProfileImage); ;
+                    _Bank.Update();
+                }
+                catch (Exception ex)
+                {
+                    NLogLogger.Info(new string[] { "CMS", "Exeption savefile", ex.Message });
+                }
+
 
             }
         }
@@ -433,7 +530,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
     }
     public void NotifyMomo(string momoid, int status)
     {
-        var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         var obj = new { momoId = momoid, action = "start" };
         if (status != 1)
             obj = new { momoId = momoid, action = "stop" };
@@ -448,7 +545,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
     {
         JavaScriptSerializer serializer = new JavaScriptSerializer();
-        var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         for (int i = 0; i < rptList.Items.Count; i++)
         {
             var _Partner = new Partners();
@@ -532,7 +629,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         _Bank = _Bank.Get();
         if (_Bank.Solution == "APIV3")
         {
-            var url = "http://127.0.0.1:9002/MomoService.ashx";
+            var url = "http://127.0.0.1:9003/MomoService.ashx";
 
             var requesData = new
             {

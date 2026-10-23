@@ -137,9 +137,11 @@ public partial class Default : System.Web.UI.Page
         drpCardType.DataBind();
         drpCardType.Items.Insert(0, new ListItem("Type:", ""));
         drpCardType.Items.Insert(1, new ListItem("BankIN", "BankIN"));
-        drpCardType.Items.Insert(2, new ListItem("BankOUT", "BankOUT"));
-        drpCardType.Items.Insert(3, new ListItem("Card", "Card"));
-        drpCardType.Items.Insert(4, new ListItem("BuyCard", "BuyCard"));
+        drpCardType.Items.Insert(2, new ListItem("MomoIN", "MomoIN"));
+        drpCardType.Items.Insert(3 ,new ListItem("BankOUT", "BankOUT"));
+        drpCardType.Items.Insert(4, new ListItem("MomoOUT", "MomoOUT"));
+        drpCardType.Items.Insert(5, new ListItem("Card", "Card"));
+        drpCardType.Items.Insert(6, new ListItem("BuyCard", "BuyCard"));
     }
     protected void btAdd_Click(object sender, EventArgs e)
     {

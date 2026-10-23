@@ -129,22 +129,22 @@
                             </div>
 
                         </div>
-                        
+
                         <div class="col-xs-12 col-sm-6 col-md-2">
                             <div class="input-group">
                                 <span class="input-group-addon" style="padding: 5px;">Phân loại</span>
                                 <asp:DropDownList ID="drpOver" runat="server" CssClass="form-control select2">
                                     <asp:ListItem Text="Tất cả" Value="-1"></asp:ListItem>
-                                    <asp:ListItem Text="OverDay" Value="2" ></asp:ListItem>
-                                     <asp:ListItem Text="OverMonth" Value="3" ></asp:ListItem>
-                                   
+                                    <asp:ListItem Text="OverDay" Value="2"></asp:ListItem>
+                                    <asp:ListItem Text="OverMonth" Value="3"></asp:ListItem>
+
                                 </asp:DropDownList>
                             </div>
 
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-1">
                             <div class="input-group">
-                                
+
                                 <asp:DropDownList ID="drpDetect" runat="server" CssClass="form-control select2">
                                     <asp:ListItem Text="Detect" Value="-2"></asp:ListItem>
                                     <asp:ListItem Text="Chưa detect" Value="-1"></asp:ListItem>
@@ -155,9 +155,9 @@
                             </div>
                         </div>
 
-                        <div class="col-xs-12 col-sm-6 col-md-1" >
+                        <div class="col-xs-12 col-sm-6 col-md-1">
                             <div class="input-group">
-                               
+
                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control select2">
                                     <asp:ListItem Text="Giải pháp" Value=""></asp:ListItem>
                                     <asp:ListItem Text="Quét His" Value="APIV2"></asp:ListItem>
@@ -213,7 +213,7 @@
                                             OnClientClick="return CheckApp2();"
                                             OnClick="btApp2Click">
                                         <i class="fa fa-power-off text-green"></i> Bật
-                                    </asp:LinkButton>
+                                        </asp:LinkButton>
                                     </li>
                                     <li>
                                         <asp:LinkButton ID="btApp4" runat="server"
@@ -229,7 +229,13 @@
                                             OnClick="btApp5Click">
                                             <i class="fa fa-refresh text-blue"></i> Quét
                                         </asp:LinkButton>
-                                        </li>
+                                    </li>
+                                    <li>
+                                        <asp:LinkButton ID="LinkButton1" runat="server"
+                                            OnClientClick="return CheckApp6();">
+                                            <i class="fa fa-edit text-blue"></i> Sửa
+                                        </asp:LinkButton>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -366,6 +372,44 @@
 
             <!-- /.row -->
     </section>
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sửa đồng loạt</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Số tiền nhận tối đa trong ngày (triệu) </p>
+                    <asp:TextBox ID="txtBalanceMaxDay" runat="server" CssClass="form-control" placeholder="Số tiền nhận tối đa trong ngày" Text="0"></asp:TextBox>
+                    <br />
+                    <p>Số tiền nhận tối đa trong tháng (triệu) </p>
+                    <asp:TextBox ID="txtBalanceMaxMonth" runat="server" CssClass="form-control" placeholder="Số tiền nhận tối đa trong tháng" Text="0"></asp:TextBox>
+                    <br />
+                    <p>Loại  </p>
+                    <asp:DropDownList ID="drpType2" runat="server" CssClass="form-control">
+                        <asp:ListItem Text="Không update" Value=""></asp:ListItem>
+                        <asp:ListItem Text="IN" Value="IN"></asp:ListItem>
+                        <asp:ListItem Text="OUT" Value="OUT"></asp:ListItem>
+                        <asp:ListItem Text="INOUT" Value="INOUT"></asp:ListItem>
+                        <asp:ListItem Text="OUTALL" Value="OUTALL"></asp:ListItem>
+                    </asp:DropDownList>
+                    <br />
+                    <p>Giải pháp </p>
+                    <asp:DropDownList ID="drpSolution2" runat="server" CssClass="form-control">
+                        <asp:ListItem Text="Không update" Value=""></asp:ListItem>
+                        <asp:ListItem Text="Quét His" Value="APIV2"></asp:ListItem>
+                        <asp:ListItem Text="Notify" Value="APIV3"></asp:ListItem>
+                        <%--<asp:ListItem Text="APIV4" Value="APIV4"></asp:ListItem>
+     <asp:ListItem Text="API" Value="API"></asp:ListItem>--%>
+                    </asp:DropDownList>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmUpdateAll()">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- /.content -->
 </asp:Content>
 
@@ -473,7 +517,7 @@ $(document).ready(function () {
     //    StopBank($(this).attr("title"));
     //});
 });
-</script>
+    </script>
     <script type="text/javascript">
         function checkAll(obj1) {
             var returnVal = undefined;
@@ -624,6 +668,42 @@ function CheckApp5() {
         return true;
     }
     return false;
+}
+
+function CheckApp6() {
+    var check = 0;
+    $('.CheckAll input').each(function (i, e) {
+
+        if ($(e).prop("checked") == true) {
+            check = 1;
+
+        }
+
+    });
+
+    if (check == 0) {
+
+        alert('Vui lòng chọn tài khoản để sửa');
+        return false;
+    }
+    $('#updateModal').modal();
+    return false
+    
+}
+function confirmUpdateAll() {
+   
+    if ($("#<%=txtBalanceMaxDay.ClientID %>").val() == '') {
+
+        alert('Vui lòng nhập số tiền nhận tối đa trong ngày');
+        return false;
+    }
+    if ($("#<%=txtBalanceMaxMonth.ClientID %>").val() == '') {
+
+        alert('Vui lòng nhập số tiền nhận tối đa trong tháng');
+        return false;
+    }
+    // Gửi OTP về server qua __doPostBack
+    __doPostBack('UpdateAll','update');
 }
     </script>
 </asp:Content>

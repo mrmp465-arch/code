@@ -275,7 +275,7 @@
                             <asp:TextBox ID="txtRewardBANKOUTTRANFER" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
 
-                        <div class="form-group" style="display: none">
+                        <div class="form-group" >
                             <label for="txtDiscountMOMO">Chiết khấu momo </label>
                             <asp:HiddenField ID="hdDiscountMOMO" runat="server" />
                             <asp:TextBox ID="txtDiscountMOMO" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
@@ -285,7 +285,7 @@
                             <asp:HiddenField ID="hdDiscountMOMOOUT" runat="server" />
                             <asp:TextBox ID="txtDiscountMOMOOUT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group" style="display: none">
+                        <div class="form-group" >
                             <label for="txtDiscountVTT">Reward Momo </label>
                             <asp:TextBox ID="txtRewardMOMO" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
@@ -293,16 +293,16 @@
                             <label for="txtDiscountVTT">Reward Momo out </label>
                             <asp:TextBox ID="txtRewardMOMOOUT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none">
                             <label for="txtDiscountVTT">Chiếu khấu VTT </label>
                             <asp:HiddenField ID="hdDiscountVTT" runat="server" />
                             <asp:TextBox ID="txtDiscountVTT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none">
                             <label for="txtDiscountVTT">Chiếu khấu VINA </label>
                             <asp:TextBox ID="txtDiscountVNP" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none">
                             <label for="txtDiscountVTT">Chiếu khấu MOBI </label>
                             <asp:TextBox ID="txtDiscountVMS" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>

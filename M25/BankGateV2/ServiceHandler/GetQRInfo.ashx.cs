@@ -23,7 +23,7 @@ namespace BankGateV2.ServiceHandler
     /// </summary>
     public class GetQRInfo : IHttpHandler
     {
-        private const string urlBaseServiceBank = "http://127.0.0.1:9002/BankService.ashx";
+        private const string urlBaseServiceBank = "http://127.0.0.1:9003/BankService.ashx";
         JavaScriptSerializer serializer = new JavaScriptSerializer();
         public void ProcessRequest(HttpContext context)
         {

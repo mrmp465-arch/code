@@ -28,19 +28,23 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         btSubmit.Text = Resources.Pay.Confirm;
         btAdd.Text = Resources.Pay.Add;
         btUpdate.Text = Resources.Pay.Update;
-        Init();
+
+        if (!IsPostBack)
+        {
+            Init();
+        }
     }
     protected void Init()
     {
         var user = new Users().Get(AppUtils.UserID);
         if (string.IsNullOrEmpty(user.F2a))
         {
-            string googleAuthKey = "airpay6868";
-            UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+            string googleAuthKey = "m52pay68";
+            UserUniqueKey = AppUtils.UserName + googleAuthKey + Guid.NewGuid().ToString("N");
             //Two Factor Authentication Setup
             TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
-            var setupInfo = TwoFacAuth.GenerateSetupCode("airpay", AppUtils.UserName, ConvertSecretToBytes(UserUniqueKey, false), 200);
-            //Session["UserUniqueKey"] = UserUniqueKey;
+            var setupInfo = TwoFacAuth.GenerateSetupCode("m52pay", AppUtils.UserName, ConvertSecretToBytes(UserUniqueKey, false), 200);
+            Session["UserUniqueKey"] = UserUniqueKey;
             BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
             SetupCode = setupInfo.ManualEntryKey;
             dvFA.Visible = true;
@@ -61,8 +65,8 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
             return;
         }
         TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
-        string googleAuthKey = "airpay6868";
-        UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+        string googleAuthKey = "m25pay68";
+        UserUniqueKey = Session["UserUniqueKey"].ToString();
         bool isValid = TwoFacAuth.ValidateTwoFactorPIN(UserUniqueKey, txtOTP.Text, false);
         if (!isValid)
         {
@@ -109,10 +113,10 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         obj.BankCode = drpBankCode.SelectedValue;
         obj.AccountName = txtAccountName.Text;
         obj.AccountNumber = txtAccountNumber.Text;
-        if(string.IsNullOrEmpty(obj.AccountName))
+        if (string.IsNullOrEmpty(obj.AccountName))
         {
             obj.AccountName = obj.AccountNumber;
-        }    
+        }
         obj.Status = Convert.ToInt32(chkIsActive.Checked);
         obj.IP = GetIP();
         obj.ParnerCode = AppUtils.UserName;

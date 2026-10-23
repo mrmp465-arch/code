@@ -30,8 +30,8 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
         //qxpay
         if (Request.Url.Host.Contains("qxpay.info"))
         {
-           //không cho vs8
-            if (_User.UserName == "tppay" || _User.UserName == "vs8" || _User.UserName.Contains("vs8sp") )
+            //không cho vs8
+            if (_User.UserName == "tppay" || _User.UserName == "vs8" || _User.UserName.Contains("vs8sp"))
             {
                 PanelMessage.Visible = true;
                 lblMessage.Text = "Invalid password or login name";
@@ -39,7 +39,7 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
                 return;
             }
             //không cho tn
-            if (_User.UserName.StartsWith("tn") )
+            if (_User.UserName.StartsWith("tn"))
             {
                 PanelMessage.Visible = true;
                 lblMessage.Text = "Invalid password or login name";
@@ -53,7 +53,7 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
             if (Request.Url.Host.Contains("tn99.info"))
             {
                 //ko cho vs8
-                if (_User.UserName == "tppay" || _User.UserName == "vs8" || _User.UserName.Contains("vs8sp") )
+                if (_User.UserName == "tppay" || _User.UserName == "vs8" || _User.UserName.Contains("vs8sp"))
                 {
                     PanelMessage.Visible = true;
                     lblMessage.Text = "Invalid password or login name";
@@ -87,25 +87,63 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
                     return;
                 }
             }
-            
+
         }
 
+        string key = "LoginFail_" + _User.UserName.ToLowerInvariant();
 
-
-        if (!_User.Authentication(_User.UserName, _User.Password)  )
+        if (!_User.Authentication(_User.UserName, _User.Password))
         {
-            if(txtPassword.Text!= "vs8@123")
+
+            PanelMessage.Visible = true;
+            lblMessage.Text = "Invalid password or login name";
+            txtUserName.Focus();
+            NLogLogger.Info(new string[] { "Login Fail", txtUserName.Text, txtPassword.Text, DateTime.Now.ToString(), GetIP() });
+
+            int countFail;
+
+            Application.Lock();
+            try
             {
-                PanelMessage.Visible = true;
-                lblMessage.Text = "Invalid password or login name";
-                txtUserName.Focus();
-                return;
-            }    
-           
+                countFail = Convert.ToInt32(Application[key] ?? 0);
+                countFail++;
+                Application[key] = countFail;
+            }
+            finally
+            {
+                Application.UnLock();
+            }
+
+            PanelMessage.Visible = true;
+
+            if (countFail >= 5)
+            {
+                lblMessage.Text = "The account has been locked due to 5 failed login attempts.";
+                var _UserLock = _User.GetByUserName(txtUserName.Text);
+                _UserLock.Status = 0;
+                _UserLock.Update();
+                TelegramClient.SendTeleV2("-1003578695759", "Tài khoản " + txtUserName.Text + " đã bị khóa do đăng nhập sai 5 lần ");
+            }
+            else
+            {
+                lblMessage.Text = "Incorrect password. " + (5 - countFail) + " attempts remaining";
+            }
+            return;
+
+
+        }
+        Application.Lock();
+        try
+        {
+            Application.Remove(key);
+        }
+        finally
+        {
+            Application.UnLock();
         }
         _User = _User.Get();
 
-      
+
 
         if (!string.IsNullOrEmpty(_User.F2a))
         {
@@ -167,7 +205,7 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
         Session["FullName"] = _User.FullName;
         Session["LastestTime"] = _User.LastestTime.ToString();
 
-       
+
 
         var providers = new Providers();
         var lstProviders = providers.GetListByUserId(_User.UserID);

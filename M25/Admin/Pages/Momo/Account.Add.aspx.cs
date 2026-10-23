@@ -19,7 +19,7 @@ using Libs.Utils;
 
 public partial class Pages_Momo_Account_Add : System.Web.UI.Page
 {
-    private string urlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+    private string urlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.MomoAccountAdd);
@@ -42,7 +42,7 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
         _Momo.Solution = drpSolution.SelectedValue;
 
         var _user = new Users().Get(AppUtils.UserID);
-        _Momo.Source = "M25";
+        _Momo.Source ="m52";
         var result=_Momo.Add();
         if (result > 0)
         {
@@ -115,7 +115,8 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
                                 obj.MomoPass = rijndaelKey.Encrypt(row.ItemArray[2].ToString().Trim());
                                 obj.BalanceMaxDay = int.Parse(row.ItemArray[3].ToString().Trim().ToLower());
                                 obj.BalanceMaxMonth = int.Parse(row.ItemArray[4].ToString().Trim());
-                                obj.Source = "M25";
+                                //obj.Source = _user.Source;
+                                obj.Source = "m52";
                                 if (obj.MomoId.Length == 9)
                                     obj.MomoId = "0" + obj.MomoId;
                                 obj.Add();
@@ -214,8 +215,16 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
                                 //    obj.Source = "inhouse";
                                 //}
                                
-                                obj.Source = "M25";
-                               
+                                //obj.Source = _user.Source;
+                                obj.Source = "m52";
+                                //if(_user.Source=="inhouse")
+                                //{
+                                //    obj.Source = row.ItemArray[3].ToString().Trim();
+                                //    if (string.IsNullOrEmpty(obj.Source))
+                                //    {
+                                //        obj.Source = "inhouse";
+                                //    }
+                                //}
                                 var result = AddMomo(obj);
                                 if (result.ResponseCode == 1)
                                 {
@@ -275,7 +284,7 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
             CommandCode = "ACCOUNT_IMEI_ADD",
             RequestContent = serializer.Serialize(momo)
         };
-        //var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        //var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         var res = Task.Run(async () => await CallbackJson(urlBaseService, serializer.Serialize(requesData))).Result;
         var resObj = serializer.Deserialize<APIResponse>(res);
         if (resObj != null)

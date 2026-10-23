@@ -19,7 +19,7 @@ using Libs.Utils;
 
 public partial class Pages_Momo_Account_Add : System.Web.UI.Page
 {
-    private string urlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+    private string urlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.MomoAccountAdd);
@@ -282,7 +282,7 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
             CommandCode = "ACCOUNT_IMEI_ADD",
             RequestContent = serializer.Serialize(momo)
         };
-        //var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        //var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         var res = Task.Run(async () => await CallbackJson(urlBaseService, serializer.Serialize(requesData))).Result;
         var resObj = serializer.Deserialize<APIResponse>(res);
         if (resObj != null)

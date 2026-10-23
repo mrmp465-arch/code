@@ -6,22 +6,46 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Libs.API;
 using System.ComponentModel;
+using ServiceStack.Common.Extensions;
+using Libs.Report;
 
 public partial class Pages_Security_Users_List : System.Web.UI.Page
 {
+    public List<PartnersDiscount> listpartnerDiscount;
     protected void Page_Load(object sender, EventArgs e)
     {
         Title = Title + " - Danh sách người dùng";
         AppUtils.CheckRoles(Resources.Url.UsersList);
         if (!IsPostBack)
         {
+            var lstGroup = new PartnerGroup().GetList();
+            lstGroup= lstGroup.OrderBy(x => x.Name).ToList();
+            drpOrder.DataSource = lstGroup;
+            drpOrder.DataTextField = "Name";
+            drpOrder.DataValueField = "Name";
+            drpOrder.DataBind();
+            
+           
+            drpOrder.Items.Insert(0, new ListItem("Nhóm:", ""));
+            drpOrder.Items.Insert(1, new ListItem("inhouse", "inhouse"));
+            drpOrder.Items.Insert(2, new ListItem("other", "other"));
             BindData();
         }
     }
+    protected void Delete_Command(Object sender, CommandEventArgs e)
+    {
+        var user = new Users();
+        user.UserID = Convert.ToInt32(e.CommandArgument.ToString());
+        user = user.Get();
 
+        user.F2a = "";
+        user.Update();
+        Response.Redirect(Request.RawUrl);
+    }
     private void BindData()
     {
-        var lst = new Users().GetList().OrderByDescending(x=>x.Balance).ToList();
+        listpartnerDiscount = new PartnersDiscount().GetList("", 2030, 1).Where(x => x.Date.Day == 1).ToList();
+        var lst = new Users().GetList();
         //if (lst != null) 
         //    lst = lst.Where(e => e.ParentId == AppUtils.UserID || e.UserID == AppUtils.UserID).ToList();
 
@@ -39,17 +63,19 @@ public partial class Pages_Security_Users_List : System.Web.UI.Page
         if (type == 2)
             lst = lst.Where(x => x.IsPartner == 1).ToList();
 
+        if (type == 3)
+            lst = lst.Where(x => x.IsTopup == 1).ToList();
 
-        var order = int.Parse(drpOrder.SelectedValue);
+        var order = drpOrder.SelectedValue;
 
-        if (order == 0)
+        if (!string.IsNullOrEmpty(order))
         {
-            lst = lst.OrderByDescending(x => x.Balance).ToList();
+            lst = lst.Where(x => x.Source.Equals(order)).ToList();
         }
-        else
-        {
-            lst = lst.OrderByDescending(x => x.Balance).ToList();
-        }
+        //else
+        //{
+        //    lst = lst.OrderBy(x => x.UserName).ToList();
+        //}
 
         var total = lst.Sum(x => x.Balance);
         lblTotalBalance.Text = string.Format("Tổng số dư: {0}", total.ToString("#,#").Replace(",", "."));
@@ -69,18 +95,51 @@ public partial class Pages_Security_Users_List : System.Web.UI.Page
             Label labelUserID = (Label)rptList.Items[i].FindControl("lblUserID");
             _User.UserID = Convert.ToInt32(labelUserID.Text);
             _User = _User.Get();
+            var oldStatus = _User.Status;
             _User.Status = cbx.Checked ? 1 : 0;
             _User.Update();
+            if (oldStatus != _User.Status)
+            {
+                //update parner;
+                if (_User.IsPartner == 1)
+                {
+                    var _Partner = new Partners().Get(_User.UserName);
+                    _Partner.Status = _User.Status;
+                    _Partner.Update();
+                }
+
+
+            }
+
         }
         BindData();
     }
-    public string GetUserType(string isAdmin, string isPartner)
+    public string GetUserType(string isAdmin, string isPartner, string topup)
     {
         if (isAdmin == "1")
             return "<div class=\"label label-success\">Admin</div>";
         if (isPartner == "1")
-            return "<div class=\"label label-default\">Đối tác</div>";
-
+            return "<div class=\"label label-default\">Merchant</div>";
+        if (topup == "1")
+            return "<div class=\"label label-warning\">Support</div>";
+        return "";
+    }
+    public string GetUserCk(string username)
+    {
+        if (listpartnerDiscount.Exists(x => x.PartnerCode == username))
+        {
+            var Discount = listpartnerDiscount.FirstOrDefault(x => x.PartnerCode == username);
+            return String.Format("{0} | {1} | {2} ", Discount.DiscountBANKTRANFER.ToString("0.0###"), Discount.DiscountBANKOUTTRANFER.ToString("0.0###"), Discount.DiscountMOMO.ToString("0.0###"));
+        }
+        return "";
+    }
+    public string GetUserRw(string username)
+    {
+        if (listpartnerDiscount.Exists(x => x.PartnerCode == username))
+        {
+            var Discount = listpartnerDiscount.FirstOrDefault(x => x.PartnerCode == username);
+            return String.Format("{0} | {1} | {2} ", Discount.RewardBANKTRANFER.ToString("0.0###"), Discount.RewardBANKOUTTRANFER.ToString("0.0###"), Discount.RewardMOMO.ToString("0.0###"));
+        }
         return "";
     }
     protected void btAdd_Click(object sender, EventArgs e)

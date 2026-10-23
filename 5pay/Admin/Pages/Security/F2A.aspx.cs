@@ -28,7 +28,9 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         btSubmit.Text = Resources.Pay.Confirm;
         btAdd.Text = Resources.Pay.Add;
         btUpdate.Text = Resources.Pay.Update;
-        Init();
+        if (!IsPostBack)
+
+            Init();
     }
     protected void Init()
     {
@@ -36,11 +38,12 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         if (string.IsNullOrEmpty(user.F2a))
         {
             string googleAuthKey = "5Pay6868";
-            UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+            UserUniqueKey = AppUtils.UserName + googleAuthKey + Guid.NewGuid().ToString("N");
             //Two Factor Authentication Setup
             TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
             var setupInfo = TwoFacAuth.GenerateSetupCode("5Pay", AppUtils.UserName, ConvertSecretToBytes(UserUniqueKey, false), 200);
-            //Session["UserUniqueKey"] = UserUniqueKey;
+            Session["UserUniqueKey"] = UserUniqueKey;
+            //NLogLogger.Info(new string[] { "UserUniqueKey1", UserUniqueKey });
             BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
             SetupCode = setupInfo.ManualEntryKey;
             dvFA.Visible = true;
@@ -62,7 +65,8 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         }
         TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
         string googleAuthKey = "5Pay6868";
-        UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+        UserUniqueKey = Session["UserUniqueKey"].ToString();
+        //NLogLogger.Info(new string[] { "UserUniqueKey2", UserUniqueKey });
         bool isValid = TwoFacAuth.ValidateTwoFactorPIN(UserUniqueKey, txtOTP.Text, false);
         if (!isValid)
         {
@@ -109,10 +113,10 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         obj.BankCode = drpBankCode.SelectedValue;
         obj.AccountName = txtAccountName.Text;
         obj.AccountNumber = txtAccountNumber.Text;
-        if(string.IsNullOrEmpty(obj.AccountName))
+        if (string.IsNullOrEmpty(obj.AccountName))
         {
             obj.AccountName = obj.AccountNumber;
-        }    
+        }
         obj.Status = Convert.ToInt32(chkIsActive.Checked);
         obj.IP = GetIP();
         obj.ParnerCode = AppUtils.UserName;

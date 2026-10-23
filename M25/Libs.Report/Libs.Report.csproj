@@ -79,6 +79,7 @@
     <Compile Include="BankCashAPI.cs" />
     <Compile Include="BankGateAPI.cs" />
     <Compile Include="APICheckCardLog.cs" />
+    <Compile Include="PartnerGroup.cs" />
     <Compile Include="PartnerTransaction.cs" />
     <Compile Include="ProvidersDiscount.cs" />
     <Compile Include="TopupMobile3rdLog.cs" />

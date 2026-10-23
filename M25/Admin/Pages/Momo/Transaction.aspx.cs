@@ -246,7 +246,7 @@ public partial class Pages_Momo_Transaction : System.Web.UI.Page
     public static async Task<string> getBalance()
     {
         var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Post, "http://127.0.0.1:9002/MomoService.ashx");
+        var request = new HttpRequestMessage(HttpMethod.Post, "http://127.0.0.1:9003/MomoService.ashx");
         var content = new StringContent("{\"PartnerCode\":\"\",\"CommandCode\":\"VSIGN_BALANCE\",\"RequestContent\":\"\",\"Description\":\"\",\"Signature\":\"\"}", null, "application/json");
         request.Content = content;
         var response = await client.SendAsync(request);

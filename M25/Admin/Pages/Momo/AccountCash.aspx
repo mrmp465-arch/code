@@ -40,6 +40,7 @@
                                         <label for="txtClassName">Ngân hàng</label>
                                         <asp:DropDownList ID="drpBankCode" runat="server" CssClass="form-control select2">
                                             <asp:ListItem Value="" Selected disabled hidden>Chọn ngân hàng</asp:ListItem>
+                                            <asp:ListItem Value="MOMO">Ví điện tử MOMO</asp:ListItem>
                                             <asp:ListItem Value="ACB">ACB - Ngân hàng TMCP Á Châu</asp:ListItem>
                                             <asp:ListItem Value="BIDV">BIDV - Ngân hàng TMCP Đầu tư và Phát triển Việt Nam</asp:ListItem>
                                             <asp:ListItem Value="MB">MBBank - Ngân hàng TMCP Quân đội</asp:ListItem>
@@ -142,7 +143,7 @@
                         </div>
                     </div>
                     <!-- /.box-body -->
-                    <
+                    
         <!-- /.box -->
 
                     <!-- /.col -->

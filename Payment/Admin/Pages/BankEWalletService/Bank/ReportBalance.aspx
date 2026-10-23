@@ -25,7 +25,7 @@
                                 <asp:TextBox ID="txtMobile" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-2">
+                        <div class="col-xs-12 col-sm-6 col-md-2" style="display:none">
                             <div class="input-group">
                                 <span class="input-group-addon" style="padding: 5px;">Loại GD</span>
                                 <asp:DropDownList ID="drpType" runat="server" CssClass="form-control ">
@@ -83,7 +83,7 @@
                             <thead>
                                 <tr>
                                     <th>STK/số ví</th>
-                                    <th style="width: 10px;">Loại GD</th>
+                                   <%-- <th style="width: 10px;">Loại GD</th>--%>
                                     <th>Tên bank</th>
                                     <th>Chủ tài khoản</th>
                                     <th>Loại bank</th>
@@ -101,7 +101,7 @@
                                     <ItemTemplate>
                                         <tr>
                                             <td><%#Eval("BankId") %></td>
-                                            <td><%#getType(Eval("Type").ToString())%></td>
+                                          <%--  <td><%#getType(Eval("Type").ToString())%></td>--%>
                                             <td><%#Eval("BankCode") %></td>
                                             <td><%#Eval("BankName") %></td>
                                             <td><%#Eval("BankType") %></td>

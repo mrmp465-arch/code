@@ -75,12 +75,12 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         serializer.MaxJsonLength = Int32.MaxValue;
 
         RoleUpload = AppUtils.CheckRolesPermission("pages/bankewalletservice/momo/uploadimage.aspx");
-      
+
 
         RoleTransfer = AppUtils.CheckRolesPermission("pages/bankewalletservice/momo/account.transfer.aspx");
         if (!RoleTransfer)
         {
-            
+
             divTransfer.Visible = false;
         }
         if (!IsPostBack)
@@ -101,7 +101,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         {
             Response.Redirect(Resources.Url.MomoAccount);
         }
-        if(_Momo.StatusDetection==1)
+        if (_Momo.StatusDetection == 1)
         {
             lbDetech.Text = "Đã Detech";
         }
@@ -151,7 +151,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         {
             calloutwaring.Visible = false;
 
-            UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+            UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
             //UrlBaseService = "https://localhost:44373/MomoService.ashx";
             //UrlBaseService = "http://149.28.130.246:9002/MomoService.ashx";
 
@@ -162,7 +162,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
                 btnSenOtpSms.Enabled = false;
                 pnLogin.Visible = true;
 
-                lblBalanceMomo.Text = GetBalanceMomo(txtMomoId.Text).ToString("N0");
+                //lblBalanceMomo.Text = GetBalanceMomo(txtMomoId.Text).ToString("N0");
                 if (_Momo.StatusExtra == -6 || _Momo.StatusExtra == -7 || _Momo.StatusExtra == -8)
                 {
                     loginStatus.Attributes["style"] = "border-color: red";
@@ -183,10 +183,11 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
             }
 
         }
-
+        if (_Momo.Solution == "APIV3")
+            dvNotify.Visible = true;
         lblBalanceWeb.Text = _Momo.BalanceTotal.ToString("N0");
 
-        
+
 
     }
 
@@ -310,7 +311,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
     }
     protected void btReset_Click(object sender, EventArgs e)
     {
-       
+
         var _Momo = new MomoAccounts();
         _Momo.Id = Convert.ToInt32(AppUtils.Request("id"));
         _Momo = _Momo.Get();
@@ -337,13 +338,19 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         _Momo.Solution = drpSolution.SelectedValue;
 
 
-        
+
         //if (chkIsActive.Checked)
         //{
         //    _Momo.StatusDetection = 0;
         //}
         _Momo.Update();
-        NotifyMomo(_Momo.MomoId, _Momo.Status);
+        if (_Momo.Solution == "APIV3")
+            NotifyMomo(_Momo.MomoId, _Momo.Status);
+
+        if (_Momo.Solution == "APIV2")
+        {
+            NotifyMomo(_Momo.MomoId, 0);
+        }
         //Log User
         var _userLog = new UserLog
         {

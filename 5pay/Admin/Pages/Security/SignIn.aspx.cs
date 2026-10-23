@@ -27,13 +27,55 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
         _User.UserName = txtUserName.Text;
         _User.Password = Encrypts.MD5(txtPassword.Text);
 
+        string key = "LoginFail_" + _User.UserName.ToLowerInvariant();
         if (!_User.Authentication(_User.UserName, _User.Password))
         {
             PanelMessage.Visible = true;
             lblMessage.Text = "Invalid password or login name";
             txtUserName.Focus();
+            NLogLogger.Info(new string[] { "Login Fail", txtUserName.Text, txtPassword.Text, DateTime.Now.ToString(), GetIP() });
+
+            int countFail;
+
+            Application.Lock();
+            try
+            {
+                countFail = Convert.ToInt32(Application[key] ?? 0);
+                countFail++;
+                Application[key] = countFail;
+            }
+            finally
+            {
+                Application.UnLock();
+            }
+
+            PanelMessage.Visible = true;
+
+            if (countFail >= 5)
+            {
+                lblMessage.Text = "The account has been locked due to 5 failed login attempts.";
+                var _UserLock = _User.GetByUserName(txtUserName.Text);
+                _UserLock.Status = 0;
+                _UserLock.Update();
+                TelegramClient.SendTeleV2("-1003578695759", "Tài khoản "+ txtUserName.Text + " đã bị khóa do đăng nhập sai 5 lần ");
+            }
+            else
+            {
+                lblMessage.Text = "Incorrect password. " + (5 - countFail) + " attempts remaining";
+            }
             return;
         }
+        // Đăng nhập thành công
+        Application.Lock();
+        try
+        {
+            Application.Remove(key);
+        }
+        finally
+        {
+            Application.UnLock();
+        }
+
         _User = _User.Get();
 
         if (!string.IsNullOrEmpty(_User.F2a))
@@ -59,7 +101,7 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
         {
             if (!_User.Ip.Contains(GetIP()))
             {
-                NLogLogger.Info(new string[] { "SignIn Fail", _User.UserName, DateTime.Now.ToString(), GetIP() });
+                NLogLogger.Info(new string[] { "Login Ip Fail", _User.UserName, DateTime.Now.ToString(), GetIP() });
                 PanelMessage.Visible = true;
                 lblMessage.Text = "IP đăng nhập không hợp lệ " + GetIP();
                 txtUserName.Focus();
@@ -81,17 +123,17 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
         var lstPartners = partners.GetListByUserId(_User.UserID);
         AppUtils.PartnerUser = lstPartners;
 
-        if(_User.IsAdmin!=1)
+        if (_User.IsAdmin != 1)
         {
-            if(lstPartners.Count()==0)
+            if (lstPartners.Count() == 0)
             {
                 NLogLogger.Info(new string[] { "SignIn Fail", AppUtils.UserName, DateTime.Now.ToString(), GetIP() });
                 PanelMessage.Visible = true;
                 lblMessage.Text = "Tài khoản chưa set cho đối tác nào";
                 txtUserName.Focus();
                 return;
-            }    
-        }    
+            }
+        }
 
         var providers = new Providers();
         var lstProviders = providers.GetListByUserId(_User.UserID);
@@ -105,7 +147,7 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
 
         NLogLogger.Info(new string[] { "SignIn", AppUtils.UserName, DateTime.Now.ToString() });
 
-        if(_User.IsAdmin==1)
+        if (_User.IsAdmin == 1)
         {
             //Log User
             var _userLog = new UserLog
@@ -117,8 +159,8 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
             };
 
             _userLog.Add();
-        }    
-       
+        }
+
         Response.Redirect(url);
     }
     public static string GetIP()

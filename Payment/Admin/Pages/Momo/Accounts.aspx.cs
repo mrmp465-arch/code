@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IdentityModel.Protocols.WSTrust;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -36,6 +37,19 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         {
             init();
             BindData();
+        }
+        if (IsPostBack)
+        {
+            string eventTarget = Request["__EVENTTARGET"];
+            string eventArgument = Request["__EVENTARGUMENT"];
+
+            if (eventTarget == "UpdateAll")
+            {
+
+
+                btApp6Click();
+            }
+
         }
     }
     protected void BindData()
@@ -104,7 +118,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
         var statusOver = int.Parse(drpOver.SelectedValue);
         if (statusOver > 0)
-            data = data.Where(x => x.StatusOver == statusOver & x.Status==1).ToList();
+            data = data.Where(x => x.StatusOver == statusOver & x.Status == 1).ToList();
 
         if (!string.IsNullOrEmpty(drpSolution.SelectedValue))
         {
@@ -192,7 +206,8 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 {
                     _Bank.Status = 1;
                     _Bank.Update();
-                    NotifyMomo(_Bank.MomoId, _Bank.Status);
+                    if (_Bank.Solution == "APIV3")
+                        NotifyMomo(_Bank.MomoId, _Bank.Status);
                 }
 
 
@@ -220,7 +235,9 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 {
                     _Bank.Status = 0;
                     _Bank.Update();
-                    NotifyMomo(_Bank.MomoId, _Bank.Status);
+                    if (_Bank.Solution == "APIV3")
+                        NotifyMomo(_Bank.MomoId, _Bank.Status);
+                   
                 }
 
 
@@ -250,7 +267,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
                 if (_Bank.Solution == "APIV3")
                 {
-                    var url = "http://127.0.0.1:9002/MomoService.ashx";
+                    var url = "http://127.0.0.1:9003/MomoService.ashx";
 
                     var requesData = new
                     {
@@ -265,6 +282,46 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         }
         Response.Redirect("/cmspay/pages/momo/accounts.aspx");
     }
+    protected void btApp6Click()
+
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+
+        for (int i = 0; i < rptList.Items.Count; i++)
+        {
+            var _Partner = new Partners();
+            CheckBox cbx = (CheckBox)rptList.Items[i].FindControl("cbxStatus2");
+            Label TransactionID = (Label)rptList.Items[i].FindControl("ID");
+            if (cbx.Checked)
+            {
+                string MomoId = TransactionID.Text;
+                var _Bank = new MomoAccounts();
+                _Bank = _Bank.Get(MomoId);
+                int Id = _Bank.Id;
+                if (Convert.ToInt32(txtBalanceMaxDay.Text) > 0)
+                    _Bank.BalanceMaxDay = Convert.ToInt32(txtBalanceMaxDay.Text);
+                if (Convert.ToInt32(txtBalanceMaxMonth.Text) > 0)
+                    _Bank.BalanceMaxMonth = Convert.ToInt32(txtBalanceMaxMonth.Text);
+                if (!string.IsNullOrEmpty(drpType2.SelectedValue))
+                    _Bank.Type = drpType2.SelectedValue;
+
+                if (!string.IsNullOrEmpty(drpSolution2.SelectedValue))
+                    _Bank.Solution = drpSolution2.SelectedValue;
+
+                _Bank.Update();
+                System.Threading.Thread.Sleep(100);
+                if (drpSolution2.SelectedValue == "APIV2")
+                {
+                    NotifyMomo(_Bank.MomoId, 0);
+                }
+
+
+            }
+        }
+        Response.Redirect("/cmspay/pages/momo/accounts.aspx");
+    }
+    
     public string GetDate(object createDate)
     {
         if (createDate != null)
@@ -474,7 +531,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
     }
     public void NotifyMomo(string momoid, int status)
     {
-        var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         var obj = new { momoId = momoid, action = "start" };
         if (status != 1)
             obj = new { momoId = momoid, action = "stop" };
@@ -489,7 +546,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
     {
         JavaScriptSerializer serializer = new JavaScriptSerializer();
-        var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         for (int i = 0; i < rptList.Items.Count; i++)
         {
             var _Partner = new Partners();
@@ -573,7 +630,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         _Bank = _Bank.Get();
         if (_Bank.Solution == "APIV3")
         {
-            var url = "http://127.0.0.1:9002/MomoService.ashx";
+            var url = "http://127.0.0.1:9003/MomoService.ashx";
 
             var requesData = new
             {

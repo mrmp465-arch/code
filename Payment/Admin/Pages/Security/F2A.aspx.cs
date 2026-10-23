@@ -35,7 +35,7 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         if(string.IsNullOrEmpty(user.F2a))
         {
             string googleAuthKey = "fastpay";
-            UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+            UserUniqueKey = AppUtils.UserName + googleAuthKey + Guid.NewGuid().ToString("N");
             //Two Factor Authentication Setup
             TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
 
@@ -48,7 +48,7 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
             {
                 setupInfo = TwoFacAuth.GenerateSetupCode("tn99", AppUtils.UserName, ConvertSecretToBytes(UserUniqueKey, false), 200);
             }
-            //Session["UserUniqueKey"] = UserUniqueKey;
+            Session["UserUniqueKey"] = UserUniqueKey;
             BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
             SetupCode = setupInfo.ManualEntryKey;
             dvFA.Visible = true;
@@ -75,7 +75,7 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         }
         TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
         string googleAuthKey = "fastpay";
-        UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+        UserUniqueKey = Session["UserUniqueKey"].ToString();
         bool isValid = TwoFacAuth.ValidateTwoFactorPIN(UserUniqueKey, txtOTP.Text, false);
         if (!isValid)
         {

@@ -20,7 +20,7 @@ namespace BankGateV2.ServiceHandler
     /// </summary>
     public class GetAcountInfo : IHttpHandler
     {
-        private const string urlBaseServiceBank = "http://127.0.0.1:9002/BankService.ashx";
+        private const string urlBaseServiceBank = "http://127.0.0.1:9003/BankService.ashx";
         JavaScriptSerializer serializer = new JavaScriptSerializer();
         public void ProcessRequest(HttpContext context)
         {
@@ -179,7 +179,7 @@ namespace BankGateV2.ServiceHandler
                 Signature = signature
             };
 
-            var response = Task.Run(async () => await MDrumBankLib.PostTask("http://127.0.0.1:9002/MomoService.ashx", serializer.Serialize(requestData))).Result;
+            var response = Task.Run(async () => await MDrumBankLib.PostTask("http://127.0.0.1:9003/MomoService.ashx", serializer.Serialize(requestData))).Result;
 
 
             var resObj = serializer.Deserialize<DrumBankLib.CashRespone>(response);

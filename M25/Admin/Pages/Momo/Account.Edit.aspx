@@ -277,6 +277,10 @@
                                                 <asp:Label ID="lblBalanceWeb" runat="server"></asp:Label></h5>
                                             <h5>&#9734; Số dư Momo:
                                                 <asp:Label ID="lblBalanceMomo" runat="server"></asp:Label></h5>
+                                            
+                                            <h5 runat="server" visible="false" id="dvNotify">&#9734; Trạng thái notify: &nbsp;
+                                            <asp:Label ID="lblNotifyStatus" runat="server"></asp:Label></h5>
+
                                             <asp:Button ID="btnSyncBalance" runat="server" Text="Đồng bộ" CssClass="btn btn-block btn-default btn-flat" OnClick="bntSyncBalance_Click"></asp:Button>
                                         </blockquote>
 
@@ -382,30 +386,98 @@
 
         }
        
+this.DocumentHeght = function () {
+    return $(document).height();
+};
+this.GetFullHeight = function () {
+    return parseInt($(document).scrollTop() + $('html').height());
+};
+this.DocumentWidth = function () { return $(document).width(); };
+this.WindowHeight = function () { return $(window).height(); };
+this.WindowWidth = function () { return $(window).width(); };
+function Loading() {
+    //this.UnLoading();
+    var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
+    $("#<%=lblBalanceMomo.ClientID %>").html(html);
 
+};
+function Loading2() {
+    //this.UnLoading();
+    var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
+    $("#<%=lblNotifyStatus.ClientID %>").html(html);
 
-        //$(document).ready(function () {
-        //    $('.base64-img').on('click', function () {
-        //        var src = $(this).children('img').first().attr('src');
-        //        $('#zoom-img').attr('src', src);
-        //        $('#zoom-modal').css('display', 'flex'); // sho
-        //    });
+};
 
-        //    $('#zoom-modal').on('click', function () {
-        //        $(this).hide();
-        //    });
-        ////});
-        //$(document).ready(function () {
-        //    $('.base64-img').each(function () {
-        //        var imgSrc = $(this).find('img').attr('src');
-        //        $(this).attr('href', imgSrc);
-        //    });
-        //});
-        //$(document).ready(function () {
-        //    $(".base64-img").fancybox({
+function UnLoading() {
+    $('#LoadingContainer').remove();
 
-        //    });
-        //});
+};
+if ($("#<%=lblBalanceMomo.ClientID %>").html() != "-1") {
+    var params = {
+        BankCode: 'Momo',
+        BankId: $("#<%=txtMomoId.ClientID %>").val(),
+
+    };
+    Loading();
+    $.ajax({
+        type: 'GET',
+        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+        data: params,
+        success: function (data) {
+            /*UnLoading();*/
+            $("#<%=lblBalanceMomo.ClientID %>").html(data);
+
+        },
+        error: function () {
+            $("#<%=lblBalanceMomo.ClientID %>").html("");
+            /*  UnLoading();*/
+        }
+    });
+}
+if ($("#<%=drpSolution.ClientID %>").val() == "APIV3") {
+    var params = {
+        BankCode: 'MomoNotify',
+        BankId: $("#<%=txtMomoId.ClientID %>").val(),
+
+    };
+    Loading2();
+    $.ajax({
+        type: 'GET',
+        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+        data: params,
+        success: function (data) {
+            /*UnLoading();*/
+            $("#<%=lblNotifyStatus.ClientID %>").html(data);
+
+        },
+        error: function () {
+            $("#<%=lblNotifyStatus.ClientID %>").html("");
+            /*  UnLoading();*/
+        }
+    });
+}
+//$(document).ready(function () {
+//    $('.base64-img').on('click', function () {
+//        var src = $(this).children('img').first().attr('src');
+//        $('#zoom-img').attr('src', src);
+//        $('#zoom-modal').css('display', 'flex'); // sho
+//    });
+
+//    $('#zoom-modal').on('click', function () {
+//        $(this).hide();
+//    });
+////});
+//$(document).ready(function () {
+//    $('.base64-img').each(function () {
+//        var imgSrc = $(this).find('img').attr('src');
+//        $(this).attr('href', imgSrc);
+//    });
+//});
+//$(document).ready(function () {
+//    $(".base64-img").fancybox({
+
+//    });
+//});
 
     </script>
     <style>

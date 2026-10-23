@@ -27,10 +27,20 @@ public class GetBankBalance : IHttpHandler
         {
 
 
-             result = GetBalanceMomo( data.BankId);
+            result = GetBalanceMomo(data.BankId);
         }
-        else {
-            result = GetBalanceBank(data.BankCode, data.BankId);
+        else
+        {
+
+            if (data.BankCode == "MomoNotify")
+
+            {
+                     result = GetNofiMomo(data.BankId);
+            }
+            else
+            {
+                result = GetBalanceBank(data.BankCode, data.BankId);
+            }
         }
         context.Response.Write(result);
     }
@@ -45,7 +55,7 @@ public class GetBankBalance : IHttpHandler
     private string GetBalanceBank(string bankCode, string bankId)
     {
         JavaScriptSerializer serializer = new JavaScriptSerializer();
-        var UrlBaseService = "http://127.0.0.1:9002/BankService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
         var requesData = new RequestData()
         {
             CommandCode = "BALANCE_GET",
@@ -70,7 +80,7 @@ public class GetBankBalance : IHttpHandler
             RequestContent = momoId
         };
 
-        var res = Task.Run(async () => await CallbackJson("http://127.0.0.1:9002/MomoService.ashx", serializer.Serialize(requesData))).Result;
+        var res = Task.Run(async () => await CallbackJson("http://127.0.0.1:9003/MomoService.ashx", serializer.Serialize(requesData))).Result;
         var resObj = serializer.Deserialize<APIResponse>(res);
         if (resObj != null && resObj.ResponseCode == (int)ResponseCode.TransactionSuccessful)
         {
@@ -81,6 +91,20 @@ public class GetBankBalance : IHttpHandler
 
             return "-1";
         }
+
+    }
+    private string GetNofiMomo(string momoId)
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+        var requesData = new RequestDataNotify()
+        {
+            
+            phone = momoId
+        };
+
+        var res = Task.Run(async () => await CallbackJson("http://45.76.183.159:3000/api/checkNotificationState", serializer.Serialize(requesData))).Result;
+        return res;
 
     }
     public static async Task<string> CallbackJson(string url, string postData)
@@ -121,6 +145,11 @@ public class GetBankBalance : IHttpHandler
         public string CommandCode { get; set; }
         public string RequestContent { get; set; }
         public string Signature { get; set; }
+    }
+    public class RequestDataNotify
+    {
+        public string phone { get; set; }
+       
     }
     public class InputData
     {

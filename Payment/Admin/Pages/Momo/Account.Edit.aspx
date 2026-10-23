@@ -277,6 +277,10 @@
                                                 <asp:Label ID="lblBalanceWeb" runat="server"></asp:Label></h5>
                                             <h5>&#9734; Số dư Momo:
                                                 <asp:Label ID="lblBalanceMomo" runat="server"></asp:Label></h5>
+                                            
+                                            <h5 runat="server" visible="false" id="dvNotify">&#9734; Trạng thái notify: &nbsp;
+                                            <asp:Label ID="lblNotifyStatus" runat="server"></asp:Label></h5>
+
                                             <asp:Button ID="btnSyncBalance" runat="server" Text="Đồng bộ" CssClass="btn btn-block btn-default btn-flat" OnClick="bntSyncBalance_Click"></asp:Button>
                                         </blockquote>
 
@@ -397,6 +401,13 @@ function Loading() {
     $("#<%=lblBalanceMomo.ClientID %>").html(html);
 
 };
+function Loading2() {
+    //this.UnLoading();
+    var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
+    $("#<%=lblNotifyStatus.ClientID %>").html(html);
+
+};
+
 function UnLoading() {
     $('#LoadingContainer').remove();
 
@@ -423,29 +434,50 @@ if ($("#<%=lblBalanceMomo.ClientID %>").html() != "-1") {
         }
     });
 }
+if ($("#<%=drpSolution.ClientID %>").val() == "APIV3") {
+    var params = {
+        BankCode: 'MomoNotify',
+        BankId: $("#<%=txtMomoId.ClientID %>").val(),
 
-        //$(document).ready(function () {
-        //    $('.base64-img').on('click', function () {
-        //        var src = $(this).children('img').first().attr('src');
-        //        $('#zoom-img').attr('src', src);
-        //        $('#zoom-modal').css('display', 'flex'); // sho
-        //    });
+    };
+    Loading2();
+    $.ajax({
+        type: 'GET',
+        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+        data: params,
+        success: function (data) {
+            /*UnLoading();*/
+            $("#<%=lblNotifyStatus.ClientID %>").html(data);
 
-        //    $('#zoom-modal').on('click', function () {
-        //        $(this).hide();
-        //    });
-        ////});
-        //$(document).ready(function () {
-        //    $('.base64-img').each(function () {
-        //        var imgSrc = $(this).find('img').attr('src');
-        //        $(this).attr('href', imgSrc);
-        //    });
-        //});
-        //$(document).ready(function () {
-        //    $(".base64-img").fancybox({
+        },
+        error: function () {
+            $("#<%=lblNotifyStatus.ClientID %>").html("");
+            /*  UnLoading();*/
+        }
+    });
+}
+//$(document).ready(function () {
+//    $('.base64-img').on('click', function () {
+//        var src = $(this).children('img').first().attr('src');
+//        $('#zoom-img').attr('src', src);
+//        $('#zoom-modal').css('display', 'flex'); // sho
+//    });
 
-        //    });
-        //});
+//    $('#zoom-modal').on('click', function () {
+//        $(this).hide();
+//    });
+////});
+//$(document).ready(function () {
+//    $('.base64-img').each(function () {
+//        var imgSrc = $(this).find('img').attr('src');
+//        $(this).attr('href', imgSrc);
+//    });
+//});
+//$(document).ready(function () {
+//    $(".base64-img").fancybox({
+
+//    });
+//});
 
     </script>
     <style>
