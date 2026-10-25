@@ -40,7 +40,7 @@ public partial class Pages_BankEWalletService_Bank_UploadImage : System.Web.UI.P
     {
         var _bank = new BankAccounts();
         _bank.Id = Convert.ToInt32(AppUtils.Request("id"));
-        _bank = _bank.GetProfile();
+        _bank = _bank.Get();
 
         if (_bank == null)
         {
@@ -51,10 +51,23 @@ public partial class Pages_BankEWalletService_Bank_UploadImage : System.Web.UI.P
         var bankCode = _bank.BankCode;
         var bankId = _bank.BankId;
 
+
+
         //lblId.Text = AppUtils.Request("id").ToString();
         //lblBankInfo.Text = "Upload - Tài khoản " + bankCode + " : " + bankId;
         bankCode = Regex.Replace(bankCode, @"[^a-zA-Z0-9]", "");
         bankId = Regex.Replace(bankId, @"[^a-zA-Z0-9]", "");
+
+
+        if (bankCode == "VPB")
+        {
+            pnVPB.Visible = true;
+        }
+
+        if (bankCode == "ACB")
+        {
+            pnACB.Visible = true;
+        }
 
         string UploadFolderPhysical = Path.Combine(@"Z:\AIRPAY", bankCode, bankId);
 

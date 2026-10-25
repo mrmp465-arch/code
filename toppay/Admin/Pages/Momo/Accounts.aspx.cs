@@ -155,7 +155,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
     {
         JavaScriptSerializer serializer = new JavaScriptSerializer();
-        var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         for (int i = 0; i < rptList.Items.Count; i++)
         {
             var _Partner = new Partners();
@@ -235,7 +235,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         _Bank = _Bank.Get();
         if (_Bank.Solution == "APIV3")
         {
-            var url = "http://127.0.0.1:9002/MomoService.ashx";
+            var url = "http://127.0.0.1:9003/MomoService.ashx";
 
             var requesData = new
             {
@@ -299,7 +299,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
     }
     public void NotifyMomo(string momoid, int status)
     {
-        var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         var obj = new { momoId = momoid, action = "start" };
         if (status != 1)
             obj = new { momoId = momoid, action = "stop" };

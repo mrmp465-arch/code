@@ -17,7 +17,7 @@ using System.Data;
 using System;
 using System.Drawing.Imaging;
 using System.Drawing;
-using QRCoder;
+
 
 
 namespace BankGateV2.Pages
@@ -173,7 +173,7 @@ namespace BankGateV2.Pages
                 lbAccountName.Text = orderResponse.AccountName;
                 lbContent.Text = orderResponse.OrderNo;
                 qrCode.Width = 250;
-                qrCode.ImageUrl = GenerateQrBase64(orderResponse.QRCode);
+                //qrCode.ImageUrl = GenerateQrBase64(orderResponse.QRCode);
                 GetListBankLog();
             }
             else
@@ -249,22 +249,22 @@ namespace BankGateV2.Pages
             public string MomoName { get; set; }
             //public string Content { get; set; }
         }
-        public static string GenerateQrBase64(string text)
-        {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+        //public static string GenerateQrBase64(string text)
+        //{
+        //    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        //    QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
 
-            QRCode qrCode = new QRCode(qrCodeData);
-            using (Bitmap qrImage = qrCode.GetGraphic(20))
-            {
-                using (var ms = new MemoryStream())
-                {
-                    qrImage.Save(ms, ImageFormat.Png);
-                    byte[] bytes = ms.ToArray();
-                    return "data:image/png;base64," + Convert.ToBase64String(bytes);
-                }
-            }
-        }
+        //    QRCode qrCode = new QRCode(qrCodeData);
+        //    using (Bitmap qrImage = qrCode.GetGraphic(20))
+        //    {
+        //        using (var ms = new MemoryStream())
+        //        {
+        //            qrImage.Save(ms, ImageFormat.Png);
+        //            byte[] bytes = ms.ToArray();
+        //            return "data:image/png;base64," + Convert.ToBase64String(bytes);
+        //        }
+        //    }
+        //}
         private void GetListBankLog()
         {
 

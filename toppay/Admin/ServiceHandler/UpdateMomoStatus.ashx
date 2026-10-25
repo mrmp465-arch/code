@@ -76,7 +76,7 @@ public class UpdateMomoStatus : IHttpHandler, IReadOnlySessionState
     }
     public void NotifyMomo(string momoid, int status)
     {
-        var UrlBaseService = "http://127.0.0.1:9002/MomoService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         var obj = new { momoId = momoid, action = "start" };
         if (status != 1)
             obj = new { momoId = momoid, action = "stop" };

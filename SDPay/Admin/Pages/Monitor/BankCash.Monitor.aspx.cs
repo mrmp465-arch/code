@@ -510,7 +510,7 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
         }
         return DateTime.Now;
     }
-    private const string urlBaseService2 = "http://127.0.0.1:9002/BankService.ashx";
+    private const string urlBaseService2 = "http://127.0.0.1:9003/BankService.ashx";
     private const string callbackurl2 = "http://127.0.0.1:1592/Callback/DrumBankCash.ashx";
 
     //protected void ExportToExcel(List<BankGateAPIExcel> data, string name)
@@ -834,7 +834,7 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
                         {
                             refcode += "_re2call";
                         }
-                        var UrlBaseService = "http://127.0.0.1:9002/BankService.ashx";
+                        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
 
                         var requesData = new RequestData()
                         {

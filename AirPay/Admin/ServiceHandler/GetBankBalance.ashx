@@ -35,7 +35,7 @@ public class GetBankBalance : IHttpHandler
     private string GetBalanceBank(string bankCode, string bankId)
     {
         JavaScriptSerializer serializer = new JavaScriptSerializer();
-        var UrlBaseService = "http://127.0.0.1:9002/BankService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
         var requesData = new RequestData()
         {
             CommandCode = "BALANCE_GET",

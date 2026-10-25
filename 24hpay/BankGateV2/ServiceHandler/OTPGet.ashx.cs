@@ -20,6 +20,8 @@ namespace BankGateV2.ServiceHandler
         {
             //context.Response.ContentType = "text/plain";
             var accNo = HttpContext.Current.Request.QueryString["accNo"];
+            if (string.IsNullOrEmpty(accNo))
+                return;
 
             //NLogLogger.Info(new string[] { "OTPGet", "ProcessRequest", accNo });
             JavaScriptSerializer serializer = new JavaScriptSerializer();

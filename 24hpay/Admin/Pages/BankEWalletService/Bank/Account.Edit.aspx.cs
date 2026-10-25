@@ -180,7 +180,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             }
         }
 
-        UrlBaseService = "http://127.0.0.1:9002/BankService.ashx";
+        UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
         //UrlBaseService = "https://localhost:44373/BankService.ashx";
         //UrlBaseService = "http://149.28.130.246:9002/BankService.ashx";
 

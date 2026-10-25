@@ -55,13 +55,21 @@
                                     </div>
                                     <br />
                                     <br />
-                                    <b>Lưu ý up ảnh cho VPB</b>
-                                    <h5>- Ảnh nhìn thẳng: từ 1 đến 4</h5>
-                                    <h5>- Ảnh ngẩng mặt: ảnh 5 </h5>
-                                    <h5>- Ảnh cúi mặt: ảnh 6 </h5>
-                                    <h5>- Ảnh quay trái: ảnh 7 </h5>
-                                    <h5>- Ảnh quay phải: ảnh 8 </h5>
-                                    <h5>- Kích thước ảnh :1080x1440 </h5>
+                                     <asp:Panel runat="server" ID="pnVPB" Visible="false">
+     <b>Lưu ý up ảnh cho VPB</b>
+     <h5>- Ảnh nhìn thẳng: từ 1 đến 4</h5>
+     <h5>- Ảnh ngẩng mặt: ảnh 5 </h5>
+     <h5>- Ảnh cúi mặt: ảnh 6 </h5>
+     <h5>- Ảnh quay trái: ảnh 7 </h5>
+     <h5>- Ảnh quay phải: ảnh 8 </h5>
+     <h5>- Kích thước ảnh :1080x1440 </h5>
+ </asp:Panel>
+ <asp:Panel runat="server" ID="pnACB" Visible="false">
+     <b>Lưu ý up ảnh cho ACB</b>
+     <h5>- Ảnh bình thường: ảnh 1 </h5>
+     <h5>- Ảnh gần: ảnh 2 </h5>
+     
+ </asp:Panel>
                                 </div>
                                 <div class="col-md-9">
                                     <blockquote id="profileimg" runat="server" style="border-color: blue" visible="true">

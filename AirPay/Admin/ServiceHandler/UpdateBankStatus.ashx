@@ -97,7 +97,7 @@ public class UpdateBankStatus : IHttpHandler, IReadOnlySessionState
             CommandCode = "TRANS_SCAN",
             RequestContent = BankCode + "," + BankId
         };
-        var UrlBaseService = "http://127.0.0.1:9002/BankService.ashx";
+        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
         var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;
     }
     public static async Task<string> CallbackJson(string url, string postData)

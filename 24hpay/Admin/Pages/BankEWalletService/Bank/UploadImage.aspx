@@ -32,7 +32,7 @@
                     <div class="nav-tabs-custom">
                         <!-- Tabs within a box -->
                         <ul class="nav nav-tabs pull-right ui-sortable-handle" id="accountTabs">
-                              <li class=""><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankUploadVideo%>?id=<%=Id%>">Video</a> </li>
+                            <li class=""><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankUploadVideo%>?id=<%=Id%>">Video</a> </li>
                             <li class="active"><a href="#account-Ảnh" data-toggle="tab">Ảnh</a></li>
                             <li class=""><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountEdit%>?id=<%=Id%>#balance-info">Chuyển tiền</a></li>
                             <li><a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountEdit%>?id=<%=Id%>#account-info">Thông tin tài khoản</a></li>
@@ -55,13 +55,21 @@
                                     </div>
                                     <br />
                                     <br />
-                                    <b>Lưu ý up ảnh cho VPB</b>
-                                    <h5>- Ảnh nhìn thẳng: từ 1 đến 4</h5>
-                                    <h5>- Ảnh ngẩng mặt: ảnh 5 </h5>
-                                    <h5>- Ảnh cúi mặt: ảnh 6 </h5>
-                                    <h5>- Ảnh quay trái: ảnh 7 </h5>
-                                    <h5>- Ảnh quay phải: ảnh 8 </h5>
-                                    <h5>- Kích thước ảnh :1080x1440 </h5>
+                                    <asp:Panel runat="server" ID="pnVPB" Visible="false">
+                                        <b>Lưu ý up ảnh cho VPB</b>
+                                        <h5>- Ảnh nhìn thẳng: từ 1 đến 4</h5>
+                                        <h5>- Ảnh ngẩng mặt: ảnh 5 </h5>
+                                        <h5>- Ảnh cúi mặt: ảnh 6 </h5>
+                                        <h5>- Ảnh quay trái: ảnh 7 </h5>
+                                        <h5>- Ảnh quay phải: ảnh 8 </h5>
+                                        <h5>- Kích thước ảnh :1080x1440 </h5>
+                                    </asp:Panel>
+                                    <asp:Panel runat="server" ID="pnACB" Visible="false">
+                                        <b>Lưu ý up ảnh cho ACB</b>
+                                        <h5>- Ảnh bình thường: ảnh 1 </h5>
+                                        <h5>- Ảnh gần: ảnh 2 </h5>
+
+                                    </asp:Panel>
                                 </div>
                                 <div class="col-md-9">
                                     <blockquote id="profileimg" runat="server" style="border-color: blue" visible="true">
@@ -273,8 +281,8 @@
         }
         $("#<%=img4.ClientID %>").height($("#<%=img4.ClientID %>").width() / 3 * 4);
         $("#<%=img3.ClientID %>").height($("#<%=img3.ClientID %>").width() / 3 * 4);
-        $("#<%=img2.ClientID %>").height($("#<%=img2.ClientID %>").width() / 3 * 4);
-        $("#<%=img1.ClientID %>").height($("#<%=img1.ClientID %>").width() / 3 * 4);
+$("#<%=img2.ClientID %>").height($("#<%=img2.ClientID %>").width() / 3 * 4);
+$("#<%=img1.ClientID %>").height($("#<%=img1.ClientID %>").width() / 3 * 4);
 
         $("#<%=img8.ClientID %>").height($("#<%=img8.ClientID %>").width() / 3 * 4);
         $("#<%=img7.ClientID %>").height($("#<%=img7.ClientID %>").width() / 3 * 4);

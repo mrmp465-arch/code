@@ -56,6 +56,16 @@ public partial class Pages_BankEWalletService_Bank_UploadImage : System.Web.UI.P
         bankCode = Regex.Replace(bankCode, @"[^a-zA-Z0-9]", "");
         bankId = Regex.Replace(bankId, @"[^a-zA-Z0-9]", "");
 
+        if (bankCode == "VPB")
+        {
+            pnVPB.Visible = true;
+        }
+
+        if (bankCode == "ACB")
+        {
+            pnACB.Visible = true;
+        }
+
         string UploadFolderPhysical = Path.Combine(@"Z:\5PAY", bankCode, bankId);
 
         if (!Directory.Exists(UploadFolderPhysical))

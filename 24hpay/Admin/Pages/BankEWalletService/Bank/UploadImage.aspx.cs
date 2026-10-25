@@ -51,6 +51,15 @@ public partial class Pages_BankEWalletService_Bank_UploadImage : System.Web.UI.P
         var bankCode = _bank.BankCode;
         var bankId = _bank.BankId;
 
+        if (bankCode == "VPB")
+        {
+            pnVPB.Visible = true;
+        }
+
+        if (bankCode == "ACB")
+        {
+            pnACB.Visible = true;
+        }
         //lblId.Text = AppUtils.Request("id").ToString();
         //lblBankInfo.Text = "Upload - Tài khoản " + bankCode + " : " + bankId;
         bankCode = Regex.Replace(bankCode, @"[^a-zA-Z0-9]", "");
