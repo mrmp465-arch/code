@@ -13,7 +13,14 @@ m52app.info
 m52pay.info
 m52pay.org
 
-1. role phan quyen
+
 2. telegroup
 
+https://api.telegram.org/bot8883184631:AAGPBAnTjKIRGI_ARnVJCVfumHEldlxWMw0/setWebhook?url=https://cms.m52pay.org/cmspay/ServiceHandler/Telegram.ashx
  
+ 
+ -thong bao chung: 5351398382
+ -client: 5393302268
+ -rut tien:5558627878
+ -duyet bank:5483981704
+ -lenh dung: 5597774639

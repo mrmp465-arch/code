@@ -288,7 +288,7 @@
                                                 <asp:HyperLink
                                                     ID="lnbill"
                                                     CssClass="lightbox"
-                                                    NavigateUrl='<%# "https://info.airapp.me/Pages/Detail.aspx?orderNo=" + Eval("TransactionID") %>'
+                                                    NavigateUrl='<%# "https://info.m52app.info/Pages/Detail.aspx?orderNo=" + Eval("TransactionID") %>'
                                                     runat="server"
                                                     Visible='<%# Eval("Status").ToString() == "1" %>'>
                                                  [Xem bill]

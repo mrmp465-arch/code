@@ -1,18 +1,20 @@
-﻿using System;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Libs.API;
 using Libs.Utils;
-using System.Web.Script.Serialization;
+using ServiceStack.Common.Extensions;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Drawing.Imaging;
 using System.Drawing;
-using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.DynamicData;
+using System.Web.Script.Serialization;
+using System.Web.UI.WebControls;
 
 public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.Page
 {
@@ -60,10 +62,11 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         btnOtpLogin.OnClientClick = "validate(" + ")";
         btnReLogin2.OnClientClick = "validate(" + ")";
         btnOtpLogin2.OnClientClick = "validate(" + ")";
+        btnGetDevice.OnClientClick = "validate(" + ")";
 
         AppUtils.CheckRoles(Resources.Url.BankAccountEdit);
         //RoleUpload = AppUtils.CheckRolesPermission(Resources.Url.BankAccountUpdateImg);
-       
+
         if (!IsPostBack)
         {
             init();
@@ -87,6 +90,32 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         {
             lblDescription.Text = BankExt.Description;
             lblDescription2.Text = BankExt.Description;
+
+            //xu ly DeviceInfo
+            if ( _bank.BankCode == "ACB" )
+            {
+                pnbGroupDevice.Visible = true;
+                if(!string.IsNullOrEmpty(BankExt.DeviceInfo))
+                {
+                    btnGetDevice.Text = "Lấy lại";
+                    if (BankExt.DeviceInfo.Contains("clientPrivKey"))
+                    {
+                        lblDeviceInfo.Text = "Đã có rồi";
+                        lblDeviceInfo.CssClass = "status-green";
+                    }
+                    else
+                    {
+                        lblDeviceInfo.Text = BankExt.DeviceInfo;
+                        lblDeviceInfo.CssClass = "status-red";
+                    }
+                }
+                else
+                {
+                    lblDeviceInfo.Text = "Chưa có";
+                    lblDeviceInfo.CssClass = "status-red";
+
+                }
+            } 
 
         }
 
@@ -233,7 +262,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         _bank.AppDeviceId = txtAppDeviceId.Text;
         _bank.CloudPhoneId = txtCloudPhoneId.Text;
 
-       
+
         _bank.Update();
 
         _bank.DeleteCache();
@@ -537,6 +566,63 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
         divResultSync.Visible = true;
     }
+    protected void bntGetDevice_Click(object sender, EventArgs e)
+    {
+        var login = GetDeviceAPI(drpBankCode.SelectedValue, txtBankId.Text);
+        if (login.ResponseCode == (int)ResponseCode.TransactionSuccessful)
+        {
+            divResultSync.Attributes["class"] = "callout callout-success";
+            syncMessage.InnerHtml = "<i>Bạn đã thực hiện gọi lệnh lấy device. Vui lòng đợi trong giây lát để hệ thống xử lý và trả kết quả . Vui lòng không ấn F5 hoặc Refresh trang</i>";
+            btnGetDevice.Enabled = false;
+            btnGetDevice.Text = "Lấy lại";
+
+            lblDeviceInfo.Visible = false;
+            divLoading.Visible = true;
+            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(15));
+
+            var BankExt = new BankAccounts().GetExt(txtBankId.Text, drpBankCode.SelectedValue);
+            if (BankExt != null)
+            {
+                if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
+                {
+                    btnGetDevice.Text = "Lấy lại";
+                    if (BankExt.DeviceInfo.Contains("clientPrivKey"))
+                    {
+                        lblDeviceInfo.Text = "Đã có rồi";
+                        lblDeviceInfo.CssClass = "status-green";
+                    }
+                    else
+                    {
+                        lblDeviceInfo.Text = BankExt.DeviceInfo;
+                        lblDeviceInfo.CssClass = "status-red";
+                    }
+                }
+                else
+                {
+                    lblDeviceInfo.Text = "Chưa có";
+                    lblDeviceInfo.CssClass = "status-red";
+
+                }
+
+            }
+
+            divLoading.Visible = false;
+            lblDeviceInfo.Visible = true;
+
+
+
+
+        }
+        else 
+        {
+            divResultSync.Attributes["class"] = "callout callout-warning";
+            syncMessage.InnerHtml = string.Format("<i>{0}.</i>", login.Description);
+
+            btnGetDevice.Enabled = false;
+        }
+        divResultSync.Visible = true;
+
+    } 
 
     protected void btCancel_Click(object sender, EventArgs e)
     {
@@ -721,6 +807,22 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         {
             CommandCode = "REG_SMART_OTP_CONFIRM",
             RequestContent = string.Format("{0},{1},{2}", bankCode, bankId, otp)
+        };
+
+        var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;
+        var resObj = serializer.Deserialize<APIResponse>(res);
+        if (resObj != null)
+        {
+            return resObj;
+        }
+        return new APIResponse((int)ResponseCode.TransactionFailed);
+    }
+    private APIResponse GetDeviceAPI(string bankCode, string bankId)
+    {
+        var requesData = new RequestData()
+        {
+            CommandCode = "GET_DEVICE_INFO",
+            RequestContent = string.Format("{0},{1}", bankCode, bankId )
         };
 
         var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;

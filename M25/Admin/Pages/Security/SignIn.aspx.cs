@@ -61,7 +61,7 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
                 var _UserLock = _User.GetByUserName(txtUserName.Text);
                 _UserLock.Status = 0;
                 _UserLock.Update();
-                TelegramClient.SendTeleV2("-1003578695759", "Tài khoản " + txtUserName.Text + " đã bị khóa do đăng nhập sai 5 lần ");
+                TelegramClient.SendTeleV2("-5351398382", "Tài khoản " + txtUserName.Text + " đã bị khóa do đăng nhập sai 5 lần ");
             }
             else
             {

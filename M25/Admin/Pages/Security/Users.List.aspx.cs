@@ -45,7 +45,7 @@ public partial class Pages_Security_Users_List : System.Web.UI.Page
     private void BindData()
     {
         listpartnerDiscount = new PartnersDiscount().GetList("", 2030, 1).Where(x => x.Date.Day == 1).ToList();
-        var lst = new Users().GetList();
+        var lst = new Users().GetList().Where(x=>x.UserID>1).ToList();
         //if (lst != null) 
         //    lst = lst.Where(e => e.ParentId == AppUtils.UserID || e.UserID == AppUtils.UserID).ToList();
 

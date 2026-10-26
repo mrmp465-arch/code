@@ -30,7 +30,7 @@ namespace BankGateTest
                     await BillScreenshotBot.CaptureBillAndSendTelegramAsync(
                   botToken: "123456:ABC...",
                   chatId: chatid,
-                  url: "https://info.airapp.me/Pages/Detail.aspx?orderNo=" + orderNo,
+                  url: "https://info.m52app.info/Pages/Detail.aspx?orderNo=" + orderNo,
                   billSelector: "#bill",
                    message_id: message_id,
                   caption: refcode

@@ -97,12 +97,7 @@
                                 </div>
 
                             </div>
-                            <%--<div class="chart tab-pane " id="account-info2">
-                                <div class="col-md-8">
-                                   
 
-                                </div>
-                            </div>--%>
                             <div class="chart tab-pane  active" id="account-info">
                                 <div class="col-md-8">
                                     <br />
@@ -198,13 +193,13 @@
                                                 <asp:TextBox ID="txtBankPass" TextMode="Password" runat="server" CssClass="form-control" placeholder="Mật khẩu"></asp:TextBox>
                                             </div>
 
-                                            <div class="form-group" >
+                                            <div class="form-group">
                                                 <label for="txtSolution">Giải pháp  *</label>
                                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control">
                                                     <asp:ListItem Text="Chọn giải pháp:" Value=""></asp:ListItem>
-                                                   
+
                                                     <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
-                                                     <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
+                                                    <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                             <div class="form-group">
@@ -274,10 +269,12 @@
                                                 </asp:Panel>
 
                                             </asp:Panel>
-                                            <br />
-                                            <br />
-                                            <asp:Panel runat="server" ID="pnGroupLogin2">
 
+
+
+                                            <asp:Panel runat="server" ID="pnGroupLogin2">
+                                                <br />
+                                                <br />
                                                 <p>
                                                     Đăng ký SmartOTP
                                                    <h5>
@@ -292,6 +289,25 @@
                                                     <asp:TextBox ID="txtOtp2" runat="server" CssClass="form-control" placeholder="Nhập mã OTP"></asp:TextBox>
                                                     <asp:Button ID="btnOtpLogin2" runat="server" Text="Xác nhận" CssClass="btn btn-block btn-default btn-flat" OnClick="bntOtpLogin2_Click"></asp:Button>
                                                 </asp:Panel>
+                                            </asp:Panel>
+                                        </blockquote>
+                                       
+                                        <blockquote id="GroupDevice" runat="server" style="border-color: olive">
+                                            <asp:Panel runat="server" ID="pnbGroupDevice" Visible="false">
+                                                <p>
+                                                    Trạng thái thông tin thiết bị
+                                                    <h5>
+                                                        <div ID="divLoading" runat="server" visible="false">
+                                                            <img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />
+                                                        </div>
+                                                        <asp:Label ID="lblDeviceInfo" runat="server"></asp:Label><br />
+                                                        <br />
+                                                        <i>(Chú ý: Chỉ thực hiện 1 lần duy nhất để tránh lỗi tài khoản)</i></h5>
+                                                    <asp:Button ID="btnGetDevice" runat="server" Text="Lấy mới" CssClass="btn btn-block btn-default btn-flat" OnClick="bntGetDevice_Click"></asp:Button>
+                                                </p>
+
+
+
                                             </asp:Panel>
                                         </blockquote>
 
@@ -378,14 +394,14 @@
         function Loading() {
             //this.UnLoading();
             var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
-            $("#<%=lblBalanceBank.ClientID %>").html(html);
+    $("#<%=lblBalanceBank.ClientID %>").html(html);
 
-        };
-        function UnLoading() {
-            $('#LoadingContainer').remove();
+};
+function UnLoading() {
+    $('#LoadingContainer').remove();
 
-        };
-        if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
+};
+if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
             var params = {
                 BankCode: $("#<%=drpBankCode.ClientID %>").val(),
                 BankId: $("#<%=txtBankId.ClientID %>").val(),
@@ -406,7 +422,7 @@
                     /*  UnLoading();*/
                 }
             });
-          }
+}
 
 
 
@@ -425,6 +441,31 @@
 
 </script>
     <style>
+        .status-green {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            border-radius: 3px;
+        }
+
+        .status-red {
+            background-color: #f2dede;
+            color: #a94442;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            border-radius: 3px;
+        }
+
+        .status-green, .status-red {
+            min-width: 150px;
+            text-align: center;
+        }
+
         input[type=file] {
             font-size: 10px;
             width: 100%;

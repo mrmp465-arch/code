@@ -1099,17 +1099,17 @@ namespace Libs.BankDirect.MDrumV2
                 {
                     if (callback.Amount >= 30000000)
                     {
-                        TelegramNotify.SendTeleV2("-5539262476", "[SN02] có lệnh nạp lớn " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.NoteFull + "=>check lai ");
+                        TelegramNotify.SendTeleV2("-5351398382", "[SN02] có lệnh nạp lớn " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.NoteFull + "=>check lai ");
                         //return apiResponse;
                     }
                     //if (callback.Amount >= 10010000 && callback.Amount <= 10900000)
                     //{
-                    //    //TelegramNotify.SendTeleV2("-5539262476", "[SN02] có lệnh nạp lớn " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.NoteFull + "=>check lai ");
+                    //    //TelegramNotify.SendTeleV2("-5351398382", "[SN02] có lệnh nạp lớn " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.NoteFull + "=>check lai ");
                     //    return apiResponse;
                     //}
                     if (!string.IsNullOrEmpty(MDrumBankLib.GetBankSuccess3(keyBank)))
                     {
-                        TelegramNotify.SendTeleV2("-5539262476", "[SN02] có lệnh nạp trùng nội dung " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.NoteFull + "=> cần kiểm tra trước khi callback ");
+                        TelegramNotify.SendTeleV2("-5351398382", "[SN02] có lệnh nạp trùng nội dung " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.NoteFull + "=> cần kiểm tra trước khi callback ");
                         return apiResponse;
                     }
                 }
@@ -1327,11 +1327,11 @@ namespace Libs.BankDirect.MDrumV2
             {
                 if (order.BankCode.ToUpper() == "MOMO")
                 {
-                    TelegramNotify.SendTeleV2("-5539262476", "Có lệnh nạp momo lớn từ đối tác " + order.PartnerCode + ", số tiền " + callback.Amount.ToString("#,#").Replace(",", "."));
+                    TelegramNotify.SendTeleV2("-5351398382", "Có lệnh nạp momo lớn từ đối tác " + order.PartnerCode + ", số tiền " + callback.Amount.ToString("#,#").Replace(",", "."));
                 }
                 else
                 {
-                    TelegramNotify.SendTeleV2("-5539262476", "Có lệnh nạp bank lớn từ đối tác " + order.PartnerCode + ", số tiền " + callback.Amount.ToString("#,#").Replace(",", "."));
+                    TelegramNotify.SendTeleV2("-5351398382", "Có lệnh nạp bank lớn từ đối tác " + order.PartnerCode + ", số tiền " + callback.Amount.ToString("#,#").Replace(",", "."));
                 }
             }
 
@@ -1416,7 +1416,7 @@ namespace Libs.BankDirect.MDrumV2
                 //{
                 //    if (DateTime.Now > order.CreatedTime.AddHours(6)&& callback.CheckTransId != "1")
                 //    {
-                //        TelegramNotify.SendTeleV2("-5539262476", "[Chuyển thường] có lệnh chuyển thường " + order.PartnerCode + " " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.Note + "=> báo lại khách hàng ");
+                //        TelegramNotify.SendTeleV2("-5351398382", "[Chuyển thường] có lệnh chuyển thường " + order.PartnerCode + " " + callback.Amount.ToString("#,#").Replace(",", ".") + " " + callback.Note + "=> báo lại khách hàng ");
                 //    }
                 //}
 
@@ -1434,7 +1434,7 @@ namespace Libs.BankDirect.MDrumV2
                 //    }
                 //    else
                 //    {
-                //        TelegramNotify.SendTeleV2("-5539262476", "[" + order.PartnerCode + "]: lệnh nạp sai số tiền refcode " + order.RefCode + ", code " + order.OrderNo + " , amount user " + Convert.ToInt64(order.Amount).ToString("#,#").Replace(",", ".") + ", amount " + callback.Amount.ToString("#,#").Replace(",", ".") + " => đã cộng số dư cho merchant, game cộng tay giúp");
+                //        TelegramNotify.SendTeleV2("-5351398382", "[" + order.PartnerCode + "]: lệnh nạp sai số tiền refcode " + order.RefCode + ", code " + order.OrderNo + " , amount user " + Convert.ToInt64(order.Amount).ToString("#,#").Replace(",", ".") + ", amount " + callback.Amount.ToString("#,#").Replace(",", ".") + " => đã cộng số dư cho merchant, game cộng tay giúp");
                 //    }
 
 

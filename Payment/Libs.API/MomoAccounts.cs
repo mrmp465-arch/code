@@ -52,7 +52,9 @@ namespace Libs.API
 
         public DateTime StopScanAt { get; set; }
 
+        public DateTime CreatedAt { get; set; }
         
+
 
         public MomoAccounts()
         {

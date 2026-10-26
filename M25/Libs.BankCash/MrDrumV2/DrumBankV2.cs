@@ -281,7 +281,7 @@ namespace Libs.BankCash.DrumV2
                 {
                     if (string.IsNullOrEmpty(chatid))
                     {
-                        TelegramNotify.SendTeleV2("-5539262476", "[" + transaction.PartnerCode + "]: lệnh rút  " + request.RefCode + " " + request.BankName + " => sai mã ngân hàng");
+                        TelegramNotify.SendTeleV2("-5351398382", "[" + transaction.PartnerCode + "]: lệnh rút  " + request.RefCode + " " + request.BankName + " => sai mã ngân hàng");
                     }
                     else
                     {
@@ -298,7 +298,7 @@ namespace Libs.BankCash.DrumV2
 
                         if (string.IsNullOrEmpty(chatid))
                         {
-                            TelegramNotify.SendTeleV2("-5539262476", "[" + transaction.PartnerCode + "]: lệnh rút  " + request.RefCode + " " + request.BankName + "=> mã ngân hàng nhận bảo trì ");
+                            TelegramNotify.SendTeleV2("-5351398382", "[" + transaction.PartnerCode + "]: lệnh rút  " + request.RefCode + " " + request.BankName + "=> mã ngân hàng nhận bảo trì ");
                         }
                         else
                         {
@@ -333,7 +333,7 @@ namespace Libs.BankCash.DrumV2
                    
                     if (string.IsNullOrEmpty(chatid))
                     {
-                        TelegramNotify.SendTeleV2("-5539262476", "Đối tác " + transaction.PartnerCode + "  không đủ số dư để tạo lệnh bank out - " + request.RefCode);
+                        TelegramNotify.SendTeleV2("-5351398382", "Đối tác " + transaction.PartnerCode + "  không đủ số dư để tạo lệnh bank out - " + request.RefCode);
                     }
                     else
                     {
@@ -455,7 +455,7 @@ namespace Libs.BankCash.DrumV2
                 var resultdeduct = UpdatePartnerBalance(_BankCashAPI.PartnerCode, Convert.ToInt64(_BankCashAPI.Amount), Fee, Deductdes, "BankOut_" + _BankCashAPI.TransactionID.ToString());
                 if (resultdeduct < 0)
                 {
-                    TelegramNotify.SendTeleV2("-5539262476", "Đối tác " + transaction.PartnerCode + "  không đủ số dư để tạo lệnh bankout");
+                    TelegramNotify.SendTeleV2("-5351398382", "Đối tác " + transaction.PartnerCode + "  không đủ số dư để tạo lệnh bankout");
                     _BankCashAPI.Status = -1;
                     _BankCashAPI.LogContent = "Số dư không đủ";
                     _APIResponse.Description = "Không đủ số dư để thực hiện giao dịch";
@@ -667,7 +667,7 @@ namespace Libs.BankCash.DrumV2
 
 
                             //{
-                            //    TelegramNotify.SendTeleV2("-5539262476", "MOMOOUT :" + resObj.Description);
+                            //    TelegramNotify.SendTeleV2("-5351398382", "MOMOOUT :" + resObj.Description);
                             //}
                             var log = new LogInfo
                             {
@@ -799,7 +799,7 @@ namespace Libs.BankCash.DrumV2
                             _BankCashAPI.Update();
                             if (resObj.Description.ToLower().Contains("system") || resObj.Description.ToLower().Contains("fail"))
                             {
-                                TelegramNotify.SendTeleV2("-5539262476", "BANKOUT :" + resObj.Description);
+                                TelegramNotify.SendTeleV2("-5351398382", "BANKOUT :" + resObj.Description);
                             }
 
                             //thất bại thì hoàn tiền
@@ -832,13 +832,13 @@ namespace Libs.BankCash.DrumV2
                         //var systemDataConfig = new SystemDataConfig();
                         systemDataConfig.Update("BankCashEnable", "0");
                         systemDataConfig.DeleteCache();
-                        TelegramNotify.SendTeleV2("-5539262476", "Nghi vấn lỗi TCP !!!!! ");
+                        TelegramNotify.SendTeleV2("-5351398382", "Nghi vấn lỗi TCP !!!!! ");
                         return new APIResponse(1);
 
 
                         ////if (resObj.Description.ToLower().Contains("system") || resObj.Description.ToLower().Contains("fail"))
                         ////{
-                        ////    TelegramNotify.SendTeleV2("-5539262476", "BANKOUT :" + resObj.Description);
+                        ////    TelegramNotify.SendTeleV2("-5351398382", "BANKOUT :" + resObj.Description);
                         ////}
                         //UpdatePartnerBalanceTopup(_BankCashAPI.PartnerCode, Convert.ToInt64(_BankCashAPI.Amount), Fee, String.Format("Hoàn tiền rút bank số tiền: {2} mgd: {0}-{1}", _BankCashAPI.TransactionID, _BankCashAPI.BankCode + "-" + _BankCashAPI.RefCode, Convert.ToInt64(_BankCashAPI.Amount).ToString("#,#").Replace(",", ".")), "BankOutRefund_" + _BankCashAPI.ReturnValue.ToString());
                         //var log = new LogInfo
@@ -1044,7 +1044,7 @@ namespace Libs.BankCash.DrumV2
                     //    if (!newclObj.transId.Contains("call"))
                     //    {
                     //        if (order.CreatedTime.AddSeconds(100) < DateTime.Now)
-                    //            TelegramNotify.SendTeleV4("-5539262476", "Out VPB có hiện tượng chậm=>Vui lòng kiểm tra  lại  hệ thống");
+                    //            TelegramNotify.SendTeleV4("-5351398382", "Out VPB có hiện tượng chậm=>Vui lòng kiểm tra  lại  hệ thống");
                     //    }
                     //}
                     var ck = getck(order.PartnerCode, order.BankCode.ToUpper());
@@ -1176,7 +1176,7 @@ namespace Libs.BankCash.DrumV2
                     //                order.Note = newclObj.Comment;
                     //                order.Update();
                     //            }
-                    //            TelegramNotify.SendTeleV2("-5539262476", "có giao dịch nghi vấn cần xử lý  RefCode " + order.RefCode + " ,đối tác " + order.PartnerCode);
+                    //            TelegramNotify.SendTeleV2("-5351398382", "có giao dịch nghi vấn cần xử lý  RefCode " + order.RefCode + " ,đối tác " + order.PartnerCode);
                     //            return apiResponse;
                     //        }
                     //    }
@@ -1212,14 +1212,14 @@ namespace Libs.BankCash.DrumV2
                             if (check.Description == "Start Operation Failed")
                             {
 
-                                //TelegramNotify.SendTeleV2("-5539262476", "Nghi vấn lỗi Proxy");
+                                //TelegramNotify.SendTeleV2("-5351398382", "Nghi vấn lỗi Proxy");
                             }
                             else
                             {
                                 //if (check.Description == "Exception from SyncRequestReceived")
                                 //{
 
-                                //    TelegramNotify.SendTeleV2("-5539262476", "Lỗi treo phone client, bật phần mềm trên máy tính kết nối lại");
+                                //    TelegramNotify.SendTeleV2("-5351398382", "Lỗi treo phone client, bật phần mềm trên máy tính kết nối lại");
                                 //}
                                 if (check.Description.Contains("Device") || check.Description.Contains("OTP") || check.Description.Contains("Start") || check.Description.Contains("Screen") || check.Description.Contains("connected"))
                                 {
@@ -1227,7 +1227,7 @@ namespace Libs.BankCash.DrumV2
                                     System.Threading.Thread.Sleep(200);
                                     if (check.Description.Contains("App ACB Not Start") || check.Status == -17)
                                     {
-                                        TelegramNotify.SendTeleV2("-5539262476", "Lỗi thiết bị " + bank.Computer + "-" + bank.PhoneDevice + " : " + check.Description + " => vui lòng kiểm tra lại thiết bị ok mới duyệt");
+                                        TelegramNotify.SendTeleV2("-5351398382", "Lỗi thiết bị " + bank.Computer + "-" + bank.PhoneDevice + " : " + check.Description + " => vui lòng kiểm tra lại thiết bị ok mới duyệt");
                                     }
                                     else
                                     {
@@ -1283,7 +1283,7 @@ namespace Libs.BankCash.DrumV2
                                 //if (check.Description == "Exception from SyncRequestReceived")
                                 //{
 
-                                //    TelegramNotify.SendTeleV2("-5539262476", "Lỗi treo phone client, bật phần mềm trên máy tính kết nối lại");
+                                //    TelegramNotify.SendTeleV2("-5351398382", "Lỗi treo phone client, bật phần mềm trên máy tính kết nối lại");
                                 //}
                                 if ((check.Description.Contains("Verify Method") || check.Description.Contains("Submit Method: Null or Empty") || check.Description.Contains("AccountInquiry Null or Empty") || check.Description.Contains("OTP not is numeric")))
                                 {
@@ -1303,7 +1303,7 @@ namespace Libs.BankCash.DrumV2
                                         if (check.Description.Contains("App ACB Not Start") || check.Status == -17 || check.Description.Contains("connected"))
 
                                         {
-                                            TelegramNotify.SendTeleV2("-5539262476", "Lỗi thiết bị " + bank.Computer + "-" + bank.PhoneDevice + " : " + check.Description + " => vui lòng kiểm tra lại thiết bị ok mới duyệt");
+                                            TelegramNotify.SendTeleV2("-5351398382", "Lỗi thiết bị " + bank.Computer + "-" + bank.PhoneDevice + " : " + check.Description + " => vui lòng kiểm tra lại thiết bị ok mới duyệt");
                                         }
                                         else
                                         {
@@ -1316,7 +1316,7 @@ namespace Libs.BankCash.DrumV2
                                         TelegramNotify.SendTeleV2("-5550261869", mess);
                                         var bank = new BankAccounts().Get(check.PartnerBankId, check.PartnerBankCode);
                                         System.Threading.Thread.Sleep(500);
-                                        TelegramNotify.SendTeleV2("-5539262476", "Tài khoản " + check.PartnerBankCode + " -" + bank.BankName + " lệch số dư=> động bộ lại trước khi duyệt");
+                                        TelegramNotify.SendTeleV2("-5351398382", "Tài khoản " + check.PartnerBankCode + " -" + bank.BankName + " lệch số dư=> động bộ lại trước khi duyệt");
                                     }
                                 }
 
@@ -1324,7 +1324,7 @@ namespace Libs.BankCash.DrumV2
                                 if (check.Description.Contains("An error occurred! (6802)"))
                                 {
                                     var bank = new BankAccounts().Get(check.PartnerBankId, check.PartnerBankCode);
-                                    TelegramNotify.SendTeleV2("-5539262476", "Nghi vấn khoá " + bank.BankCode + " - " + bank.BankName + " => vui lòng kiểm tra lại ");
+                                    TelegramNotify.SendTeleV2("-5351398382", "Nghi vấn khoá " + bank.BankCode + " - " + bank.BankName + " => vui lòng kiểm tra lại ");
                                     bank.Status = -1;
                                     bank.Update();
                                 }
@@ -1355,7 +1355,7 @@ namespace Libs.BankCash.DrumV2
 
 
                     }
-                    TelegramNotify.SendTeleV2("-5539262476", "có giao dịch nghi vấn cần xử lý  RefCode " + order.RefCode);
+                    TelegramNotify.SendTeleV2("-5351398382", "có giao dịch nghi vấn cần xử lý  RefCode " + order.RefCode);
                     return apiResponse;
                 }
 
@@ -1420,11 +1420,11 @@ namespace Libs.BankCash.DrumV2
                     //{
                     //    if (order.BankCode == "MOMO")
                     //    {
-                    //        TelegramNotify.SendTeleV2("-5539262476", "MOMOOUT :" + callback.Description);
+                    //        TelegramNotify.SendTeleV2("-5351398382", "MOMOOUT :" + callback.Description);
                     //    }
                     //    else
                     //    {
-                    //        TelegramNotify.SendTeleV2("-5539262476", "BANKOUT :" + callback.Description);
+                    //        TelegramNotify.SendTeleV2("-5351398382", "BANKOUT :" + callback.Description);
                     //    }
                     //}
 

@@ -165,7 +165,7 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
         
         if (AppUtils.IsAdmin)
         {
-            lblTotal.Text = String.Format("{0} : {1}/{2} - {3} : {4} - {5} : {6} - Số lệnh đang xử lý :{7}", Resources.Pay.CashOrderNumber, lstDataBank.Sum(x => x.TotalTransSuccess).ToString(), lstDataBank.Sum(x => x.TotalTrans).ToString(), Resources.Pay.CashAmount, lstDataBank.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","), Resources.Pay.CashFee, lstDataBank.Sum(x => x.TotalFee).ToString("N0").Replace(".", ","), lstDataBank.Sum(x => x.TotalTransProcess.GetValueOrDefault()).ToString("N0").Replace(".", ","));
+            lblTotal.Text = String.Format("{0} : {1}/{2} - {3} : {4} - {5} : {6} ", Resources.Pay.CashOrderNumber, lstDataBank.Sum(x => x.TotalTransSuccess).ToString(), lstDataBank.Sum(x => x.TotalTrans).ToString(), Resources.Pay.CashAmount, lstDataBank.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","), Resources.Pay.CashFee, lstDataBank.Sum(x => x.TotalFee).ToString("N0").Replace(".", ","));
         }
     }
 
@@ -289,13 +289,13 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
             var partner = new Partners().GetCache(PartnerCode);
             if (string.IsNullOrEmpty(partner.Hotline))
             {
-                //TelegramNotify.SendTeleV2("-5539262476", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+                //TelegramNotify.SendTeleV2("-5351398382", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
                 return;
             }
             var user = new Users().GetByUserName(partner.Hotline.Trim());
             if (user == null)
             {
-                //TelegramNotify.SendTeleV2("-5539262476", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+                //TelegramNotify.SendTeleV2("-5351398382", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
                 return;
             }
 
@@ -319,13 +319,13 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
             var partner = new Partners().GetCache(PartnerCode);
             if (string.IsNullOrEmpty(partner.Hotline))
             {
-                //TelegramNotify.SendTeleV2("-5539262476", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+                //TelegramNotify.SendTeleV2("-5351398382", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
                 return;
             }
             var user = new Users().GetByUserName(partner.Hotline.Trim());
             if (user == null)
             {
-                //TelegramNotify.SendTeleV2("-5539262476", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
+                //TelegramNotify.SendTeleV2("-5351398382", "Chưa cập nhật tài khoản đối ứng cho đối tác " + PartnerCode);
                 return;
             }
 
@@ -810,7 +810,7 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
                     _CardAPILog.Reward = Convert.ToInt64(Convert.ToInt64(_CardAPILog.Amount) * (rw) / 100);
                     _CardAPILog.Update();
 
-                    LogCache.RemovePBankInfo(_CardAPILog.RefCode);
+                    //LogCache.RemovePBankInfo(_CardAPILog.RefCode);
                     //TelegramClient.SendWarning("-4278595388", "Cập nhật đúng lệnh xuất khoản  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
                     var _userLog = new UserLog
                     {
@@ -939,7 +939,7 @@ public partial class Pages_Monitor_BankCash_Monitor : System.Web.UI.Page
                         continue;
                     }
 
-                    LogCache.RemovePBankInfo(_CardAPILog.RefCode);
+                    //LogCache.RemovePBankInfo(_CardAPILog.RefCode);
                     //var resultupdate = _CardAPILog.UpdateApp();
 
                     //if (resultupdate < 0)

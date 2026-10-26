@@ -51,8 +51,9 @@ namespace Libs.API
         public int ByPass20M { get; set; }
 
         public DateTime StopScanAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        
+
 
         public MomoAccounts()
         {

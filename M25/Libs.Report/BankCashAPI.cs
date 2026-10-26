@@ -106,7 +106,7 @@ namespace Libs.Report
 
         }
         // Lấy danh sách
-        public DataTable GetTable(int top, string partnerCodes, string Mobile, DateTime fromdate, DateTime requestTime, int? status, string bankCode, string refCode, long? amount = null, string ProviderCode = null,string orderInfo=null,bool isApp=false, bool isDay = false)
+        public DataTable GetTable(int top, string partnerCodes, string Mobile, string Mobile2, DateTime fromdate, DateTime requestTime, int? status, string bankCode, string refCode, long? amount = null, string ProviderCode = null)
         {
             DBHelper db = new DBHelper(Configs.VPGAPIReportConnectionStrings);
             return db.GetDataTableSP("sp_BankCashAPI_SelectList"
@@ -118,10 +118,8 @@ namespace Libs.Report
                 , status == null ? new SqlParameter("@Status", DBNull.Value) : new SqlParameter("@Status", status)
                  , amount == null ? new SqlParameter("@Amount", DBNull.Value) : new SqlParameter("@Amount", amount)
                , string.IsNullOrEmpty(Mobile) ? new SqlParameter("@Mobile", DBNull.Value) : new SqlParameter("@Mobile", Mobile)
+                , string.IsNullOrEmpty(Mobile2) ? new SqlParameter("@Mobile2", DBNull.Value) : new SqlParameter("@Mobile2", Mobile2)
                , new SqlParameter("@FromDate", fromdate)
-                , new SqlParameter("@OrderInfo", orderInfo)
-                , isApp==false ? new SqlParameter("@IsApp ", false) : new SqlParameter("@IsApp ", isApp)
-                 , isDay == false ? new SqlParameter("@IsDay ", false) : new SqlParameter("@IsDay ", isDay)
                 , new SqlParameter("@RequestTime", requestTime)
                 );
         }
