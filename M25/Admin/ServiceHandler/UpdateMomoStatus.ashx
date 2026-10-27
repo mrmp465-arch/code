@@ -86,7 +86,10 @@ public class UpdateMomoStatus : IHttpHandler, IReadOnlySessionState
             CommandCode = "NOTIFY_ACTION",
             RequestContent = serializer.Serialize(obj),
         };
-        var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;
+        Task.Run(async () => await CallbackJson(
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
     }
     public class RequestData
     {

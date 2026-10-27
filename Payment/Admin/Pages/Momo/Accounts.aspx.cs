@@ -237,7 +237,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                     _Bank.Update();
                     if (_Bank.Solution == "APIV3")
                         NotifyMomo(_Bank.MomoId, _Bank.Status);
-                   
+
                 }
 
 
@@ -274,7 +274,10 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                         CommandCode = "TRANS_SCAN",
                         RequestContent = _Bank.MomoId,
                     };
-                    var res = Task.Run(async () => await CallbackJson(url, serializer.Serialize(requesData))).Result;
+                    Task.Run(async () => await CallbackJson(
+                        url,
+                        serializer.Serialize(requesData)
+                    ));
                 }
 
 
@@ -321,7 +324,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         }
         Response.Redirect("/cmspay/pages/momo/accounts.aspx");
     }
-    
+
     public string GetDate(object createDate)
     {
         if (createDate != null)
@@ -540,7 +543,10 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
             CommandCode = "NOTIFY_ACTION",
             RequestContent = serializer.Serialize(obj),
         };
-        var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;
+        Task.Run(async () => await CallbackJson(
+    UrlBaseService,
+    serializer.Serialize(requesData)
+));
     }
     protected void btAppClick(object sender, EventArgs e)
 

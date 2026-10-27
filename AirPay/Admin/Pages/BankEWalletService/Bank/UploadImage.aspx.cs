@@ -285,7 +285,7 @@ public partial class Pages_BankEWalletService_Bank_UploadImage : System.Web.UI.P
 
         var _bank = new BankAccounts();
         _bank.Id = Convert.ToInt32(AppUtils.Request("id"));
-        _bank = _bank.GetProfile();
+        _bank = _bank.Get();
 
         var bankCode = _bank.BankCode;
         var bankId = _bank.BankId;
@@ -295,7 +295,7 @@ public partial class Pages_BankEWalletService_Bank_UploadImage : System.Web.UI.P
         bankCode = Regex.Replace(bankCode, @"[^a-zA-Z0-9]", "");
         bankId = Regex.Replace(bankId, @"[^a-zA-Z0-9]", "");
 
-        string UploadFolderPhysical = Path.Combine(@"Z:\24HPAY", bankCode, bankId);
+        string UploadFolderPhysical = Path.Combine(@"Z:\AIRPAY", bankCode, bankId);
 
         if (!Directory.Exists(UploadFolderPhysical))
         {

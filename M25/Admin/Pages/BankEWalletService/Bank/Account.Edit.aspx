@@ -23,8 +23,7 @@
             <ul class="nav nav-tabs pull-left">
                 <li class="pull-left header"><i class="fa fa-inbox"></i>Bank</li>
                 <li class="active"><a href="#revenue-chart" data-toggle="tab">Tài khoản Bank</a></li>
-                <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.BankPartner %>">Quản lý kênh</a></li>
-                <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.PartnerBank %>">Phân bố kênh & tài khoản</a></li>
+                <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.ITAccount %>">Tài khoản chứa</a></li>
             </ul>
 
             <div class="row">
@@ -63,9 +62,17 @@
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="detail-form-4">
 
-                                        <div class="col-md-9">
+                                        <div class="col-md-9" id="divTransfer" runat="server">
                                             <div class="callout callout-success" id="calloutForm4" runat="server" visible="False">
                                                 <p id="resTextForm4" runat="server"><i>Bạn đã rút tiền thành công.</i></p>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="drpBankCode2">Chọn từ tài khoản chứa *</label>
+
+                                                <asp:DropDownList ID="drpBankCode2" runat="server" CssClass="form-control select2">
+                                                    <asp:ListItem Text="Chọn từ tài khoản chứa: " Value=""></asp:ListItem>
+                                                </asp:DropDownList>
+
                                             </div>
                                             <div class="form-group">
                                                 <label for="drpBankCodeForm4">Ngân hàng người nhận *</label>
@@ -198,13 +205,13 @@
                                                 <asp:TextBox ID="txtBankPass" TextMode="Password" runat="server" CssClass="form-control" placeholder="Mật khẩu"></asp:TextBox>
                                             </div>
 
-                                            <div class="form-group" >
+                                            <div class="form-group">
                                                 <label for="txtSolution">Giải pháp  *</label>
                                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control">
                                                     <asp:ListItem Text="Chọn giải pháp:" Value=""></asp:ListItem>
-                                                   
+
                                                     <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
-                                                     <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
+                                                    <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                             <div class="form-group">
@@ -274,10 +281,10 @@
                                                 </asp:Panel>
 
                                             </asp:Panel>
-                                            <br />
-                                            <br />
+                                           
                                             <asp:Panel runat="server" ID="pnGroupLogin2">
-
+                                                 <br />
+ <br />
                                                 <p>
                                                     Đăng ký SmartOTP
                                                    <h5>
@@ -290,11 +297,42 @@
                                                 </asp:Panel>
                                                 <asp:Panel runat="server" ID="pnOtpLogin2" Visible="False">
                                                     <asp:TextBox ID="txtOtp2" runat="server" CssClass="form-control" placeholder="Nhập mã OTP"></asp:TextBox>
-                                                    <asp:Button ID="btnOtpLogin2" runat="server" Text="Xác nhận" CssClass="btn btn-block btn-default btn-flat" OnClick="bntOtpLogin2_Click"></asp:Button>
+                                                    <asp:Button ID="btnOtpLogin2" runat="server" Text="Xác nhận" CssClass="btn btn-block btn-default btn-flat" OnClick="bntOtpLogin2_Click" Visible="false"></asp:Button>
                                                 </asp:Panel>
                                             </asp:Panel>
                                         </blockquote>
+                                       
+                                        <blockquote id="GroupDevice" runat="server" style="border-color: olive">
+                                            <asp:Panel runat="server" ID="pnbGroupDevice" Visible="false">
+                                                <p>
+                                                    Trạng thái thông tin thiết bị
+                                                    <h5>
+                                                        <div id="divLoading" runat="server" visible="false">
+                                                            <img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top: -5px" alt="loadding" />
+                                                        </div>
 
+                                                        <div class="device-status-row">
+                                                            <asp:Label ID="lblDeviceInfo" runat="server"
+                                                                CssClass="status-green">
+                                                         </asp:Label>
+
+                                                            <asp:LinkButton ID="btnDeleteDevice" runat="server" Visible="false"
+                                                                CssClass="text-red"
+                                                                ToolTip="Xóa thiết bị"
+                                                                OnClick="btnDeleteDevice_Click">
+                                                                <i class="fa fa-trash fa-lg"></i>
+                                                            </asp:LinkButton>
+                                                        </div>
+                                                        <br />
+                                                        <br />
+                                                        <i>(Chú ý: Chỉ thực hiện 1 lần duy nhất để tránh lỗi tài khoản)</i></h5>
+                                                    <asp:Button ID="btnGetDevice" runat="server" Text="Lấy mới" CssClass="btn btn-block btn-default btn-flat" OnClick="bntGetDevice_Click"></asp:Button>
+                                                </p>
+
+
+
+                                            </asp:Panel>
+                                        </blockquote>
 
                                     </div>
                                 </div>
@@ -340,6 +378,16 @@
 
         })
 
+            $('#<%= drpBankCode2.ClientID%>').on('change', function () {
+                if (this.value != '') {
+
+                    var result = this.value.split("-");
+                    $("#<%= drpBankCodeForm4.ClientID%>").val(result[0]);
+                    $("#<%= txtBankNameForm4.ClientID%>").val(result[1]);
+                    $("#<%= txtBankIdForm4.ClientID%>").val(result[2]);
+                }
+
+            });
         //$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         //var target = $(e.target).attr("href") // activated tab
         //alert(target);
@@ -424,6 +472,47 @@
 
 </script>
     <style>
+        .device-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+    .device-status-row .status-green,
+    .device-status-row .status-red {
+        min-width: 150px;
+        text-align: center;
+    }
+
+    .device-status-row .fa-trash {
+        font-size: 18px;
+    }
+
+.status-green {
+    background-color: #dff0d8;
+    color: #3c763d;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.status-red {
+    background-color: #f2dede;
+    color: #a94442;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.status-green, .status-red {
+    min-width: 150px;
+    text-align: center;
+}
         input[type=file] {
             font-size: 10px;
             width: 100%;

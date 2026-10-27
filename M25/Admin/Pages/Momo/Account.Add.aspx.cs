@@ -55,6 +55,13 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
                 Description = "Thêm mới momo " + _Momo.MomoId
             };
             _userLog.Add();
+            //phân bổ
+            var _PartnerMomo = new PartnerMomo();
+            _PartnerMomo.PartnerId = 1;
+            _PartnerMomo.MomoId = result;
+            _PartnerMomo.Status = 1;
+            _PartnerMomo.OrderNo = 1;
+            _PartnerMomo.Add();
             Response.Redirect(Constant.ADMIN_PATH + Resources.Url.MomoAccount);
         }
         else

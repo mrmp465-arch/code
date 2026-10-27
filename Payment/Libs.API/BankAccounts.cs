@@ -283,5 +283,10 @@ namespace Libs.API
             DBHelper db = new DBHelper(Configs.VPGBankConnectionStrings);
             return db.GetInstanceSP<BankExtra>("sp_BankExtra_Select_By_BankId", new SqlParameter("@BankId", BankId), new SqlParameter("@BankCode", BankCode));
         }
+        public void ResetDevice(string BankId, string BankCode)
+        {
+            DBHelper db = new DBHelper(Configs.VPGBankConnectionStrings);
+             db.GetInstanceSP<BankExtra>("sp_BankExtra_CMS_ResetDevice", new SqlParameter("@BankId", BankId), new SqlParameter("@BankCode", BankCode));
+        }
     }
 }

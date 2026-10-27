@@ -51,6 +51,14 @@ public partial class Pages_BankEWalletService_Bank_Account_Add : System.Web.UI.P
                 Description = "Thêm mới bank " + _bank.BankCode+" |"+ _bank.BankId
             };
             _userLog.Add();
+
+            //phân bổ
+            var _PartnerBank = new PartnerMomo();
+            _PartnerBank.PartnerId = 1;
+            _PartnerBank.MomoId = result;
+            _PartnerBank.Status = 1;
+            _PartnerBank.OrderNo = 1;
+            _PartnerBank.Add();
             Response.Redirect(Constant.ADMIN_PATH + Resources.Url.BankAccount);
         }
         else

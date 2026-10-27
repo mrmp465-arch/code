@@ -207,7 +207,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             return;
 
         }
-        TelegramClient.SendTeleV2("-5291354169", "Tạo lệnh rút tiền  " + amount.ToString("#,#").Replace(",", ".") + " từ user " + AppUtils.UserName + " Mã lệnh " + result.ToString());
+        TelegramClient.SendTeleV2("-5558627878", "Tạo lệnh rút tiền  " + amount.ToString("#,#").Replace(",", ".") + " từ user " + AppUtils.UserName + " Mã lệnh " + result.ToString());
 
         try
         {
@@ -483,7 +483,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             _tran.Admin = AppUtils.UserName;
             _tran.Cancel();
 
-            TelegramClient.SendTeleV2("-5291354169", "Hủy lệnh rút tiền từ user " + AppUtils.UserName + " Mã lệnh " + _tran.Id.ToString() + ", Số tiền " + _tran.Amount.ToString("#,#").Replace(",", "."));
+            TelegramClient.SendTeleV2("-5558627878", "Hủy lệnh rút tiền từ user " + AppUtils.UserName + " Mã lệnh " + _tran.Id.ToString() + ", Số tiền " + _tran.Amount.ToString("#,#").Replace(",", "."));
             //GetList();
 
         }
@@ -497,7 +497,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         _tran.Admin = AppUtils.UserName;
         _tran.Confirm();
         _tran = _tran.Get();
-        TelegramClient.SendTeleV2("-5291354169", "Duyệt lệnh rút tiền từ user " + AppUtils.UserName + " Mã lệnh " + _tran.Id.ToString() + ", Số tiền " + _tran.Amount.ToString("#,#").Replace(",", "."));
+        TelegramClient.SendTeleV2("-5558627878", "Duyệt lệnh rút tiền từ user " + AppUtils.UserName + " Mã lệnh " + _tran.Id.ToString() + ", Số tiền " + _tran.Amount.ToString("#,#").Replace(",", "."));
         //GetList();
         Response.Redirect(Request.RawUrl);
 

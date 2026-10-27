@@ -63,6 +63,8 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         btnReLogin2.OnClientClick = "validate(" + ")";
         btnOtpLogin2.OnClientClick = "validate(" + ")";
         btnGetDevice.OnClientClick = "validate(" + ")";
+        btnDeleteDevice.OnClientClick = "if (validate()) return false; return confirm('Bạn có chắc chắn muốn xóa thiết bị này?');";
+
 
         AppUtils.CheckRoles(Resources.Url.BankAccountEdit);
         //RoleUpload = AppUtils.CheckRolesPermission(Resources.Url.BankAccountUpdateImg);
@@ -92,7 +94,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             lblDescription2.Text = BankExt.Description;
 
             //xu ly DeviceInfo
-            if ( _bank.BankCode == "ACB" )
+            if ( _bank.BankCode == "ACB" && _bank.StatusExtra==1)
             {
                 pnbGroupDevice.Visible = true;
                 if(!string.IsNullOrEmpty(BankExt.DeviceInfo))
@@ -108,6 +110,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
                         lblDeviceInfo.Text = BankExt.DeviceInfo;
                         lblDeviceInfo.CssClass = "status-red";
                     }
+                    btnDeleteDevice.Visible = true;
                 }
                 else
                 {
@@ -577,43 +580,31 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             btnGetDevice.Text = "Lấy lại";
 
             lblDeviceInfo.Visible = false;
+            btnDeleteDevice.Visible = false;
             divLoading.Visible = true;
-            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(15));
+            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            var BankExt = new BankAccounts().GetExt(txtBankId.Text, drpBankCode.SelectedValue);
-            if (BankExt != null)
+            for (int i = 0; i < 50; i++)
             {
-                if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
-                {
-                    btnGetDevice.Text = "Lấy lại";
-                    if (BankExt.DeviceInfo.Contains("clientPrivKey"))
-                    {
-                        lblDeviceInfo.Text = "Đã có rồi";
-                        lblDeviceInfo.CssClass = "status-green";
-                    }
-                    else
-                    {
-                        lblDeviceInfo.Text = BankExt.DeviceInfo;
-                        lblDeviceInfo.CssClass = "status-red";
-                    }
-                }
-                else
-                {
-                    lblDeviceInfo.Text = "Chưa có";
-                    lblDeviceInfo.CssClass = "status-red";
+                int result = BindingDevice();
 
+                if (result > 0)
+                {
+                    break; // Thành công, dừng vòng lặp
                 }
 
+                // Chờ 2 giây trước lần gọi tiếp theo
+                if (i < 49)
+                {
+                    System.Threading.Thread.Sleep(2000);
+                }
             }
 
             divLoading.Visible = false;
             lblDeviceInfo.Visible = true;
 
-
-
-
         }
-        else 
+        else
         {
             divResultSync.Attributes["class"] = "callout callout-warning";
             syncMessage.InnerHtml = string.Format("<i>{0}.</i>", login.Description);
@@ -622,7 +613,50 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         }
         divResultSync.Visible = true;
 
-    } 
+    }
+    protected void btnDeleteDevice_Click(object sender, EventArgs e)
+    {
+        // Thực hiện xóa thiết bị
+        new BankAccounts().ResetDevice(txtBankId.Text, drpBankCode.SelectedValue);
+        lblDeviceInfo.Text = "Chưa có";
+        lblDeviceInfo.CssClass = "status-red";
+        btnDeleteDevice.Visible = false;
+
+    }
+    protected int BindingDevice()
+    {
+        var BankExt = new BankAccounts().GetExt(txtBankId.Text, drpBankCode.SelectedValue);
+        if (BankExt != null)
+        {
+            if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
+            {
+                btnGetDevice.Text = "Lấy lại";
+                if (BankExt.DeviceInfo.Contains("clientPrivKey"))
+                {
+                    lblDeviceInfo.Text = "Đã có rồi";
+                    lblDeviceInfo.CssClass = "status-green";
+                }
+                else
+                {
+                    lblDeviceInfo.Text = BankExt.DeviceInfo;
+                    lblDeviceInfo.CssClass = "status-red";
+                }
+                btnDeleteDevice.Visible = true;
+                return 1;
+            }
+            else
+            {
+                lblDeviceInfo.Text = "Chưa có";
+                lblDeviceInfo.CssClass = "status-red";
+                return -1;
+
+            }
+
+
+        }
+        return -1;
+    }
+
 
     protected void btCancel_Click(object sender, EventArgs e)
     {

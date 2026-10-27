@@ -31,8 +31,7 @@
             <ul class="nav nav-tabs pull-left">
                 <li class="pull-left header"><i class="fa fa-inbox"></i>Bank</li>
                 <li class="active"><a href="#revenue-chart" data-toggle="tab">Tài khoản Bank</a></li>
-                <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.BankPartner %>">Quản lý kênh</a></li>
-                <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.PartnerBank %>">Phân bố kênh & Tài khoản</a></li>
+                 <li><a href="<%=Constant.ADMIN_PATH + Resources.Url.ITAccount %>">Tài khoản chứa</a></li>
             </ul>
 
             <div class="row">

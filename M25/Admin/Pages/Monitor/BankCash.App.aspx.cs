@@ -373,7 +373,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                         Description = "Hủy lệnh bankout" + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode
                     };
                     _userLog.Add();
-                    TelegramClient.SendTeleV2("-5550261869", "Hủy lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
+                    TelegramClient.SendTeleV2("-5483981704", "Hủy lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
                     var partner = new Partners().GetCache(_CardAPILog.PartnerCode);
                     //if (!string.IsNullOrEmpty(partner.SMSUrl))
                     //{
@@ -504,7 +504,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                         Description = "Duyệt tay bankout " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode
                     };
                     _userLog.Add();
-                    TelegramClient.SendTeleV2("-5550261869", "Duyệt tay lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
+                    TelegramClient.SendTeleV2("-5483981704", "Duyệt tay lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
 
                     //bắn tele
                     //if (_CardAPILog.PartnerCode == "sn1")
@@ -610,7 +610,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                     {
                         //var check2 = new BankTransaction().GetByRefcode(_CardAPILog.TransactionID.ToString() + "_re2call");
                         //{
-                        TelegramClient.SendTeleV2("-5550261869", "[Hết lượt] Lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Hết lượt duyệt tự động vui lòng huỷ lệnh");
+                        TelegramClient.SendTeleV2("-5483981704", "[Hết lượt] Lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Hết lượt duyệt tự động vui lòng huỷ lệnh");
                         //_CardAPILog.Status = -1;
                         //_CardAPILog.LogContent = " Huỷ duyệt vì hết lượt";
                         ////_CardAPILog.ApproveUser = AppUtils.UserName;
@@ -628,7 +628,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                     {
                         if (_CardAPILog.PartnerCode == "cn02" && _CardAPILog.CreatedTime.AddMinutes(1) < DateTime.Now)
                         {
-                            TelegramClient.SendTeleV2("-5550261869", "Lệnh của CN02 đã quá 1 phút vui lòng huỷ lệnh");
+                            TelegramClient.SendTeleV2("-5483981704", "Lệnh của CN02 đã quá 1 phút vui lòng huỷ lệnh");
                             ischeck = 0;
                         }
 
@@ -641,7 +641,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                     {
                         if (!data.Exists(x => x.BalanceTotal >= _CardAPILog.Amount))
                         {
-                            TelegramClient.SendTeleV2("-5550261869", "Tài khoản bank out không đủ tiền để duyệt lệnh out này");
+                            TelegramClient.SendTeleV2("-5483981704", "Tài khoản bank out không đủ tiền để duyệt lệnh out này");
                             ischeck = 0;
                         }
                     }
@@ -651,7 +651,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                     }
                     if (_CardAPILog.Status == -2 && ischeck == 1)
                     {
-                        TelegramClient.SendTeleV2("-5550261869", "Duyệt tự động lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
+                        TelegramClient.SendTeleV2("-5483981704", "Duyệt tự động lệnh bankout  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + "  đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode + " Từ tài khoản " + AppUtils.UserName);
                         System.Threading.Thread.Sleep(100);
 
 
@@ -755,7 +755,7 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                                         _CardAPILog.Update();
 
 
-                                        TelegramClient.SendTeleV2("-5550261869", "Có lệnh bankout cần duyệt  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode);
+                                        TelegramClient.SendTeleV2("-5483981704", "Có lệnh bankout cần duyệt  " + _CardAPILog.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + _CardAPILog.PartnerCode + " RefCode " + _CardAPILog.RefCode);
 
                                         //return new APIResponse(1);
                                     }

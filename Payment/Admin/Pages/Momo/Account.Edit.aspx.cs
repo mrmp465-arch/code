@@ -372,7 +372,10 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
             CommandCode = "NOTIFY_ACTION",
             RequestContent = serializer.Serialize(obj),
         };
-        var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;
+        Task.Run(async () => await CallbackJson(
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
     }
     protected void bntSyncBalance_Click(object sender, EventArgs e)
     {

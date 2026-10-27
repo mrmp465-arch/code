@@ -20,6 +20,9 @@ namespace Libs.API
         public string Description { get; set; }
         public string BankId { get; set; }
 
+        public string DeviceInfo { get; set; }
+        
+
     }
 
     [Serializable]
@@ -254,6 +257,11 @@ namespace Libs.API
             DBHelper db = new DBHelper(Configs.VPGBankConnectionStrings);
             db.ExecuteNonQuerySP("sp_Bank_CMS_Reset"
                 , new SqlParameter("@Id", Id));
+        }
+        public void ResetDevice(string BankId, string BankCode)
+        {
+            DBHelper db = new DBHelper(Configs.VPGBankConnectionStrings);
+            db.GetInstanceSP<BankExtra>("sp_BankExtra_CMS_ResetDevice", new SqlParameter("@BankId", BankId), new SqlParameter("@BankCode", BankCode));
         }
         public void Delete()
         {

@@ -23,10 +23,9 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.BankGateAPIFixStatus);
-        RoleFixAdmin = true;
+        RoleFixAdmin = AppUtils.CheckRolesPermission("pages/monitor/bankgateapi.fixstatusbig.aspx");
 
-        var lstconfig = new SystemDataConfig().GetListCache();
-        MaxAmount =100;
+        MaxAmount = 5000000;
         if (!IsPostBack)
         {
             var lst = new List<Partners>();
@@ -185,7 +184,7 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
                 Description = "Cập nhật lệnh nạp bank " + _BankGateAPI.Amount.ToString("#,#").Replace(",", ".") + " mã code " + _BankGateAPI.OrderNo + " RefCode " + _BankGateAPI.RefCode
             };
             _userLog.Add();
-            TelegramClient.SendTeleV2("-5110278047", "Cập nhật đúng lệnh nạp bank  " + _BankGateAPI.TotalAmount.ToString("#,#").Replace(",", ".") + " mã code " + _BankGateAPI.OrderNo + " RefCode " + _BankGateAPI.RefCode + " Từ tài khoản " + AppUtils.UserName);
+            TelegramClient.SendTeleV2("-5597774639", "Cập nhật đúng lệnh nạp bank  " + _BankGateAPI.TotalAmount.ToString("#,#").Replace(",", ".") + " mã code " + _BankGateAPI.OrderNo + " RefCode " + _BankGateAPI.RefCode + " Từ tài khoản " + AppUtils.UserName);
             if (_BankGateAPI.Status == 1 && oldstatus < 1)
             {
                 //Action<string, long, string, string, string> send = UpdatePartnerBalance;

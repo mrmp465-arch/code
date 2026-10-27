@@ -291,16 +291,29 @@
                                                 </asp:Panel>
                                             </asp:Panel>
                                         </blockquote>
-                                       
+
                                         <blockquote id="GroupDevice" runat="server" style="border-color: olive">
                                             <asp:Panel runat="server" ID="pnbGroupDevice" Visible="false">
                                                 <p>
                                                     Trạng thái thông tin thiết bị
                                                     <h5>
-                                                        <div ID="divLoading" runat="server" visible="false">
-                                                            <img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />
+                                                        <div id="divLoading" runat="server" visible="false">
+                                                            <img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top: -5px" alt="loadding" />
                                                         </div>
-                                                        <asp:Label ID="lblDeviceInfo" runat="server"></asp:Label><br />
+
+                                                        <div class="device-status-row">
+                                                            <asp:Label ID="lblDeviceInfo" runat="server"
+                                                                CssClass="status-green">
+                                                         </asp:Label>
+
+                                                            <asp:LinkButton ID="btnDeleteDevice" runat="server" Visible="false"
+                                                                CssClass="text-red"
+                                                                ToolTip="Xóa thiết bị"
+                                                                OnClick="btnDeleteDevice_Click">
+                                                                <i class="fa fa-trash fa-lg"></i>
+                                                            </asp:LinkButton>
+                                                        </div>
+                                                        <br />
                                                         <br />
                                                         <i>(Chú ý: Chỉ thực hiện 1 lần duy nhất để tránh lỗi tài khoản)</i></h5>
                                                     <asp:Button ID="btnGetDevice" runat="server" Text="Lấy mới" CssClass="btn btn-block btn-default btn-flat" OnClick="bntGetDevice_Click"></asp:Button>
@@ -406,15 +419,15 @@ if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
                 BankCode: $("#<%=drpBankCode.ClientID %>").val(),
                 BankId: $("#<%=txtBankId.ClientID %>").val(),
 
-            };
-            Loading();
-            $.ajax({
-                type: 'GET',
-                url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
-                data: params,
-                success: function (data) {
-                    /*UnLoading();*/
-                    $("#<%=lblBalanceBank.ClientID %>").html(data);
+    };
+    Loading();
+    $.ajax({
+        type: 'GET',
+        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+        data: params,
+        success: function (data) {
+            /*UnLoading();*/
+            $("#<%=lblBalanceBank.ClientID %>").html(data);
 
                 },
                 error: function () {
@@ -439,8 +452,25 @@ if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
 //    });
 //});
 
-</script>
+    </script>
     <style>
+        .device-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+            .device-status-row .status-green,
+            .device-status-row .status-red {
+                min-width: 150px;
+                text-align: center;
+            }
+
+            .device-status-row .fa-trash {
+                font-size: 18px;
+            }
+
         .status-green {
             background-color: #dff0d8;
             color: #3c763d;

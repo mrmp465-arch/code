@@ -1,18 +1,19 @@
-﻿using System;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Libs.API;
 using Libs.Utils;
-using System.Web.Script.Serialization;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Drawing.Imaging;
 using System.Drawing;
-using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
+using System.Web.UI.WebControls;
 
 public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.Page
 {
@@ -50,6 +51,8 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
     }
     public bool RoleUpload { get; set; }
+    public bool RoleTransfer { get; set; }
+    public bool RoleTransferAdmin { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         serializer.MaxJsonLength = int.MaxValue;
@@ -60,10 +63,25 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         btnOtpLogin.OnClientClick = "validate(" + ")";
         btnReLogin2.OnClientClick = "validate(" + ")";
         btnOtpLogin2.OnClientClick = "validate(" + ")";
+        btnGetDevice.OnClientClick = "validate(" + ")";
+        btnDeleteDevice.OnClientClick = "if (validate()) return false; return confirm('Bạn có chắc chắn muốn xóa thiết bị này?');";
 
         AppUtils.CheckRoles(Resources.Url.BankAccountEdit);
         //RoleUpload = AppUtils.CheckRolesPermission(Resources.Url.BankAccountUpdateImg);
-       
+
+        RoleTransfer = AppUtils.CheckRolesPermission("pages/bankewalletservice/bank/account.transfer.aspx");
+        RoleTransferAdmin = AppUtils.CheckRolesPermission("pages/bankewalletservice/bank/admin.transfer.aspx");
+        if (!RoleTransfer)
+        {
+            btnCashForm4.Visible = false;
+            divTransfer.Visible = false;
+        }
+        if (!RoleTransferAdmin)
+        {
+            txtBankIdForm4.Attributes["readonly"] = "readonly";
+            txtBankNameForm4.Attributes["readonly"] = "readonly";
+        }
+
         if (!IsPostBack)
         {
             init();
@@ -82,11 +100,51 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         {
             Response.Redirect(Resources.Url.BankAccount);
         }
+
+        var lstBank2 = new ITBank().GetList().Where(x => x.Type == "HOLD" && x.Status == 1).ToList();
+        foreach (var item in lstBank2)
+        {
+            item.BankCode += "-" + item.BankName + "-" + item.BankId;
+        }
+
+        drpBankCode2.DataSource = lstBank2;
+        drpBankCode2.DataTextField = "BankCode";
+        drpBankCode2.DataValueField = "BankCode";
+        drpBankCode2.DataBind();
+
+        drpBankCode2.Items.Insert(0, new ListItem("Chọn từ tài khoản chứa", ""));
+
+
         var BankExt = new BankAccounts().GetExt(_bank.BankId, _bank.BankCode);
         if (BankExt != null)
         {
             lblDescription.Text = BankExt.Description;
             lblDescription2.Text = BankExt.Description;
+            //xu ly DeviceInfo
+            if (_bank.BankCode == "ACB" && _bank.StatusExtra == 1)
+            {
+                pnbGroupDevice.Visible = true;
+                if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
+                {
+                    btnGetDevice.Text = "Lấy lại";
+                    if (BankExt.DeviceInfo.Contains("clientPrivKey"))
+                    {
+                        lblDeviceInfo.Text = "Đã có rồi";
+                        lblDeviceInfo.CssClass = "status-green";
+                    }
+                    else
+                    {
+                        lblDeviceInfo.Text = BankExt.DeviceInfo;
+                        lblDeviceInfo.CssClass = "status-red";
+                    }
+                }
+                else
+                {
+                    lblDeviceInfo.Text = "Chưa có";
+                    lblDeviceInfo.CssClass = "status-red";
+
+                }
+            }
 
         }
 
@@ -233,7 +291,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         _bank.AppDeviceId = txtAppDeviceId.Text;
         _bank.CloudPhoneId = txtCloudPhoneId.Text;
 
-       
+
         _bank.Update();
 
         _bank.DeleteCache();
@@ -337,6 +395,93 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             NLogLogger.Info(new string[] { "ImageHelper", "ImgResize", "Base64 Invalid", e.Message });
             return string.Empty;
         }
+    }
+    protected void bntGetDevice_Click(object sender, EventArgs e)
+    {
+        var login = GetDeviceAPI(drpBankCode.SelectedValue, txtBankId.Text);
+        if (login.ResponseCode == (int)ResponseCode.TransactionSuccessful)
+        {
+            divResultSync.Attributes["class"] = "callout callout-success";
+            syncMessage.InnerHtml = "<i>Bạn đã thực hiện gọi lệnh lấy device. Vui lòng đợi trong giây lát để hệ thống xử lý và trả kết quả . Vui lòng không ấn F5 hoặc Refresh trang</i>";
+            btnGetDevice.Enabled = false;
+            btnGetDevice.Text = "Lấy lại";
+
+            lblDeviceInfo.Visible = false;
+            btnDeleteDevice.Visible = false;
+            divLoading.Visible = true;
+            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            for (int i = 0; i < 50; i++)
+            {
+                int result = BindingDevice();
+
+                if (result > 0)
+                {
+                    break; // Thành công, dừng vòng lặp
+                }
+
+                // Chờ 2 giây trước lần gọi tiếp theo
+                if (i < 49)
+                {
+                    System.Threading.Thread.Sleep(2000);
+                }
+            }
+
+            divLoading.Visible = false;
+            lblDeviceInfo.Visible = true;
+
+        }
+        else
+        {
+            divResultSync.Attributes["class"] = "callout callout-warning";
+            syncMessage.InnerHtml = string.Format("<i>{0}.</i>", login.Description);
+
+            btnGetDevice.Enabled = false;
+        }
+        divResultSync.Visible = true;
+
+    }
+    protected void btnDeleteDevice_Click(object sender, EventArgs e)
+    {
+        // Thực hiện xóa thiết bị
+        new BankAccounts().ResetDevice(txtBankId.Text, drpBankCode.SelectedValue);
+        lblDeviceInfo.Text = "Chưa có";
+        lblDeviceInfo.CssClass = "status-red";
+        btnDeleteDevice.Visible = false;
+
+    }
+    protected int BindingDevice()
+    {
+        var BankExt = new BankAccounts().GetExt(txtBankId.Text, drpBankCode.SelectedValue);
+        if (BankExt != null)
+        {
+            if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
+            {
+                btnGetDevice.Text = "Lấy lại";
+                if (BankExt.DeviceInfo.Contains("clientPrivKey"))
+                {
+                    lblDeviceInfo.Text = "Đã có rồi";
+                    lblDeviceInfo.CssClass = "status-green";
+                }
+                else
+                {
+                    lblDeviceInfo.Text = BankExt.DeviceInfo;
+                    lblDeviceInfo.CssClass = "status-red";
+                }
+                btnDeleteDevice.Visible = true;
+                return 1;
+            }
+            else
+            {
+                lblDeviceInfo.Text = "Chưa có";
+                lblDeviceInfo.CssClass = "status-red";
+                return -1;
+
+            }
+
+
+        }
+        return -1;
     }
     protected void bntSyncBalance_Click(object sender, EventArgs e)
     {
@@ -598,6 +743,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
                     Description = "Chuyển tiền bank " + drpBankCode.SelectedValue + " |" + txtBankId.Text + " |" + txtAmountForm4.Text + " |" + drpBankCodeForm4.SelectedValue + " |" + txtBankIdForm4.Text
                 };
                 _userLog.Add();
+                TelegramClient.SendTeleV2("-5558627878", "Chuyển tiền bank " + drpBankCode.SelectedValue + " | " + txtBankId.Text + " | " + txtAmountForm4.Text + " |" + drpBankCodeForm4.SelectedValue + " | " + txtBankIdForm4.Text + " từ user " + AppUtils.UserName);
             }
 
             else
@@ -649,7 +795,22 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         client.Dispose();
         return string.Empty;
     }
+    private APIResponse GetDeviceAPI(string bankCode, string bankId)
+    {
+        var requesData = new RequestData()
+        {
+            CommandCode = "GET_DEVICE_INFO",
+            RequestContent = string.Format("{0},{1}", bankCode, bankId)
+        };
 
+        var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;
+        var resObj = serializer.Deserialize<APIResponse>(res);
+        if (resObj != null)
+        {
+            return resObj;
+        }
+        return new APIResponse((int)ResponseCode.TransactionFailed);
+    }
     private int GetBalanceBank(string bankCode, string bankId)
     {
         var requesData = new RequestData()
