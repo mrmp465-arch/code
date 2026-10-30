@@ -291,7 +291,7 @@
                                                 <asp:HyperLink
                                                     ID="lnbill"
                                                     CssClass="lightbox"
-                                                    NavigateUrl='<%# "https://momo.opaps.info/Pages/Detail2.aspx?orderNo=" + Eval("Id") %>'
+                                                    NavigateUrl='<%# "https://info.m52app.info/Pages/Detail2.aspx?orderNo=" + Eval("Id") %>'
                                                     runat="server"
                                                     Visible='<%# Eval("Status").ToString() == "1" && Eval("CommandCode").ToString()=="TRANSFER" %>'>
                                                 Xem bill

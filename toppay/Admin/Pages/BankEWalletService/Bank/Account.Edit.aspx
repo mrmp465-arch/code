@@ -212,8 +212,8 @@
                                             <div class="form-group" style="display: noe">
                                                 <label for="txtSolution">Giải pháp  *</label>
                                                 <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control">
-                                                      <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
-  <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
+                                                    <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
+                                                    <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                             <div class="form-group">
@@ -284,10 +284,10 @@
                                                 </asp:Panel>
 
                                             </asp:Panel>
-                                            <br />
-                                            <br />
-                                            <asp:Panel runat="server" ID="pnGroupLogin2">
 
+                                            <asp:Panel runat="server" ID="pnGroupLogin2">
+                                                <br />
+                                                <br />
                                                 <p>
                                                     Đăng ký SmartOTP
                                                      <h5>
@@ -304,7 +304,38 @@
                                                 </asp:Panel>
                                             </asp:Panel>
                                         </blockquote>
-                                        
+                                        <blockquote id="GroupDevice" runat="server" style="border-color: olive">
+                                            <asp:Panel runat="server" ID="pnbGroupDevice" Visible="false">
+                                                <p>
+                                                    Trạng thái thông tin thiết bị
+            <h5>
+                <div id="divLoading" runat="server" visible="false">
+                    <img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top: -5px" alt="loadding" />
+                </div>
+
+                <div class="device-status-row">
+                    <asp:Label ID="lblDeviceInfo" runat="server"
+                        CssClass="status-green">
+                 </asp:Label>
+
+                    <asp:LinkButton ID="btnDeleteDevice" runat="server" Visible="false"
+                        CssClass="text-red"
+                        ToolTip="Xóa thiết bị"
+                        OnClick="btnDeleteDevice_Click">
+                        <i class="fa fa-trash fa-lg"></i>
+                    </asp:LinkButton>
+                </div>
+                <br />
+                <br />
+                <i>(Chú ý: Chỉ thực hiện 1 lần duy nhất để tránh lỗi tài khoản)</i></h5>
+                                                    <asp:Button ID="btnGetDevice" runat="server" Text="Lấy mới" CssClass="btn btn-block btn-default btn-flat" OnClick="bntGetDevice_Click"></asp:Button>
+                                                </p>
+
+
+
+                                            </asp:Panel>
+                                        </blockquote>
+
                                     </div>
                                 </div>
                             </div>
@@ -432,34 +463,76 @@
                     /*  UnLoading();*/
                 }
             });
+}
+
+
+
+//$(document).ready(function () {
+//    $('.base64-img').on('click', function () {
+//        var src = $(this).children('img').first().attr('src');
+//        $('#zoom-img').attr('src', src);
+//        $('#zoom-modal').css('display', 'flex'); // sho
+//    });
+
+//    $('#zoom-modal').on('click', function () {
+//        $(this).hide();
+//    });
+//});
+$(document).ready(function () {
+    $('.base64-img').each(function () {
+        var imgSrc = $(this).find('img').attr('src');
+        $(this).attr('href', imgSrc);
+    });
+});
+$(document).ready(function () {
+    $(".base64-img").fancybox({
+
+    });
+});
+</script>
+    <style>
+        .device-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
 
-      
+            .device-status-row .status-green,
+            .device-status-row .status-red {
+                min-width: 150px;
+                text-align: center;
+            }
 
-        //$(document).ready(function () {
-        //    $('.base64-img').on('click', function () {
-        //        var src = $(this).children('img').first().attr('src');
-        //        $('#zoom-img').attr('src', src);
-        //        $('#zoom-modal').css('display', 'flex'); // sho
-        //    });
+            .device-status-row .fa-trash {
+                font-size: 18px;
+            }
 
-        //    $('#zoom-modal').on('click', function () {
-        //        $(this).hide();
-        //    });
-        //});
-        $(document).ready(function () {
-            $('.base64-img').each(function () {
-                var imgSrc = $(this).find('img').attr('src');
-                $(this).attr('href', imgSrc);
-            });
-        });
-        $(document).ready(function () {
-            $(".base64-img").fancybox({
+        .status-green {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            border-radius: 3px;
+        }
 
-            });
-        });
-    </script>
-    <style>
+        .status-red {
+            background-color: #f2dede;
+            color: #a94442;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            border-radius: 3px;
+        }
+
+        .status-green, .status-red {
+            min-width: 150px;
+            text-align: center;
+        }
+
         input[type=file] {
             font-size: 10px;
             width: 100%;

@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="box box-default">
+                        <div class="box box-default" style="display:none">
                             <div class="box-header with-border">
                                 <h3 class="box-title">Thêm tài khoản thông thường</h3>
 
@@ -142,11 +142,11 @@
                             </div>
                             <div class="box-body" style="">
                                 <div class="form-group">
-                                    <img width="539" src="<%=Constant.ADMIN_PATH  %>Content/tempmomov2.png?r=3" />
+                                    <img width="539" src="<%=Constant.ADMIN_PATH  %>Content/tempmomov2.png?r=5" />
                                 </div>
 
                                 <div class="form-group">
-                                    <a href="<%=Constant.ADMIN_PATH  %>content/tempmomov2.xlsx?r=2"><strong>Tải file excel mẫu</strong></a>
+                                    <a href="<%=Constant.ADMIN_PATH  %>content/tempmomov2.xlsx?r=5"><strong>Tải file excel mẫu</strong></a>
                                 </div>
                                 <div class="form-group">
                                     <asp:FileUpload ID="FileUpload1" runat="server" />

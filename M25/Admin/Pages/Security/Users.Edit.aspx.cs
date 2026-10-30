@@ -54,6 +54,8 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         IsUserPartner = _User.IsPartner;
         IsUserToup = _User.IsTopup;
         chkWithdraw.Checked = Convert.ToBoolean(_User.Withdraw);
+
+        txtSource.Text = _User.Source.ToString();
         //txtDeposit.Text = _User.F2a.ToString();
 
         var LstPartners = new Partners().GetList();
@@ -349,14 +351,8 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         _User.IsTopup = Convert.ToInt32(cbxIsTopup.Checked);
         _User.IsProvider = Convert.ToInt32(cbxIsProvider.Checked);
         _User.Ip = txtIp.Text.Trim();
-        if (_User.IsAdmin == 1)
-        {
-            _User.Source = "inhouse";
-        }
-        else
-        {
-            _User.Source = drpOrder.SelectedValue;
-        }
+        _User.Source = txtSource.Text;
+      
         _User.Withdraw = Convert.ToInt32(chkWithdraw.Checked);
         //_User.F2a = txtDeposit.Text;
         _User.Update();

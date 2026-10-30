@@ -196,6 +196,11 @@
                             <asp:CheckBox ID="chkWithdraw" runat="server"></asp:CheckBox>
                             <small>Rút tiền (tk phụ)</small>
                         </div>
+                        <div class="form-group" style="">
+                            <label for="txtSource">Source *</label>
+                            <asp:TextBox ID="txtSource" runat="server" CssClass="form-control"></asp:TextBox>
+
+                        </div>
                         <div class="form-group">
                             <asp:CheckBox ID="chkIsActive" runat="server"></asp:CheckBox>
                             <small>Kích hoạt</small>
@@ -275,7 +280,7 @@
                             <asp:TextBox ID="txtRewardBANKOUTTRANFER" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
 
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="txtDiscountMOMO">Chiết khấu momo </label>
                             <asp:HiddenField ID="hdDiscountMOMO" runat="server" />
                             <asp:TextBox ID="txtDiscountMOMO" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
@@ -285,7 +290,7 @@
                             <asp:HiddenField ID="hdDiscountMOMOOUT" runat="server" />
                             <asp:TextBox ID="txtDiscountMOMOOUT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label for="txtDiscountVTT">Reward Momo </label>
                             <asp:TextBox ID="txtRewardMOMO" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
@@ -442,22 +447,22 @@
         });
     </script>
     <script>
-        function copyText(id) {
-            var str = $(id).val();
-            var el = document.createElement('textarea');
-            el.value = str;
-            el.setAttribute('readonly', '');
-            el.style = {
-                position: 'absolute',
-                left: '-9999px'
-            };
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
+function copyText(id) {
+    var str = $(id).val();
+    var el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style = {
+        position: 'absolute',
+        left: '-9999px'
+    };
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
 
-        }
-    </script>
+}
+</script>
     <style>
         .textcopy {
             width: 86%;

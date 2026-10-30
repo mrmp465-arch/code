@@ -20,9 +20,11 @@ using Libs.Utils;
 public partial class Pages_Momo_Account_Add : System.Web.UI.Page
 {
     private string urlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
+    public bool RoleAdmin { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.MomoAccountAdd);
+        RoleAdmin = AppUtils.CheckRolesPermission("pages/bankewalletservice/bank/transaction.aspx");
     }
 
     protected void btAdd_Click(object sender, EventArgs e)
@@ -42,7 +44,7 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
         _Momo.Solution = drpSolution.SelectedValue;
 
         var _user = new Users().Get(AppUtils.UserID);
-        _Momo.Source ="m52";
+        _Momo.Source = _user.Source;
         var result=_Momo.Add();
         if (result > 0)
         {
@@ -216,14 +218,18 @@ public partial class Pages_Momo_Account_Add : System.Web.UI.Page
                                 if (obj.Phone.Length == 9)
                                     obj.Phone = "0" + obj.Phone;
                                 obj.Imei = row.ItemArray[2].ToString().Trim();
-                                //obj.Source = row.ItemArray[3].ToString().Trim();
-                                //if (string.IsNullOrEmpty(obj.Source))
-                                //{
-                                //    obj.Source = "inhouse";
-                                //}
-                               
+                                obj.Source = row.ItemArray[3].ToString().Trim();
+                                if (string.IsNullOrEmpty(obj.Source))
+                                {
+                                    obj.Source = "m52";
+                                }
+                                if(!RoleAdmin)
+                                {
+                                    obj.Source = _user.Source;
+
+                                }
                                 //obj.Source = _user.Source;
-                                obj.Source = "m52";
+                                //obj.Source = "m52";
                                 //if(_user.Source=="inhouse")
                                 //{
                                 //    obj.Source = row.ItemArray[3].ToString().Trim();

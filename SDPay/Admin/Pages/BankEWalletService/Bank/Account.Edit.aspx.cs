@@ -804,7 +804,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
         httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         var client = new HttpClient();
-        client.Timeout = TimeSpan.FromSeconds(300);
+        client.Timeout = TimeSpan.FromSeconds(30);
         try
         {
             NLogLogger.Info(new string[] { "CMS", "Account.Edit", "Request", postData });

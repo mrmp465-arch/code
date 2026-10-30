@@ -58,10 +58,13 @@ public partial class Pages_Security_SignIn : System.Web.UI.Page
             if (countFail >= 5)
             {
                 lblMessage.Text = "The account has been locked due to 5 failed login attempts.";
-                var _UserLock = _User.GetByUserName(txtUserName.Text);
-                _UserLock.Status = 0;
-                _UserLock.Update();
-                TelegramClient.SendTeleV2("-5351398382", "Tài khoản " + txtUserName.Text + " đã bị khóa do đăng nhập sai 5 lần ");
+                var _UserLock = _User.GetByUserName(txtUserName.Text.Trim().ToLower());
+                if (_UserLock != null)
+                {
+                    _UserLock.Status = 0;
+                    _UserLock.Update();
+                    TelegramClient.SendTeleV2("-5351398382", "Tài khoản " + txtUserName.Text + " đã bị khóa do đăng nhập sai 5 lần ");
+                }
             }
             else
             {

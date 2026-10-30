@@ -24,10 +24,12 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 {
     protected long total;
     public bool RoleEdit { get; set; }
+    public bool RoleAdmin { get; set; }
     JavaScriptSerializer serializer = new JavaScriptSerializer();
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.MomoAccount);
+        RoleAdmin = AppUtils.CheckRolesPermission("pages/bankewalletservice/bank/transaction.aspx");
         RoleEdit = AppUtils.CheckRolesPermission(Resources.Url.MomoAccountEdit);
         if (RoleEdit)
         {
@@ -59,10 +61,10 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
         var _user = new Users().Get(AppUtils.UserID);
 
-        //if (_user.Source != "m25")
-        //{
-        //    data = data.Where(x => x.Source == _user.Source).ToList();
-        //}
+        if (!RoleAdmin)
+        {
+            data = data.Where(x => x.Source == _user.Source).ToList();
+        }
 
         var status = int.Parse(drpStatus.SelectedValue);
         //if (status == -2)

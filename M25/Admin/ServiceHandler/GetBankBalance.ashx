@@ -103,7 +103,7 @@ public class GetBankBalance : IHttpHandler
             phone = momoId
         };
 
-        var res = Task.Run(async () => await CallbackJson("http://45.76.183.159:3000/api/checkNotificationState", serializer.Serialize(requesData))).Result;
+        var res = Task.Run(async () => await CallbackJson("http://139.180.154.76:3000/api/checkNotificationState", serializer.Serialize(requesData))).Result;
         return res;
 
     }
