@@ -19,24 +19,37 @@ namespace Bot
 
         static void Main(string[] args)
         {
-            ReporBank();
+
+            if(DateTime.Now.Minute==59|| DateTime.Now.Minute == 29)
+            Report();
 
             //ReportSN();
             //ReporOtp();
         }
+        static void Report()
+        {
+
+            DateTime begintime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            DateTime endtime = DateTime.Now;
+            var lstDataBank = new BankGateAPI().ReportDashboard(string.Empty, begintime, endtime);
+            var lstDataBankCash = new BankCashAPI().ReportDashboard(string.Empty, begintime, endtime);
+            SendTeleV3("-5565643821", "BankIn: " + lstDataBank.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","));
+            SendTeleV3("-5565643821", "BankOut: " + lstDataBankCash.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","));
+        }
+
         static void ReporBank()
         {
             var _Bank = new BankAccounts();
-            var data = _Bank.GetList().Where(x=>x.StatusExtra != -4 && x.BalanceTotal>=100000).ToList();
-            SendTeleV3("-4935229779", "Tổng số dư bank: " + data.Sum(x=>x.BalanceTotal).ToString("N0").Replace(".", ","));
+            var data = _Bank.GetList().Where(x => x.StatusExtra != -4 && x.BalanceTotal >= 100000).ToList();
+            SendTeleV3("-4935229779", "Tổng số dư bank: " + data.Sum(x => x.BalanceTotal).ToString("N0").Replace(".", ","));
             System.Threading.Thread.Sleep(200);
             foreach (var bank in data)
             {
-                SendTeleV3("-4935229779", "Tài khoản "+ bank.BankCode+" -" + bank.BankId + " -" + bank.BankName + " Số dư : "+ bank.BalanceTotal.ToString("N0").Replace(".", ","));
+                SendTeleV3("-4935229779", "Tài khoản " + bank.BankCode + " -" + bank.BankId + " -" + bank.BankName + " Số dư : " + bank.BalanceTotal.ToString("N0").Replace(".", ","));
             }
 
             var _Momo = new MomoAccounts();
-            var data2 = _Momo.GetList().Where(a=>a.StatusExtra!=-4).Where(x => x.Status == 1 || x.Status == 0).ToList();
+            var data2 = _Momo.GetList().Where(a => a.StatusExtra != -4).Where(x => x.Status == 1 || x.Status == 0).ToList();
             SendTeleV3("-4935229779", "Tổng số dư momo: " + data2.Sum(x => x.BalanceTotal).ToString("N0").Replace(".", ","));
             System.Threading.Thread.Sleep(200);
             //foreach (var bank in data2)
@@ -152,10 +165,10 @@ namespace Bot
 
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
-                var requestUrl = string.Format("https://api.telegram.org/bot7593090326:AAFAMnx9Bw6akr6mw9YLrtohHBzybgoqhpo/sendMessage?chat_id={1}&text={0}", message, id);
+                var requestUrl = string.Format("https://api.telegram.org/bot8675955812:AAEV_c3dgnUY4JzVGLIRgOdXmpuJJI9tCb4/sendMessage?chat_id={1}&text={0}", message, id);
                 var webclient = new WebClient();
 
-                //NLogLogger.Info(requestUrl);
+                NLogLogger.Info(requestUrl);
                 webclient.DownloadString(requestUrl);
             }
             catch (Exception e)

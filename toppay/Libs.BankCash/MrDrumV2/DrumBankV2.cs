@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
-using Libs.API;
+﻿using Libs.API;
 using Libs.BankCash.CoCo;
 using Libs.BankCash.Drum;
 using Libs.Report;
 using Libs.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Script.Serialization;
 using static Libs.BankCash.BankCashService;
-
 using static Libs.BankCash.Drum.DrumBankLib;
 
 
@@ -212,6 +212,10 @@ namespace Libs.BankCash.DrumV2
 
             if (request.BankName.ToLower() == "vietcombank")
                 request.BankName = "VCB";
+
+
+            if (request.BankName.ToLower() == "kbank")
+                request.BankName = "KSKHCM";
 
             //if (request.BankName.Length > 10)
             //    return new APIResponse((int)ResponseCode.BankCodeInvalid);
@@ -469,20 +473,73 @@ namespace Libs.BankCash.DrumV2
                 step = 3;
 
                 var MinBankAproveAmount = int.Parse(systemDataConfig.GetKey(lstConfig, "MinBankAproveAmount"));
-                //NLogLogger.Info(new string[] { "CheckApp", "Amount",request.RefCode,request.Amount.ToString(),MinBankAproveAmount.ToString()
-                //    });
-                //if ((transaction.PartnerCode == "nh88" || transaction.PartnerCode == "nh99") && request.Amount >= 3000000)
-                //{
-                //    TelegramNotify.SendTeleV2("-4611125295", "[CheckBankOut " + transaction.PartnerCode + "] Bankout Pendding cần xác nhận " + request.BankName + "-" + request.BankAccountNumber + " số tiền " + request.Amount.ToString("#,#").Replace(",", ".") + " RefCode " + request.RefCode + " ae xem giúp nhé");
+                if (!string.IsNullOrEmpty(partner.SMSCommand))
+                {
+                    if (int.TryParse(partner.SMSCommand, out int smsValue))
+                    {
+                        if (request.Amount >= smsValue)
+                        {
+                            //  var chatId = partner.SMSPlusUrl;
+                            //TelegramNotify.SendTeleV2(chatid, "[CheckBankOut " + transaction.PartnerCode + "] Bankout awaiting confirmation " + request.RefCode + " => Please confirm");
+                            var acc = HttpUtility.HtmlEncode(request.BankAccountNumber);
+                            acc = MaskString(acc);
+                            var accName = HttpUtility.HtmlEncode(request.BankAccountName);
+                            accName = MaskString2(accName);
+                            var mess =
+                               "🏦 <b>ConfirmBankOut</b>\n\n" +
+                               "📌 订单号 RefCode: <code>" + HttpUtility.HtmlEncode(request.RefCode) + "</code>\n" +
+                               "💰 金额 Amount: <b>" + request.Amount.ToString("#,#").Replace(",", ".") + "</b>\n" +
+                               "🏛 收款信息 Bank: " +
+                                   HttpUtility.HtmlEncode(request.BankName) + " - " +
+                                   acc + " - " +
+                                   accName + "\n\n" +
+
+                               "⚠️ Cần xác nhận giao dịch này. Vui lòng bấm <b>Confirm</b> hoặc <b>Cancel</b> bên dưới.\n" +
+                               "⚠️ This transaction requires confirmation. Please click <b>Confirm</b> or <b>Cancel</b> below.\n" +
+                               "⚠️ 该笔订单需要确认，请点击下方的 <b>确认（Confirm）</b> 或 <b>取消（Cancel）</b>。\n\n";
 
 
-                //    _BankCashAPI.Status = -2;
-                //    _BankCashAPI.LogContent = "Chờ xác nhận";
-                //    _BankCashAPI.ApproveUser = "";
-                //    _BankCashAPI.LastTime = DateTime.Now;
-                //    _BankCashAPI.Update();
-                //    return new APIResponse(1);
-                //}
+                            var mess2 =
+                              "🏦 ConfirmBankOut\n\n" +
+                             "📌 RefCode: " + request.RefCode + "\n" +
+                             "💰 Amount: " + request.Amount.ToString("#,#").Replace(",", ".") + "\n\n" +
+                             "🏛 Bank: " + request.BankName + "-" + acc + "-" + accName + "\n" +
+                             "⚠️ Cần xác nhận giao dịch này.\n" +
+                             "👉 Vui lòng bấm Confirm hoặc Cancel bên dưới.\n\n" +
+                             "────────────────────\n" +
+                             "🇬🇧 Bankout Awaiting Confirmation\n" +
+                             "RefCode: " + request.RefCode + "\n" +
+                             "Amount: " + request.Amount.ToString("#,#").Replace(",", ".") + "\n" +
+                             "Bank: " + request.BankName + "-" + acc + "-" + request.BankAccountName + "\n\n";
+
+                            var userconfirm = partner.SMSPlusCheckUrl;
+                            if (!string.IsNullOrEmpty(userconfirm))
+                            {
+                                userconfirm = userconfirm.Replace(',', ' ');
+                                mess = mess + userconfirm;
+                                mess2 = mess2 + userconfirm;
+                            }
+
+                            try
+                            {
+                                TelegramNotify.SendConfirmMessage(chatid, mess, request.RefCode);
+                            }
+                            catch
+                            {
+                                TelegramNotify.SendConfirmMessage(chatid, mess2, request.RefCode);
+                            }
+
+                            //TelegramNotify.SendConfirmMessage(chatid, mess, request.RefCode);
+
+                            _BankCashAPI.Status = -2;
+                            _BankCashAPI.LogContent = "Chờ xác nhận";
+                            _BankCashAPI.ApproveUser = "";
+                            _BankCashAPI.LastTime = DateTime.Now;
+                            _BankCashAPI.Update();
+                            return new APIResponse(1);
+                        }
+                    }
+                }
                 if (request.Amount >= MinBankAproveAmount)
                 {
                     TelegramNotify.SendTeleV2("-1003964341811", "[Duyệt] Có lệnh bankout cần duyệt  " + request.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + transaction.PartnerCode + " RefCode " + request.RefCode);
@@ -858,7 +915,7 @@ namespace Libs.BankCash.DrumV2
                     {
                         var checkOrder = new CheckOrder
                         {
-                            LasTime = DateTime.Now,
+                            LastTime = DateTime.Now,
                             RefCode = order.RefCode,
                             Amount = Convert.ToInt32(order.Amount),
                             TransactionID = order.TransactionID.ToString()

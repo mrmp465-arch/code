@@ -88,6 +88,24 @@
 
                             <asp:TextBox ID="txtSMSPlusUrl" runat="server" CssClass="form-control" placeholder="GroupId"></asp:TextBox>
                         </div>
+                        <div class="form-group">
+                            <label for="txtSMSCommand">Số tiền xác nhận đơn rút</label>
+
+
+                            <asp:TextBox ID="txtSMSCommand" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtRequestType">Số tiền gửi bill tự động</label>
+
+
+                            <asp:TextBox ID="txtRequestType" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtSMSPlusUrl">Tài khoản đại lý</label>
+
+
+                            <asp:TextBox ID="txtSMSPlusCommand" runat="server" CssClass="form-control" placeholder="Nhập tên tk đại lý"></asp:TextBox>
+                        </div>
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -96,7 +114,7 @@
                                             <asp:CheckBox ID="ddlBankCashEnable" runat="server"></asp:CheckBox>
 
                                         </span>
-                                        <span class="form-control" style="font-weight: bold">Rút momo</span>
+                                        <span class="form-control" style="font-weight: bold">Rút bank</span>
 
                                     </div>
                                 </div>
@@ -109,7 +127,7 @@
                                             <asp:CheckBox ID="ddlBankInEnable" runat="server"></asp:CheckBox>
 
                                         </span>
-                                        <span class="form-control" style="font-weight: bold">Nạp momo</span>
+                                        <span class="form-control" style="font-weight: bold">Nạp bank</span>
 
                                     </div>
 
@@ -168,7 +186,13 @@
                             <small>Danh sách IP Cách nhau bằng dấu phẩy</small>
 
                         </div>
-                        <div class="form-group">
+                          <div class="form-group">
+                              <label for="txtIp">User xác nhận</label>
+                              <asp:TextBox ID="txtUserConfirm" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
+                              <small>Danh sách user Cách nhau bằng dấu phẩy</small>
+
+                          </div>
+                                        <div class="form-group">
                             <asp:CheckBox ID="chkWithdraw" runat="server"></asp:CheckBox>
                             <small>Rút tiền (tk phụ)</small>
                         </div>
@@ -410,22 +434,22 @@
         });
     </script>
     <script>
-        function copyText(id) {
-            var str = $(id).val();
-            var el = document.createElement('textarea');
-            el.value = str;
-            el.setAttribute('readonly', '');
-            el.style = {
-                position: 'absolute',
-                left: '-9999px'
-            };
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
+function copyText(id) {
+    var str = $(id).val();
+    var el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style = {
+        position: 'absolute',
+        left: '-9999px'
+    };
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
 
-        }
-    </script>
+}
+</script>
     <style>
         .textcopy {
             width: 86%;

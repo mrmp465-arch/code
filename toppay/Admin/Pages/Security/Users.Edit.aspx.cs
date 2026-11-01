@@ -257,7 +257,13 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
             }
 
             var _Partner = new Partners().Get(_User.UserName);
+
             txtSMSPlusUrl.Text = _Partner.SMSPlusUrl;
+            txtSMSCommand.Text = _Partner.SMSCommand;
+            txtRequestType.Text = _Partner.RequestType.ToString();
+            txtUserConfirm.Text = _Partner.SMSPlusCheckUrl;
+            txtSMSPlusCommand.Text = _Partner.SMSUrl;
+
             txtPartnerCode.Text = _Partner.PartnerCode;
             txtPartnerKey.Text = _Partner.PublicKey;
             var _PartnerService = new PartnerService();
@@ -355,10 +361,15 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
             var _Partner = new Partners().Get(_User.UserName);
             //if (_Partner.Status != _User.Status)
             //{
-                _Partner.Status = _User.Status;
-                _Partner.SMSUrl = drpOrder.SelectedValue;
-                _Partner.SMSPlusUrl = txtSMSPlusUrl.Text.Trim();
-                _Partner.Update();
+            _Partner.Status = _User.Status;
+            _Partner.SMSUrl = txtSMSPlusCommand.Text.Trim();
+
+            _Partner.SMSPlusUrl = txtSMSPlusUrl.Text.Trim();
+            _Partner.SMSCommand = txtSMSCommand.Text.Trim();
+            _Partner.RequestType = int.Parse(txtRequestType.Text.Trim());
+            _Partner.SMSPlusCheckUrl = txtUserConfirm.Text.Trim();
+
+            _Partner.Update();
             //}
             List<PartnerService> list = _PartnerService.GetList(_Partner.PartnerID, 0);
             var bankService = list.FirstOrDefault(x => x.ServiceID == 13);

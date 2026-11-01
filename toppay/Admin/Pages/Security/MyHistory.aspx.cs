@@ -12,13 +12,23 @@ using DocumentFormat.OpenXml.Drawing;
 using System.Globalization;
 using System.IO;
 using Libs.Utils;
+using OfficeOpenXml;
 public partial class Pages_Security_MyHistory : System.Web.UI.Page
 {
+    public bool IsDL { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.MyHistory);
         Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
         Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
+        if (AppUtils.IsTopup)
+        {
+            var partnerlist = new Partners().GetList();
+            if (partnerlist.Exists(x => x.SMSUrl == AppUtils.UserName))
+            {
+                IsDL = true;
+            }
+        }
         if (!IsPostBack)
         {
 
@@ -36,7 +46,7 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
         btView.Text = Resources.Pay.View;
         btExcel.Text = Resources.Pay.ExportExcel;
         txtEndTime.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1).AddSeconds(-1).ToString("dd/MM/yyyy HH:mm:ss");
-        txtBeginTime.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).ToString("dd/MM/yyyy HH:mm:ss");
+        txtBeginTime.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-7).ToString("dd/MM/yyyy HH:mm:ss");
 
         drpType.Items.Insert(0, new ListItem(Resources.Pay.TransactionType, "-1"));
         drpType.Items.Insert(1, new ListItem(Resources.Pay.AddMoney, "1"));
@@ -47,7 +57,7 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
         var lst = new List<Users>();
         if (AppUtils.IsAdmin)
         {
-            lst = new Users().GetList().Where(x => x.IsPartner == 1).OrderBy(x => x.UserName).ToList();
+            lst = new Users().GetList().Where(x => x.IsPartner == 1 || x.IsTopup == 1).OrderBy(x => x.UserName).ToList();
 
         }
         else
@@ -68,12 +78,11 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
         if (AppUtils.IsAdmin)
         {
             name = drpUser.SelectedValue;
+           
         }
         else
         {
-            name = AppUtils.UserName;
-
-            if (!AppUtils.IsPartner)
+            if (!AppUtils.IsPartner && !IsDL)
             {
 
 
@@ -105,12 +114,11 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
         if (AppUtils.IsAdmin)
         {
             name = drpUser.SelectedValue;
+           
         }
         else
         {
-            name = AppUtils.UserName;
-
-            if (!AppUtils.IsPartner)
+            if (!AppUtils.IsPartner && !IsDL)
             {
 
 
@@ -118,17 +126,20 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
                 name = lstPartner.FirstOrDefault().Name;
             }
         }
+
         DateTime begintime = ToDateTime(txtBeginTime.Text);
         DateTime endtime = ToDateTime(txtEndTime.Text);
 
-        
+       
             var lstdata = new UserTransaction().GetList(name, "", "", -1, begintime, endtime, 100000);
-            var Data=new List<HistoryExcel>();
+            var Data = new List<HistoryExcel>();
             foreach (var bank in lstdata)
             {
                 var item = new HistoryExcel();
                 item.Id = bank.Id;
-                item.CreatedTime = bank.CreatedTime;
+                item.RefCode = bank.RefCode;
+                item.TransactionId = gettran(bank.Note);
+                item.CreatedTime = bank.CreatedTime.ToString("dd/MM/yyyy HH:mm:ss"); ;
                 item.Note = bank.Note;
                 item.Balance = bank.Balance;
                 item.Amount = bank.Amount;
@@ -138,7 +149,16 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
             }
 
             ExportToExcel(Data, "history-" + name.Replace(",", "") + endtime.ToString("ddMMyyy"));
-        
+       
+
+    }
+    public string gettran(string value)
+    {
+        if (value.Contains("-"))
+        {
+            return value.Split('-').LastOrDefault();
+        }
+        return "";
 
     }
     public DateTime ToDateTime(string value)
@@ -161,6 +181,8 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
     public class HistoryExcel
     {
         public long Id { get; set; }
+        public string RefCode { get; set; }
+        public string TransactionId { get; set; }
         public string Type { get; set; }
         //1- topup 2 deduct 3 widraw
         public long Amount { get; set; }
@@ -168,30 +190,45 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
         public long BalanceBefore { get; set; }
 
         public long Balance { get; set; }
-        public DateTime CreatedTime { get; set; }
+        public string CreatedTime { get; set; }
 
     }
+
+    //protected void ExportToExcel(List<HistoryExcel> data, string name)
+    //{
+    //    Response.Clear();
+    //    Response.Buffer = true;
+    //    //Response.Charset = "UTF-8"; 
+    //    Response.AppendHeader("Content-Disposition", "attachment;filename=" + name + ".xls");
+    //    Response.ContentEncoding = System.Text.Encoding.GetEncoding("UTF-8");
+    //    Response.ContentType = "application/ms-excel";
+    //    EnableViewState = false;
+    //    var myCItrad = new CultureInfo("VI-VN", true);
+    //    var oStringWriter = new StringWriter(myCItrad);
+    //    var oHtmlTextWriter = new HtmlTextWriter(oStringWriter);
+
+
+    //    var grid = new DataGrid { DataSource = data };
+    //    grid.DataBind();
+    //    grid.RenderControl(oHtmlTextWriter);
+
+    //    Response.Write(oStringWriter.ToString());
+    //    Response.Flush();
+    //    Response.End();
+    //}
     protected void ExportToExcel(List<HistoryExcel> data, string name)
     {
-        Response.Clear();
-        Response.Buffer = true;
-        //Response.Charset = "UTF-8"; 
-        Response.AppendHeader("Content-Disposition", "attachment;filename=" + name + ".xls");
-        Response.ContentEncoding = System.Text.Encoding.GetEncoding("UTF-8");
-        Response.ContentType = "application/ms-excel";
-        EnableViewState = false;
-        var myCItrad = new CultureInfo("VI-VN", true);
-        var oStringWriter = new StringWriter(myCItrad);
-        var oHtmlTextWriter = new HtmlTextWriter(oStringWriter);
+        using (var package = new ExcelPackage())
+        {
+            var ws = package.Workbook.Worksheets.Add("Data");
+            ws.Cells["A1"].LoadFromCollection(data, true);
 
-
-        var grid = new DataGrid { DataSource = data };
-        grid.DataBind();
-        grid.RenderControl(oHtmlTextWriter);
-
-        Response.Write(oStringWriter.ToString());
-        Response.Flush();
-        Response.End();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment; filename=" + name + ".xlsx");
+            Response.BinaryWrite(package.GetAsByteArray());
+            Response.End();
+        }
     }
     public string GetSType(int statusOver)
     {
@@ -207,7 +244,7 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
         if (statusOver.ToString() == "3")
         {
             return Resources.Pay.WithdrawMoney;
-         }
+        }
 
 
 
@@ -233,7 +270,7 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
 
         }
         else
-        if (type == 1|| type == 4)
+        if (type == 1 || type == 4)
         {
             if (strMoney == "0")
                 sign = "";
@@ -248,6 +285,6 @@ public partial class Pages_Security_MyHistory : System.Web.UI.Page
             length = strMoney.IndexOf('.');
         }
 
-        return "<span class='" + classcss + "'>" + sign + strMoney.Replace(",", ".") + "</span>";
+        return "<span class='" + classcss + "'>" + sign + strMoney.Replace(".", ",") + "</span>";
     }
 }

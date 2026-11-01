@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Libs.Utils;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Libs.Utils;
 
 namespace Libs.BankCash
 {
@@ -124,6 +127,67 @@ namespace Libs.BankCash
                 }
             }
         }
+        public static void SendConfirmMessage(string chatId, string message, string requestId)
+        {
+            Task.Run(() => SendConfirmMessageV2(chatId, message, requestId));
+        }
+        public static void SendConfirmMessageV2(string chatId, string message, string requestId)
+        {
+            string BotToken = token;
+            string url =
+                "https://api.telegram.org/bot" +
+                BotToken +
+                "/sendMessage";
+
+            string keyboard =
+                "{\"inline_keyboard\":[[" +
+                "{\"text\":\"✅ 确认 Confirm\",\"callback_data\":\"confirm:" + requestId + "\"}," +
+                "{\"text\":\"❌ 取消 Cancel\",\"callback_data\":\"cancel:" + requestId + "\"}" +
+                "]]}";
+
+            int maxRetry = 3;
+
+            for (int i = 1; i <= maxRetry; i++)
+            {
+                try
+                {
+                    using (var client = new WebClient())
+                    {
+                        var data = new NameValueCollection
+                        {
+                            ["chat_id"] = chatId,
+                            ["text"] = message,
+                            ["parse_mode"] = "HTML",
+                            ["reply_markup"] = keyboard
+                        };
+
+                        byte[] response = client.UploadValues(url, "POST", data);
+                        string result = Encoding.UTF8.GetString(response);
+
+                        // Log thành công nếu cần
+                        // NLogLogger.Info(new[] { "Telegram", "SendConfirmMessage", result });
+
+                        return; // gửi thành công thì thoát hàm void
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log lỗi mỗi lần retry
+                    NLogLogger.Info(new[] { "Telegram", "Retry " + i, ex.ToString() });
+
+                    if (i < maxRetry)
+                    {
+                        Thread.Sleep(i * 2000); // 2s, 4s
+                    }
+                    else
+                    {
+                        // Hết retry thì chỉ log, không return bool
+                        // NLogLogger.Info(new[] { "Telegram", "SendConfirmMessage Failed", ex.ToString() });
+                    }
+                }
+            }
+        }
+
 
     }
 }

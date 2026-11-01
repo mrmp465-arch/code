@@ -29,8 +29,8 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         btAdd.Text = Resources.Pay.Add;
         btUpdate.Text = Resources.Pay.Update;
         if (!IsPostBack)
-
-            Init();
+            
+        	Init();
     }
     protected void Init()
     {
@@ -38,7 +38,7 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         if (string.IsNullOrEmpty(user.F2a))
         {
             string googleAuthKey = "5Pay6868";
-            UserUniqueKey = AppUtils.UserName + googleAuthKey + Guid.NewGuid().ToString("N");
+             UserUniqueKey =  Guid.NewGuid().ToString("N");
             //Two Factor Authentication Setup
             TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
             var setupInfo = TwoFacAuth.GenerateSetupCode("5Pay", AppUtils.UserName, ConvertSecretToBytes(UserUniqueKey, false), 200);
@@ -113,10 +113,10 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         obj.BankCode = drpBankCode.SelectedValue;
         obj.AccountName = txtAccountName.Text;
         obj.AccountNumber = txtAccountNumber.Text;
-        if (string.IsNullOrEmpty(obj.AccountName))
+        if(string.IsNullOrEmpty(obj.AccountName))
         {
             obj.AccountName = obj.AccountNumber;
-        }
+        }    
         obj.Status = Convert.ToInt32(chkIsActive.Checked);
         obj.IP = GetIP();
         obj.ParnerCode = AppUtils.UserName;

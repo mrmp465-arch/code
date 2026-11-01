@@ -9,15 +9,17 @@ using Libs.API;
 using Libs.Utils;
 using System.Globalization;
 using System.Data;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 
 
 
 public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
 {
-
-    public bool RoleApp { get; set; }
     public string UrlHistory;
+    public bool RoleApp { get; set; }
+    public bool IsDL { get; set; }
+
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.PartnerTransaction);
@@ -25,38 +27,73 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         btView.Text = Resources.Pay.View;
         btCreate.Text = Resources.Pay.CreateWithdrawalOrder;
-
         RoleApp = AppUtils.CheckRolesPermission("pages/security/partnertransactionapp.aspx");
 
-        if (AppUtils.IsAdmin)
+        if (AppUtils.IsTopup)
         {
-            if (!AppUtils.CheckRolesPermission("pages/security/partnertransactionadd.aspx"))
-                dvRutAdmin.Visible = false;
-        }
-        else
-        {
-            var username = AppUtils.UserName;
-            if (!AppUtils.IsPartner)
+            var partnerlist = new Partners().GetList();
+            if (partnerlist.Exists(x => x.SMSUrl == AppUtils.UserName))
             {
-                dvRut.Visible = false;
-                var user = new Users().Get(AppUtils.UserID);
-                if (user.Withdraw == 1)
-                    dvRut.Visible = true;
-
-                var lstPartner = new Partners().GetListByUserId(AppUtils.UserID);
-                username = lstPartner.FirstOrDefault().Name;
-
-
-                txtAccountName.ReadOnly = true;
-                txtAccountNumber.ReadOnly = true;
-                drpBankCode.Enabled = false;
+                IsDL = true;
             }
-
-           
-
         }
+
         if (!IsPostBack)
         {
+            if (AppUtils.IsAdmin)
+            {
+                if (!AppUtils.CheckRolesPermission("pages/security/partnertransactionadd.aspx"))
+                    dvRutAdmin.Visible = false;
+            }
+            else
+            {
+                var username = AppUtils.UserName;
+                if (!AppUtils.IsPartner)
+                {
+                    dvRut.Visible = false;
+                    var user = new Users().Get(AppUtils.UserID);
+                    if (user.Withdraw == 1)
+                        dvRut.Visible = true;
+
+                    var lstPartner = new Partners().GetListByUserId(AppUtils.UserID);
+                    username = lstPartner.FirstOrDefault().Name;
+
+
+                    txtAccountName.ReadOnly = true;
+                    txtAccountNumber.ReadOnly = true;
+                    drpBankCode.Enabled = false;
+                    if (IsDL)
+                    {
+                        //IsDL = true;
+
+                        txtAccountName.ReadOnly = false;
+                        txtAccountNumber.ReadOnly = false;
+                        drpBankCode.Enabled = true;
+                        dvRut.Visible = true;
+                        username = AppUtils.UserName;
+                    }
+                }
+
+                var lstBank2 = new PartnersBankAccount().GetLis().Where(x => x.ParnerCode == username && x.Status == 1).OrderBy(x => x.Number).ToList();
+                foreach (var item in lstBank2)
+                {
+                    item.BankCode += "-" + item.AccountName + "-" + item.AccountNumber;
+                }
+
+                drpBankCode2.DataSource = lstBank2;
+                drpBankCode2.DataTextField = "BankCode";
+                drpBankCode2.DataValueField = "BankCode";
+                drpBankCode2.DataBind();
+
+                drpBankCode2.Items.Insert(0, new System.Web.UI.WebControls.ListItem(Resources.Pay.ChoseAccount, ""));
+
+                if (lstBank2.Count() == 0)
+                {
+                    divAccount.Visible = false;
+                }
+
+            }
+
             init();
             GetList();
         }
@@ -65,11 +102,23 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
 
     protected void btAdd_Click(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(txtAccountName.Text) || string.IsNullOrEmpty(txtAmount.Text) || string.IsNullOrEmpty(txtAccountNumber.Text) || string.IsNullOrEmpty(drpBankCode.SelectedValue))
+        if (AppUtils.IsPartner || IsDL)
         {
-            AlertInfoss.Text = Resources.Pay.NotEnoughInformation;
-            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
-            return;
+            if (string.IsNullOrEmpty(txtAccountName.Text) || string.IsNullOrEmpty(txtAmount.Text) || string.IsNullOrEmpty(txtAccountNumber.Text) || string.IsNullOrEmpty(drpBankCode.SelectedValue))
+            {
+                AlertInfoss.Text = Resources.Pay.NotEnoughInformation;
+                Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
+                return;
+            }
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(txtAmount.Text) || string.IsNullOrEmpty(drpBankCode2.SelectedValue))
+            {
+                AlertInfoss.Text = Resources.Pay.NotEnoughInformation;
+                Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
+                return;
+            }
         }
         long amount = long.Parse(txtAmount.Text);
         if (amount < 10000)
@@ -78,9 +127,15 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
             return;
         }
-        if (DateTime.Now.Hour >= 23 && DateTime.Now.Minute >= 50)
+        //if (DateTime.Now.Hour >= 23 && DateTime.Now.Minute >= 50)
+        //{
+        //    AlertInfoss.Text = "Tính năng rút tiền đang bảo trì. Vui lòng rút lại sau 12h";
+        //    Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
+        //    return;
+        //}
+        if (String.IsNullOrEmpty(drpBankCode.SelectedValue))
         {
-            AlertInfoss.Text = "Tính năng rút tiền đang bảo trì. Vui lòng rút lại sau 12h";
+            AlertInfoss.Text = "Vui lòng chọn bankcode";
             Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
             return;
         }
@@ -89,11 +144,27 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         _tran.UserName = AppUtils.UserName;
         _tran.Amount = amount;
         _tran.Note = String.Format("Ngân hàng: <b>{0}</b><br>Số tài khoản: <b>{1}</b>  <br> Chủ tài khoản: <b>{2}</b>", drpBankCode.SelectedItem.Text, txtAccountNumber.Text, txtAccountName.Text);
+
+        if (!AppUtils.IsPartner && !IsDL)
+        {
+            var arrbank = drpBankCode2.SelectedValue.Split('-');
+            _tran.Note = String.Format("Ngân hàng: <b>{0}</b><br>Số tài khoản: <b>{1}</b>  <br> Chủ tài khoản: <b>{2}</b>", arrbank[0], arrbank[2], arrbank[1]);
+
+
+        }
         _tran.BankInfo = "";
         _tran.Fee = 0;
         _tran.Reward = 0;
         _tran.Type = 1;
         _tran.Usdt = 0;
+        //thêm thằng support nó cũng rút đc
+        if (!AppUtils.IsPartner && !IsDL)
+        {
+            var lstPartner = new Partners().GetListByUserId(AppUtils.UserID);
+            _tran.UserName = lstPartner.FirstOrDefault().Name;
+
+        }
+
         var bankCode = getBankCode(drpBankCode.SelectedValue);
         if (!string.IsNullOrEmpty(bankCode))
         {
@@ -113,6 +184,23 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         }
         NLogLogger.Info(new string[] { "withdraw", AppUtils.UserName, GetIP() });
         TelegramClient.SendTeleV2("-1003758147588", "Tạo lệnh rút tiền  " + amount.ToString("#,#").Replace(",", ".") + " từ user " + AppUtils.UserName + " Mã lệnh " + result.ToString());
+
+        try
+        {
+            var partner = new Partners().GetCache(_tran.UserName);
+            var chatid = partner.SMSPlusUrl;
+            if (!string.IsNullOrEmpty(chatid))
+                    {
+                TelegramClient.SendTeleV2(chatid, "Tạo lệnh rút tiền  " + amount.ToString("#,#").Replace(",", ".") + " từ user " + AppUtils.UserName + " Mã lệnh " + result.ToString() +" "+ bankCode +" - "+ txtAccountNumber.Text.Trim() + " - " + txtAccountName.Text.Trim());
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+
         AlertSuccesss.Text = Resources.Pay.SuccessOrder;
         Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#MAlertSuccess').modal()}); ", true);
 
@@ -136,7 +224,7 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             var lstUser = new Users().GetList().OrderBy(x => x.UserName);
             foreach (var item in lstUser)
             {
-                if (item.IsPartner == 1)
+                if (item.IsPartner == 1 || item.IsTopup == 1)
                     lst.Add(new Users { UserName = item.UserName });
             }
         }
@@ -156,19 +244,19 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         ddlAccount.DataTextField = "UserName";
         ddlAccount.DataValueField = "UserName";
         ddlAccount.DataBind();
-        ddlAccount.Items.Insert(0, new ListItem("Tài khoản:", ""));
+        ddlAccount.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Tài khoản:", ""));
 
 
-        drpStatus.Items.Insert(0, new ListItem(Resources.Pay.Status, "-99"));
-        drpStatus.Items.Insert(1, new ListItem(Resources.Pay.Finish, "1"));
-        drpStatus.Items.Insert(2, new ListItem(Resources.Pay.WaitApproval, "0"));
+        drpStatus.Items.Insert(0, new System.Web.UI.WebControls.ListItem(Resources.Pay.Status, "-99"));
+        drpStatus.Items.Insert(1, new System.Web.UI.WebControls.ListItem(Resources.Pay.Finish, "1"));
+        drpStatus.Items.Insert(2, new System.Web.UI.WebControls.ListItem(Resources.Pay.WaitApproval, "0"));
         //drpStatus.Items.Insert(2, new ListItem(Resources.Pay.Processing, "0"));
-        drpStatus.Items.Insert(3, new ListItem(Resources.Pay.Cancel, "-1"));
+        drpStatus.Items.Insert(3, new System.Web.UI.WebControls.ListItem(Resources.Pay.Cancel, "-1"));
 
         if (AppUtils.IsAdmin)
         {
-            drpPartner.Items.Insert(0, new ListItem("Tài khoản:", ""));
-            drpTop.SelectedValue = "100";
+            drpPartner.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Tài khoản:", ""));
+            drpTop.SelectedValue = "500";
         }
         else
         {
@@ -266,14 +354,6 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         _tran.Fee = long.Parse(txtFee.Text);
         _tran.Reward = 0;
         _tran.Type = int.Parse(drlType2.SelectedValue);
-        var bankCode = getBankCode(drpBankCode2.SelectedValue);
-        if (bankCode != "Bank")
-        {
-            _tran.Note = String.Format("Ngân hàng: <b>{0}</b><br>Số tài khoản: <b>{1}</b>  <br> Chủ tài khoản: <b>{2}</b> <br> <b>{3}</b>", drpBankCode2.SelectedItem.Text, txtAccountNumber2.Text, txtAccountName2.Text, txtNote.Text);
-            _tran.BankInfo = String.Format("https://img.vietqr.io/image/{0}-{1}-compact2.jpg?amount={2}&accountName={2}", bankCode, txtAccountNumber2.Text, txtAmount2.Text, txtAccountName2.Text);
-            if (_tran.Amount > 500000000)
-                _tran.BankInfo = String.Format("https://img.vietqr.io/image/{0}-{1}-compact2.jpg&accountName={2}", bankCode, txtAccountNumber2.Text, txtAccountName2.Text);
-        }
         var lstPartner = new Partners().GetList().Where(x => x.Hotline != "").GroupBy(x => x.Hotline).Select(a => a.Key).ToList();
 
         if (lstPartner.Exists(x => x.Equals(_tran.UserName)))
@@ -461,14 +541,14 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
         else
         {
             name = AppUtils.UserName;
-
-            if (!AppUtils.IsPartner)
+            if (!AppUtils.IsPartner && !IsDL)
             {
 
 
                 var lstPartner = new Partners().GetListByUserId(AppUtils.UserID);
                 name = lstPartner.FirstOrDefault().Name;
             }
+
             rptList.DataSource = new UserWithdraw().GetList(top, name, status, fromDate, requestTime);
             rptList.DataBind();
             var user = new Users().GetByUserName(name);
@@ -556,13 +636,11 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             case "NCB":
                 return "NCB";
             case "DongA":
-                return "VIKKI";
+                return "DOB";
             case "LPBank":
                 return "LPBank";
             case "Cake":
                 return "CAKE";
-            case "Wooribank":
-                return "WVN";
 
         }
         return bank;
@@ -626,13 +704,11 @@ public partial class Pages_Security_PartnerTransaction : System.Web.UI.Page
             case "ncb":
                 return "NCB";
             case "donga":
-                return "VIKKI";
+                return "DOB";
             case "lpbank":
                 return "LPBank";
             case "cake":
                 return "cake";
-            case "Wooribank":
-                return "WVN";
 
         }
         return bank;

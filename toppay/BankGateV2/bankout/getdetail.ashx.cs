@@ -82,7 +82,7 @@ namespace BankGateV2.bankout
                 {
                     var checkOrder = new CheckOrder
                     {
-                        LasTime = trans.LastTime,
+                        LastTime = trans.LastTime,
                         RefCode = trans.RefCode,
                         Amount = Convert.ToInt32(trans.TotalAmount),
                         TransactionID = trans.TransactionID.ToString()
@@ -140,7 +140,7 @@ namespace BankGateV2.bankout
         public string RefCode { get; set; }
 
         public string TransactionID { get; set; }
-        public DateTime LasTime { get; set; }
+        public DateTime LastTime { get; set; }
 
     }
     public class RequestDetail

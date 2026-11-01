@@ -119,8 +119,8 @@
                                                     <td><%#Eval("Note")%></td>
 
 
-                                                    <td><%#Convert.ToInt64(Eval("BalanceBefore")).ToString("#,#").Replace(",", ".") %></td>
-                                                    <td><%#Convert.ToInt64(Eval("Balance")).ToString("#,#").Replace(",", ".") %></td>
+                                                    <td><%#Convert.ToInt64(Eval("BalanceBefore")).ToString("#,#").Replace(".", ",") %></td>
+                                                    <td><%#Convert.ToInt64(Eval("Balance")).ToString("#,#").Replace(".", ",") %></td>
 
                                                 </tr>
                                             </ItemTemplate>

@@ -65,7 +65,7 @@ namespace Libs.BankCash
             public string RefCode { get; set; }
 
             public string TransactionID { get; set; }
-            public DateTime LasTime { get; set; }
+            public DateTime LastTime { get; set; }
 
         }
         private APIResponse CheckTrans(APITransaction transaction)
@@ -84,7 +84,7 @@ namespace Libs.BankCash
             {
                 var checkOrder = new CheckOrder
                 {
-                    LasTime = trans.LastTime,
+                    LastTime = trans.LastTime,
                     RefCode = trans.RefCode,
                     Amount = Convert.ToInt32(trans.TotalAmount),
                     TransactionID = trans.TransactionID.ToString()

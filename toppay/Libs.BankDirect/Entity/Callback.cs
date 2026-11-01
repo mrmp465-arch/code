@@ -16,7 +16,10 @@ namespace Libs.BankDirect
         public string OrderInfo { get; set; }
         public string Type { get; set; }
         public string MomoTransId { get; set; }
+
+        public long Fee { get; set; }
         
+
 
     }
     public class DataCallbackV3
@@ -33,6 +36,7 @@ namespace Libs.BankDirect
 
         public string Description { get; set; }
         public string Signature { get; set; }
+        public long Fee { get; set; }
         //public string MomoTransId { get; set; }
 
 

@@ -89,7 +89,7 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
         public int Amount { get; set; }
         public string RefCode { get; set; }
         public string TransactionID { get; set; }
-        public DateTime LasTime { get; set; }
+        public DateTime LastTime { get; set; }
     }
     protected void btView_Click(object sender, EventArgs e)
     {
@@ -132,7 +132,7 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
             //            return;
             //        }
             //    }    
-                   
+
             //}
 
             //if (int.Parse(txtAmount.Text) > 20000000)
@@ -141,6 +141,7 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
             //    Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
             //    return;
             //}
+            var partner = new Partners().Get(_BankGateAPI.PartnerCode);
             _BankGateAPI.Status = AppUtils.ToInt32(txtStatus.Text);
             _BankGateAPI.TotalAmount = Convert.ToDecimal(txtAmount.Text);
             _BankGateAPI.LastTime = DateTime.Now;
@@ -182,6 +183,18 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
                 }
                 UpdatePartnerBalance(_BankGateAPI.PartnerCode, Convert.ToInt64(_BankGateAPI.TotalAmount), _BankGateAPI.Fee, Balancedesc, "BankIn_" + _BankGateAPI.TransactionID.ToString());
 
+                if (!string.IsNullOrEmpty(partner.SMSUrl))
+                {
+
+                    if (rw > 0)
+                    {
+                        //var TotalR = Convert.ToInt64(_BankGateAPI.Amount * rw);
+                        var TotalR = _BankGateAPI.Reward;
+                        var Balancedesc2 = String.Format("Cộng tiền hoa hồng nạp bank đối tác {4} số tiền: {3} mgd: {0}-{1}-{2}", _BankGateAPI.TransactionID, _BankGateAPI.BankCode, _BankGateAPI.OrderNo + "-" + _BankGateAPI.RefCode, Convert.ToInt64(_BankGateAPI.Amount).ToString("#,#").Replace(",", "."), partner.PartnerCode);
+                        UpdatePartnerBalanceReward(partner.SMSUrl, TotalR, Balancedesc2, "RBankIn_" + _BankGateAPI.TransactionID.ToString());
+                    }
+                }
+
             }
             //if (_BankGateAPI.Status < 1 && oldstatus== 1)
             //{
@@ -191,7 +204,7 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
             //}
             if (_BankGateAPI.Status > 0)
             {
-                var partner = new Partners().Get(_BankGateAPI.PartnerCode);
+                //var partner = new Partners().Get(_BankGateAPI.PartnerCode);
 
                 //CallBack Partner
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -202,7 +215,7 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
                     OrderNo = _BankGateAPI.FullName,
                     OrderInfo = _BankGateAPI.OrderInfo,
                     Amount = Convert.ToInt32(_BankGateAPI.TotalAmount),
-                    //AccountInfo = txtAccountInfo.Text,
+                    Fee = _BankGateAPI.Fee,
                     Type = "bank"
                 };
                 if (_BankGateAPI.BankCode.ToLower() == "momo")
@@ -211,7 +224,7 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
                 }
                 var checkOrder = new CheckOrder
                 {
-                    LasTime = DateTime.Now,
+                    LastTime = DateTime.Now,
                     RefCode = _BankGateAPI.RefCode,
                     Amount = Convert.ToInt32(_BankGateAPI.Amount),
                     TransactionID = _BankGateAPI.TransactionID.ToString()
@@ -250,6 +263,10 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
         public string OrderInfo { get; set; }
         //public string AccountInfo { get; set; }
         public int Amount { get; set; }
+
+        public long Fee { get; set; }
+
+        
 
         public int ResponseCode { get; set; }
 
@@ -303,6 +320,29 @@ public partial class Pages_Monitor_BankGateAPI_FixStatus : System.Web.UI.Page
 
 
         return ck;
+    }
+    private void UpdatePartnerBalanceReward(string PartnerCode, long realAmount, string TranId, string RefCode)
+    {
+        try
+        {
+            NLogLogger.Info(new string[] { "Update Balance Reward", PartnerCode, realAmount.ToString(), TranId.ToString(), RefCode });
+
+            if (realAmount == 0)
+            {
+                //TelegramNotify.SendWarning("-4214596800", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
+                return;
+            }
+
+            //long realAmount = Amount - fee;
+            // NLogLogger.Info(new string[] { "Bank Topup", realAmount.ToString(), ck.ToString() });
+            new Users().Topup(realAmount, PartnerCode, PartnerCode, TranId, RefCode);
+        }
+        catch (Exception ex)
+        {
+            NLogLogger.Info(ex.Message);
+        }
+
+
     }
     private void UpdatePartnerBalance(string PartnerCode, long Amount, long fee, string TranId, string RefCode)
     {

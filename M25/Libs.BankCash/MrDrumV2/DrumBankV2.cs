@@ -239,6 +239,7 @@ namespace Libs.BankCash.DrumV2
 
             if (request.BankName.ToLower() == "vietcombank")
                 request.BankName = "VCB";
+
             if (request.BankName.ToLower() == "kbank")
                 request.BankName = "KSKHCM";
 

@@ -73,6 +73,7 @@
     <Compile Include="MomoOCRDictionary.cs" />
     <Compile Include="PartnerBank.cs" />
     <Compile Include="PartnerMomo.cs" />
+    <Compile Include="PartnersBankAccount.cs" />
     <Compile Include="SimUSSD.cs" />
     <Compile Include="IServiceHandler.cs" />
     <Compile Include="Roles.cs" />

@@ -12,6 +12,8 @@ using Libs.Utils;
 using System.Data;
 using Libs.Report;
 using DocumentFormat.OpenXml.Wordprocessing;
+
+using OfficeOpenXml.FormulaParsing.Utilities;
 public partial class Pages_Security_F2A : System.Web.UI.Page
 {
     public string UserUniqueKey;
@@ -24,37 +26,34 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
         Page.Culture = Libs.Utils.GlobalHelper.GetLanguage();
         Page.UICulture = Libs.Utils.GlobalHelper.GetLanguage();
         btSubmit.Text = Resources.Pay.Confirm;
+        btAdd.Text = Resources.Pay.Add;
+        btUpdate.Text = Resources.Pay.Update;
         if (!IsPostBack)
-        {
-            Init();
-        }
+            
+        	Init();
     }
     protected void Init()
     {
         var user = new Users().Get(AppUtils.UserID);
-        if(string.IsNullOrEmpty(user.F2a))
+        if (string.IsNullOrEmpty(user.F2a))
         {
-            string googleAuthKey = "toppay";
-            UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+            string googleAuthKey = "5Pay6868";
+             UserUniqueKey =  Guid.NewGuid().ToString("N");
             //Two Factor Authentication Setup
             TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
-            var setupInfo = TwoFacAuth.GenerateSetupCode("toppay", AppUtils.UserName, ConvertSecretToBytes(UserUniqueKey, false), 200);
-            //Session["UserUniqueKey"] = UserUniqueKey;
+            var setupInfo = TwoFacAuth.GenerateSetupCode("5Pay", AppUtils.UserName, ConvertSecretToBytes(UserUniqueKey, false), 200);
+            Session["UserUniqueKey"] = UserUniqueKey;
+            //NLogLogger.Info(new string[] { "UserUniqueKey1", UserUniqueKey });
             BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
             SetupCode = setupInfo.ManualEntryKey;
             dvFA.Visible = true;
         }
 
-        var partner = new Partners().Get(AppUtils.UserName);
-        txtMinBankAproveAmount.Text = "0";
-        if(partner!=null)
+        if (!IsPostBack)
         {
-            if(!string.IsNullOrEmpty(partner.SMSPlusUrl))
-            {
-                txtMinBankAproveAmount.Text = partner.SMSPlusUrl;
-            }    
-        }    
-       
+
+            BindData();
+        }
     }
     protected void btSubmit_Click(object sender, EventArgs e)
     {
@@ -65,8 +64,9 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
             return;
         }
         TwoFactorAuthenticator TwoFacAuth = new TwoFactorAuthenticator();
-        string googleAuthKey = "toppay";
-        UserUniqueKey = (AppUtils.UserName + googleAuthKey);
+        string googleAuthKey = "5Pay6868";
+        UserUniqueKey = Session["UserUniqueKey"].ToString();
+        //NLogLogger.Info(new string[] { "UserUniqueKey2", UserUniqueKey });
         bool isValid = TwoFacAuth.ValidateTwoFactorPIN(UserUniqueKey, txtOTP.Text, false);
         if (!isValid)
         {
@@ -85,23 +85,158 @@ public partial class Pages_Security_F2A : System.Web.UI.Page
             Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#MAlertSuccess').modal()}); ", true);
         }
     }
-
-    protected void btSubmit2_Click(object sender, EventArgs e)
-    {
-        var partner = new Partners().Get(AppUtils.UserName);
-        if (partner != null)
-        {
-            partner.SMSPlusUrl = txtMinBankAproveAmount.Text;
-            partner.Update();
-            string KeyCache = string.Format("{0}:{1}", "RedisPartners", partner.PartnerCode);
-            DataCaching.RemoveCache(KeyCache);
-            AlertSuccesss.Text = "Cập nhật thành công";
-            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#MAlertSuccess').modal()}); ", true);
-        }
-    }
     public byte[] ConvertSecretToBytes(string secret, bool secretIsBase32)
     {
         return secretIsBase32 ? Base32Encoding.ToBytes(secret) : Encoding.UTF8.GetBytes(secret);
+    }
+    private void BindData()
+    {
+        var data = new PartnersBankAccount().GetLis().Where(x => x.ParnerCode == AppUtils.UserName).OrderBy(x => x.Number).ToList();
+
+
+        // JavaScriptSerializer serializer = new JavaScriptSerializer();
+        //NLogLogger.Info(new string[] { "Data", "PartnerMomoo", serializer.Serialize(data) });
+        rptList.DataSource = data;
+        rptList.DataBind();
+
+
+    }
+    protected void btAdd_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(drpBankCode.SelectedValue))
+        {
+            AlertInfos.Text = "Vui lòng chọn bank";
+            Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "Script", " $(document).ready(function() {$('#AlertInfo').modal()}); ", true);
+            return;
+        }
+        var obj = new PartnersBankAccount();
+        obj.BankCode = drpBankCode.SelectedValue;
+        obj.AccountName = txtAccountName.Text;
+        obj.AccountNumber = txtAccountNumber.Text;
+        if(string.IsNullOrEmpty(obj.AccountName))
+        {
+            obj.AccountName = obj.AccountNumber;
+        }    
+        obj.Status = Convert.ToInt32(chkIsActive.Checked);
+        obj.IP = GetIP();
+        obj.ParnerCode = AppUtils.UserName;
+        obj.Add(obj);
+        System.Threading.Thread.Sleep(100);
+        //Response.Redirect("/cmspay/pages/security/F2A.aspx#bank");
+        hdCurrentTab.Value = "#bank";
+        drpBankCode.SelectedValue = "";
+        txtAccountName.Text = "";
+        txtAccountNumber.Text = "";
+        BindData();
+
+    }
+    protected void btApply_Click(object sender, EventArgs e)
+    {
+        for (int i = 0; i < rptList.Items.Count; i++)
+        {
+            System.Web.UI.WebControls.CheckBox cbx = (System.Web.UI.WebControls.CheckBox)rptList.Items[i].FindControl("cbxStatus");
+
+            Label lbPId = (Label)rptList.Items[i].FindControl("lblId");
+            TextBox tbx = (TextBox)rptList.Items[i].FindControl("txtOrderNo");
+            var tbxValue = tbx.Text;
+
+            //NLogLogger.Info(new string[] { "Data", "lbPId", lbPId.Text });
+            var _Partner = new PartnersBankAccount();
+            _Partner.Id = Convert.ToInt32(lbPId.Text);
+            _Partner.Status = cbx.Checked ? 1 : 0;
+            _Partner.Number = Convert.ToInt32(tbxValue);
+            //JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //NLogLogger.Info(new string[] { "Data", "lbPId", serializer.Serialize(_PartnerMomo) });
+            new PartnersBankAccount().Update(_Partner);
+        }
+        //Response.Redirect("/cmspay/pages/security/F2A.aspx#bank");
+        hdCurrentTab.Value = "#bank";
+        BindData();
+    }
+    protected void Delete_Command(Object sender, CommandEventArgs e)
+    {
+        //Provider.GoBillingLogDataAccess.DeleteTopupEventLog(Convert.ToInt64(e.CommandArgument.ToString()));
+        int Id = Convert.ToInt32(e.CommandArgument.ToString());
+
+        //var order = new PartnerMomo { Id = Id };
+        new PartnersBankAccount().Delete(Id);
+        hdCurrentTab.Value = "#bank";
+        BindData();
+        //Response.Redirect("/cmspay/pages/security/F2A.aspx#bank");
+    }
+    public string GetDate(object createDate)
+    {
+        if (createDate != null)
+        {
+            DateTime dt = Convert.ToDateTime(createDate);
+            return dt.ToString("dd/MM/yyyy");
+        }
+
+
+
+        return "";
+    }
+    public static string GetIP()
+    {
+        string IP = "";
+        //return IP;
+        if (HttpContext.Current.Request.ServerVariables["HTTP_CLIENT_IP"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_CLIENT_IP"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_X_CLUSTER_CLIENT_IP"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_X_CLUSTER_CLIENT_IP"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED_FOR"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED_FOR"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED"] != null)
+        {
+            IP = HttpContext.Current.Request.ServerVariables["HTTP_FORWARDED"];
+            if (IP.Contains(","))
+                return IP.Split(',')[0].Trim();
+            return IP;
+        }
+
+        if (IP == "")
+        {
+            IP = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+        }
+        if (IP.Contains(","))
+            return IP.Split(',')[0].Trim();
+
+
+        return IP;
     }
 
 }

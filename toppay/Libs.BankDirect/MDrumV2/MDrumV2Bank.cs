@@ -1577,6 +1577,10 @@ namespace Libs.BankDirect.MDrumV2
                 var rw = getrw(order.PartnerCode, order.BankCode);
 
                 order.Reward = Convert.ToInt64(callback.Amount * rw / 100);
+
+                datacb.Fee = order.Fee;
+
+
                 //if (string.IsNullOrEmpty(callback.MomoTransId))
                 //    order.OrderInfo = callback.BankTransId;
 
@@ -1612,41 +1616,7 @@ namespace Libs.BankDirect.MDrumV2
                 //}
 
 
-                if (Convert.ToInt64(order.Amount) != callback.Amount)
-                {
-                    string chatid = GetChatId(order.PartnerCode);
-                    if (order.PartnerCode == "go99" || order.PartnerCode == "nohu888")
-                    {
-                        //IsCallback = 0;
-                        if (Convert.ToInt64(callback.Amount) % 1000 == 0)
-                        {
-                            TelegramNotify.SendTeleFast(chatid, "[" + order.PartnerCode + "]: lệnh nạp sai số tiền refcode " + order.RefCode + " , mgd " + order.OrderInfo + " , amount user " + Convert.ToInt64(order.Amount).ToString("#,#").Replace(",", ".") + ", amount " + callback.Amount.ToString("#,#").Replace(",", ".") + " => game lên lệnh mới để ghép nhé");
-                            apiResponse = new APIResponse((int)ResponseCode.BankAmountInvalid);
-                            apiResponse.Description = Convert.ToInt64(order.Amount).ToString() + " vs " + callback.Amount.ToString();
-                            return apiResponse;
-                        }
-                        else
-                        {
-                            IsCallback = 0;
-                            TelegramNotify.SendTeleFast(chatid, "[" + order.PartnerCode + "]: lệnh nạp sai số tiền refcode " + order.RefCode + " , mgd " + order.OrderInfo + " , amount user " + Convert.ToInt64(order.Amount).ToString("#,#").Replace(",", ".") + ", amount " + callback.Amount.ToString("#,#").Replace(",", ".") + " => game cộng tay giúp");
-                        }
-
-                    }
-                    if (order.PartnerCode == "go05")
-                    {
-                        TelegramNotify.SendTeleFast(chatid, "[" + order.PartnerCode + "]: lệnh nạp sai số tiền refcode " + order.RefCode + " , mgd " + order.OrderInfo + " , amount user " + Convert.ToInt64(order.Amount).ToString("#,#").Replace(",", ".") + ", amount " + callback.Amount.ToString("#,#").Replace(",", ".") + " => game lên lệnh mới để ghép nhé");
-                        apiResponse = new APIResponse((int)ResponseCode.BankAmountInvalid);
-                        apiResponse.Description = Convert.ToInt64(order.Amount).ToString() + " vs " + callback.Amount.ToString();
-                        return apiResponse;
-                    }
-                    if (order.PartnerCode == "shdsn555" || order.PartnerCode == "shdsn444" || order.PartnerCode == "shdsn888" || order.PartnerCode == "shdsn666" || order.PartnerCode == "shdsn777" || order.PartnerCode == "shdsn999" || order.PartnerCode == "hn002" || order.PartnerCode == "hn001")
-                    {
-                        IsCallback = 0;
-                        TelegramNotify.SendTeleFast(chatid, "[" + order.PartnerCode + "]: lệnh nạp sai số tiền refcode " + order.RefCode + " , mgd " + order.OrderInfo + " , amount user " + Convert.ToInt64(order.Amount).ToString("#,#").Replace(",", ".") + ", amount " + callback.Amount.ToString("#,#").Replace(",", ".") + " => game cộng tay giúp");
-                    }
-
-
-                }
+                
 
 
                 var resultupdate = order.Update();
@@ -1677,7 +1647,18 @@ namespace Libs.BankDirect.MDrumV2
                         Balancedesc = String.Format("Cộng tiền nạp momo số tiền: {3} mgd: {0}-{1}-{2}", order.TransactionID, order.BankCode, order.OrderNo + "-" + order.RefCode, Convert.ToInt64(callback.Amount).ToString("#,#").Replace(",", "."));
                     }
                     UpdatePartnerBalance(order.PartnerCode, Convert.ToInt64(callback.Amount), order.Fee, Balancedesc, "BankIn_" + order.TransactionID.ToString());
+                    
+                    var partner = new Partners().GetCache(order.PartnerCode);
+                    if (!string.IsNullOrEmpty(partner.SMSUrl))
+                    {
 
+                        if (rw > 0)
+                        {
+                            var TotalR = order.Reward;
+                            var Balancedesc2 = String.Format("Cộng tiền hoa hồng nạp bank đối tác {4} số tiền: {3} mgd: {0}-{1}-{2}", order.TransactionID, order.BankCode, order.OrderNo + "-" + order.RefCode, Convert.ToInt64(callback.Amount).ToString("#,#").Replace(",", "."), partner.PartnerCode);
+                            UpdatePartnerBalanceReward(partner.SMSUrl, TotalR, Balancedesc2, "RBankIn_" + order.TransactionID.ToString());
+                        }
+                    }
 
                     //Callback for Partner
                     if (IsCallback == 1)
@@ -1687,7 +1668,7 @@ namespace Libs.BankDirect.MDrumV2
 
                             var checkOrder = new CheckOrder
                             {
-                                LasTime = DateTime.Now,
+                                LastTime = DateTime.Now,
                                 RefCode = order.RefCode,
                                 Amount = callback.Amount,
                                 TransactionID = order.TransactionID.ToString()
@@ -1695,7 +1676,7 @@ namespace Libs.BankDirect.MDrumV2
                             DataCaching.SetCache("CheckOrder:" + order.PartnerCode + order.RefCode, checkOrder, 900);
 
 
-                            var partner = new Partners().GetCache(order.PartnerCode);
+                            //var partner = new Partners().GetCache(order.PartnerCode);
                             apiResponse.Signature = PaymentUtils.Signature(apiResponse.ResponseCode.ToString() + apiResponse.Description + apiResponse.ResponseContent, partner.PrivateKey, partner.SignatureType);
                             if (order.PartnerCode != "sn1")
                             {
@@ -1705,6 +1686,7 @@ namespace Libs.BankDirect.MDrumV2
                                 datacb2.Type = datacb.Type;
                                 datacb2.OrderInfo = datacb.OrderInfo;
                                 datacb2.OrderNo = datacb.OrderNo;
+                                datacb2.Fee = datacb.Fee;
                                 datacb2.ResponseCode = apiResponse.ResponseCode;
                                 datacb2.Description = apiResponse.Description;
                                 datacb2.Signature = PaymentUtils.Signature(datacb2.ResponseCode.ToString() + datacb2.Description + datacb2.RefCode, partner.PrivateKey, partner.SignatureType);
@@ -1769,6 +1751,29 @@ namespace Libs.BankDirect.MDrumV2
 
 
             return ck;
+        }
+        private void UpdatePartnerBalanceReward(string PartnerCode, long realAmount, string TranId, string RefCode)
+        {
+            try
+            {
+                NLogLogger.Info(new string[] { "Update Balance Reward", PartnerCode, realAmount.ToString(), TranId.ToString(), RefCode });
+
+                if (realAmount == 0)
+                {
+                    //TelegramNotify.SendWarning("-4214596800", "Chưa cập nhật chiếu khấu bank cho đối tác " + PartnerCode);
+                    return;
+                }
+
+                //long realAmount = Amount - fee;
+                // NLogLogger.Info(new string[] { "Bank Topup", realAmount.ToString(), ck.ToString() });
+                new Users().Topup(realAmount, PartnerCode, PartnerCode, TranId, RefCode);
+            }
+            catch (Exception ex)
+            {
+                NLogLogger.Info(ex.Message);
+            }
+
+
         }
         private void UpdatePartnerBalance(string PartnerCode, long Amount, long fee, string TranId, string RefCode)
         {
