@@ -163,7 +163,7 @@ public partial class Pages_BankEWalletService_Bank_Edit_TranIn : System.Web.UI.P
         var apiResponse = new APIResponse((int)ResponseCode.TransactionSuccessful);
         apiResponse.ResponseContent = JsonConvert.SerializeObject(objContent);
 
-        if (txtNote.Text.Contains("huybo"))
+        if (txtNote.Text.ToLower().Trim().Equals("huybo_congvi"))
         {
 
             //update

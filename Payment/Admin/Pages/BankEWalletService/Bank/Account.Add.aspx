@@ -68,7 +68,7 @@
                                 <asp:ListItem Text="TIMO" Value="TIMO"></asp:ListItem>
                                 <asp:ListItem Text="OCB" Value="OCB"></asp:ListItem>
 
-                                 <asp:ListItem Text="TPB" Value="TPB"></asp:ListItem>
+                                <asp:ListItem Text="TPB" Value="TPB"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                         <div class="form-group">
@@ -117,9 +117,10 @@
                         <div class="form-group">
                             <label for="txtSolution">Giải pháp  *</label>
                             <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control" required>
-                                
-                                <asp:ListItem Text="Bản cũ" Value="API" ></asp:ListItem>
+
+                                <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
                                 <asp:ListItem Text="Bản mới" Value="APIV2" Selected="True"></asp:ListItem>
+                                <asp:ListItem Text="Notify" Value="APIV3"></asp:ListItem>
                             </asp:DropDownList>
                         </div>
                         <div class="form-group">
@@ -161,12 +162,12 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('#TableResponsive').DataTable({
-                responsive: true
-                , "autoWidth": false, "paging": false, "searching": false, "info": false, "ordering": false
-            });
-            new $.fn.dataTable.FixedHeader(table);
-        });
-    </script>
+$(document).ready(function () {
+    var table = $('#TableResponsive').DataTable({
+        responsive: true
+        , "autoWidth": false, "paging": false, "searching": false, "info": false, "ordering": false
+    });
+    new $.fn.dataTable.FixedHeader(table);
+});
+</script>
 </asp:Content>

@@ -3,10 +3,12 @@ using Libs.API;
 using Libs.Utils;
 using ServiceStack.Common.Extensions;
 using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -94,10 +96,10 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             lblDescription2.Text = BankExt.Description;
 
             //xu ly DeviceInfo
-            if ( _bank.BankCode == "ACB" && _bank.StatusExtra==1)
+            if (_bank.BankCode == "ACB" && _bank.StatusExtra == 1)
             {
                 pnbGroupDevice.Visible = true;
-                if(!string.IsNullOrEmpty(BankExt.DeviceInfo))
+                if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
                 {
                     btnGetDevice.Text = "Lấy lại";
                     if (BankExt.DeviceInfo.Contains("clientPrivKey"))
@@ -118,7 +120,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
                     lblDeviceInfo.CssClass = "status-red";
 
                 }
-            } 
+            }
 
         }
 
@@ -145,7 +147,10 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         txtBankName.Text = _bank.BankName;
         txtBankAccount.Text = _bank.BankAccount;
         txtBankPass.Attributes["value"] = rijndaelKey.Decrypt(_bank.BankPass);
-        chkIsActive.Checked = Convert.ToBoolean(_bank.Status);
+
+        //chkIsActive.Checked = Convert.ToBoolean(_bank.Status);
+        drpStatus.SelectedValue = _bank.Status.ToString();
+
         drpType.SelectedValue = _bank.Type.ToString();
         drpSolution.SelectedValue = _bank.Solution;
         txtBalanceMaxDay.Text = _bank.BalanceMaxDay.ToString();
@@ -161,7 +166,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
         UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
         //UrlBaseService = "https://localhost:44373/BankService.ashx";
-        //UrlBaseService = "http://149.28.130.246:9002/BankService.ashx";
+        //UrlBaseService = "http://149.28.130.246:9003/BankService.ashx";
 
         lblBalanceWeb.Text = _bank.BalanceTotal.ToString("N0");
         if (_bank.BankCode == "SEAB")
@@ -227,7 +232,8 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
                 lbOTP.Text = resultOTP.otp;
         }
-
+        if (_bank.Solution == "APIV3")
+            dvNotify.Visible = true;
         //imge
 
     }
@@ -252,7 +258,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         _bank.BankId = txtBankId.Text;
         _bank.BankName = txtBankName.Text.Trim();
         _bank.BankAccount = txtBankAccount.Text.Trim();
-        _bank.Status = Convert.ToInt32(chkIsActive.Checked);
+        _bank.Status = Convert.ToInt32(drpStatus.Text);
         _bank.BalanceMaxDay = Convert.ToInt32(txtBalanceMaxDay.Text);
         _bank.BalanceMaxMonth = Convert.ToInt32(txtBalanceMaxMonth.Text);
         _bank.Type = drpType.SelectedValue;
@@ -263,12 +269,44 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         _bank.PinOtp = txtPinOtp.Text;
         _bank.BankType = drpBankType.SelectedValue;
         _bank.AppDeviceId = txtAppDeviceId.Text;
-        _bank.CloudPhoneId = txtCloudPhoneId.Text;
+
+
+        if (!string.IsNullOrEmpty(txtCloudPhoneId.Text))
+        {
+            if (_bank.CloudPhoneId != txtCloudPhoneId.Text)
+            {
+                {
+                    var _Bank = new BankAccounts();
+                    var data = _Bank.GetList().OrderBy(x => x.Type).ToList();
+                    if (data.Exists(x => x.CloudPhoneId == txtCloudPhoneId.Text.Trim()))
+                    {
+                        var exbank = data.FirstOrDefault(x => x.CloudPhoneId == txtCloudPhoneId.Text.Trim());
+                        var mess = "Đã tồn tại bank " + exbank.BankId + " có CloudPhoneId trùng";
+                        Page.ClientScript.RegisterClientScriptBlock(
+                           this.GetType(),
+                           "Script",
+                           "$(document).ready(function() { alert('"+ mess+"'); });",
+                           true
+                       );
+                        return;
+                    }
+                }
+            }
+        }
+        _bank.CloudPhoneId = txtCloudPhoneId.Text.Trim();
+
 
 
         _bank.Update();
 
+
+
         _bank.DeleteCache();
+
+        if (_bank.Solution == "APIV3")
+            NotifyBank(_bank.BankId, _bank.BankCode, _bank.Status);
+        else
+            NotifyBank(_bank.BankId, _bank.BankCode, 0);
         //Log User
         var _userLog = new UserLog
         {
@@ -279,6 +317,25 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         };
         _userLog.Add();
         Response.Redirect(Constant.ADMIN_PATH + Resources.Url.BankAccount);
+    }
+    public void NotifyBank(string bankId, string bankCode, int status)
+    {
+        if (bankCode != "ACB")
+            return;
+        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
+        var obj = new { BankId = bankId, BankCode = bankCode, Action = "start" };
+        if (status != 1)
+            obj = new { BankId = bankId, BankCode = bankCode, Action = "stop" };
+        var requesData = new RequestData()
+        {
+            CommandCode = "NOTIFY_ACTION",
+            RequestContent = serializer.Serialize(obj),
+        };
+
+        Task.Run(async () => await CallbackJson(
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
     }
     protected string ConvertBase64(Stream Path)
     {
@@ -856,7 +913,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         var requesData = new RequestData()
         {
             CommandCode = "GET_DEVICE_INFO",
-            RequestContent = string.Format("{0},{1}", bankCode, bankId )
+            RequestContent = string.Format("{0},{1}", bankCode, bankId)
         };
 
         var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;

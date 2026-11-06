@@ -38,6 +38,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Add : System.Web.UI.P
         {
             _bank.Solution = "API";
         }
+
         var result = _bank.Add();
         if (result > 0)
         {

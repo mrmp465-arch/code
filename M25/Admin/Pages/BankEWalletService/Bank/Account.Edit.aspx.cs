@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.Page
@@ -85,6 +86,11 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         if (!IsPostBack)
         {
             init();
+        }
+        if (IsPostBack && Request["__EVENTTARGET"] == "CheckDevice")
+
+        {
+            CheckDeviceResult();
         }
     }
     private void init()
@@ -402,34 +408,27 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         if (login.ResponseCode == (int)ResponseCode.TransactionSuccessful)
         {
             divResultSync.Attributes["class"] = "callout callout-success";
-            syncMessage.InnerHtml = "<i>Bạn đã thực hiện gọi lệnh lấy device. Vui lòng đợi trong giây lát để hệ thống xử lý và trả kết quả . Vui lòng không ấn F5 hoặc Refresh trang</i>";
+
+            syncMessage.InnerHtml =
+                "<i>Đã gửi lệnh lấy Device thành công. " +
+                "Hệ thống đang chờ kết quả, vui lòng không Refresh trang.</i>";
+
             btnGetDevice.Enabled = false;
             btnGetDevice.Text = "Lấy lại";
 
+            divResultSync.Visible = true;
             lblDeviceInfo.Visible = false;
             btnDeleteDevice.Visible = false;
             divLoading.Visible = true;
-            System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            for (int i = 0; i < 50; i++)
-            {
-                int result = BindingDevice();
-
-                if (result > 0)
-                {
-                    break; // Thành công, dừng vòng lặp
-                }
-
-                // Chờ 2 giây trước lần gọi tiếp theo
-                if (i < 49)
-                {
-                    System.Threading.Thread.Sleep(2000);
-                }
-            }
-
-            divLoading.Visible = false;
-            lblDeviceInfo.Visible = true;
-
+            // Sau khi trang hiển thị, đợi 2 giây rồi gọi kiểm tra Device
+            ScriptManager.RegisterStartupScript(
+                Page,
+                Page.GetType(),
+                "CheckDevice",
+                "setTimeout(function() { __doPostBack('CheckDevice', ''); }, 2000);",
+                true
+            );
         }
         else
         {
@@ -437,9 +436,47 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             syncMessage.InnerHtml = string.Format("<i>{0}.</i>", login.Description);
 
             btnGetDevice.Enabled = false;
+            divResultSync.Visible = true;
         }
-        divResultSync.Visible = true;
 
+
+    }
+    private void CheckDeviceResult()
+    {
+        int result = 0;
+
+        for (int i = 0; i < 20; i++)
+        {
+            result = BindingDevice();
+
+            if (result > 0)
+            {
+                break;
+            }
+
+            if (i < 19)
+            {
+                System.Threading.Thread.Sleep(2000);
+            }
+        }
+
+        divLoading.Visible = false;
+        lblDeviceInfo.Visible = true;
+
+        if (result > 0)
+        {
+            syncMessage.InnerHtml =
+                "<i>Đã lấy thông tin Device thành công!</i>";
+        }
+        else
+        {
+            divResultSync.Attributes["class"] = "callout callout-warning";
+
+            syncMessage.InnerHtml =
+                "<i>Chưa nhận được thông tin Device. Vui lòng báo lại kỹ thuật.</i>";
+
+            btnGetDevice.Enabled = true;
+        }
     }
     protected void btnDeleteDevice_Click(object sender, EventArgs e)
     {
@@ -769,7 +806,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
         httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         var client = new HttpClient();
-        client.Timeout = TimeSpan.FromSeconds(300);
+        client.Timeout = TimeSpan.FromSeconds(30);
         try
         {
             NLogLogger.Info(new string[] { "CMS", "Account.Edit", "Request", postData });
@@ -777,7 +814,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             if (response.Content != null)
             {
                 var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                NLogLogger.Info(new string[] { "CMS", "Account.Edit", "Response", responseContent });
+                NLogLogger.Info(new string[] { "CMS", "Account.Edit", "Response", postData, responseContent });
                 client.Dispose();
                 return responseContent;
             }

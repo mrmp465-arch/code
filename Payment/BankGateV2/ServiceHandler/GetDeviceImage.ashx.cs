@@ -52,7 +52,24 @@ namespace BankGateV2.ServiceHandler
                             {
                                 case "main":
                                 case "frontal":
-                                    index = new Random().Next(1, 5);
+                                    //lay roundrobin
+                                    var keyCache = $"RedisBankProfileIndex:{bankId}";
+                                    var dataCache = DataCaching.GetCache<string>(keyCache);
+
+                                    int indexr = 1;
+
+                                    if (!string.IsNullOrEmpty(dataCache))
+                                    {
+                                        indexr = int.Parse(dataCache);
+                                        indexr++;
+                                    }
+
+                                    if (indexr > 4)
+                                        indexr = 1;
+
+                                    DataCaching.SetCache(keyCache, indexr.ToString(), 86400);
+                                    index = indexr;
+                                    //index = new Random().Next(1, 5);
                                     break;
                                 case "up":
                                     index = 5;

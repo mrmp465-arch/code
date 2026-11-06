@@ -97,11 +97,11 @@ public partial class Pages_BankEWalletService_Bank_Edit_TranIn : System.Web.UI.P
         txtNote.Text = _bankTranLog.Comment;
         lblBankTime.Text = string.Format("{0:dd/MM/yyyy HH:mm:ss}", _bankTranLog.UpdateTime);
 
-        //txtNote.ReadOnly = true;
-        //if (_bankTranLog.Comment == "" || _bankTranLog.Comment.Contains("_"))
-        //{
-        //    txtNote.ReadOnly = false;
-        //}
+        txtNote.ReadOnly = true;
+        if (!_bankTranLog.Comment.Contains("vo_hieu"))
+        {
+            txtNote.ReadOnly = false;
+        }
     }
     public string GetCode(string input)
     {
@@ -145,7 +145,7 @@ public partial class Pages_BankEWalletService_Bank_Edit_TranIn : System.Web.UI.P
         var apiResponse = new APIResponse((int)ResponseCode.TransactionSuccessful);
         apiResponse.ResponseContent = JsonConvert.SerializeObject(objContent);
 
-        if (txtNote.Text.Trim()=="hoantien")
+        if (txtNote.Text.Trim()== "huybo_congvi")
         {
 
             //update

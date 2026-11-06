@@ -20,22 +20,118 @@ namespace Bot
         static void Main(string[] args)
         {
 
-            if(DateTime.Now.Minute==59|| DateTime.Now.Minute == 29)
-            Report();
+            if (DateTime.Now.Minute == 0 || DateTime.Now.Minute == 30)
+                Report();
 
             //ReportSN();
             //ReporOtp();
         }
+
+
+
+
         static void Report()
         {
+            DateTime now = DateTime.Now;
 
-            DateTime begintime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-            DateTime endtime = DateTime.Now;
-            var lstDataBank = new BankGateAPI().ReportDashboard(string.Empty, begintime, endtime);
-            var lstDataBankCash = new BankCashAPI().ReportDashboard(string.Empty, begintime, endtime);
-            SendTeleV3("-5565643821", "BankIn: " + lstDataBank.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","));
-            SendTeleV3("-5565643821", "BankOut: " + lstDataBankCash.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","));
+            bool isPreviousDay = now.TimeOfDay < TimeSpan.FromMinutes(30);
+
+            DateTime begintime = isPreviousDay
+                ? now.Date.AddDays(-1)
+                : now.Date;
+
+            DateTime endtime = isPreviousDay
+                ? now.Date
+                : now;
+
+            DateTime endtimelast = endtime.AddMinutes(-30);
+
+            if (endtimelast < begintime)
+                endtimelast = begintime;
+
+            var lstDataBank = new BankGateAPI()
+                .ReportDashboardPartner(string.Empty, begintime, endtime);
+
+            var lstDataBankCash = new BankCashAPI()
+                .ReportDashboardPartner(string.Empty, begintime, endtime);
+
+            var lstDataBankLast = new BankGateAPI()
+                .ReportDashboardPartner(string.Empty, begintime, endtimelast);
+
+            var lstDataBankCashLast = new BankCashAPI()
+                .ReportDashboardPartner(string.Empty, begintime, endtimelast);
+
+            var listPartnerCode = lstDataBank.Select(x => x.PartnerCode)
+                .Union(lstDataBankCash.Select(x => x.PartnerCode))
+                .Distinct()
+                .ToList();
+
+            var sb = new System.Text.StringBuilder();
+
+            sb.AppendLine("📊 BÁO CÁO SẢN LƯỢNG ĐỐI TÁC");
+            sb.AppendLine("📅 Ngày: " + begintime.ToString("dd/MM/yyyy"));
+            sb.AppendLine("⏰ Đến: " + endtime.ToString("HH:mm dd/MM/yyyy"));
+            sb.AppendLine("━━━━━━━━━━━━━━");
+
+            int count = 0;
+
+            foreach (var pacode in listPartnerCode)
+            {
+                decimal totalIn = lstDataBank
+                    .Where(x => x.Type == 2 && x.PartnerCode == pacode)
+                    .Sum(x => x.TotalAmountSuccess);
+
+                decimal totalOut = lstDataBankCash
+                    .Where(x => x.Type == 2 && x.PartnerCode == pacode)
+                    .Sum(x => x.TotalAmountSuccess);
+
+                if (totalIn == 0 && totalOut == 0)
+                    continue;
+
+                decimal lastIn = lstDataBankLast
+                    .Where(x => x.Type == 2 && x.PartnerCode == pacode)
+                    .Sum(x => x.TotalAmountSuccess);
+
+                decimal lastOut = lstDataBankCashLast
+                    .Where(x => x.Type == 2 && x.PartnerCode == pacode)
+                    .Sum(x => x.TotalAmountSuccess);
+
+                decimal increaseIn = totalIn - lastIn;
+                decimal increaseOut = totalOut - lastOut;
+
+                bool isStopped = increaseIn <= 0 && increaseOut <= 0;
+
+                string status = isStopped
+                    ? "🔴 TẠM NGƯNG"
+                    : "🟢 HOẠT ĐỘNG";
+
+                sb.AppendLine("🏦 Đối tác: " + pacode);
+                sb.AppendLine("💰 BankIn: " + totalIn.ToString("N0")
+                    + " (" + increaseIn.ToString("+#,##0;-#,##0;0") + ")");
+                sb.AppendLine("💸 BankOut: " + totalOut.ToString("N0")
+                    + " (" + increaseOut.ToString("+#,##0;-#,##0;0") + ")");
+                sb.AppendLine("📊 " + status);
+                sb.AppendLine("━━━━━━━━━━━━━━");
+
+                count++;
+            }
+
+            if (count > 0)
+            {
+                SendTeleV3("-5565643821", sb.ToString());
+            }
         }
+
+
+
+
+
+
+        //var lstDataBank = new BankGateAPI().ReportDashboard(string.Empty, begintime, endtime);
+        //var lstDataBankCash = new BankCashAPI().ReportDashboard(string.Empty, begintime, endtime);
+        //SendTeleV3("-5565643821", "BankIn: " + lstDataBank.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","));
+        //SendTeleV3("-5565643821", "BankOut: " + lstDataBankCash.Sum(x => x.TotalAmountSuccess).ToString("N0").Replace(".", ","));
+
 
         static void ReporBank()
         {
@@ -165,10 +261,10 @@ namespace Bot
 
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
-                var requestUrl = string.Format("https://api.telegram.org/bot8675955812:AAEV_c3dgnUY4JzVGLIRgOdXmpuJJI9tCb4/sendMessage?chat_id={1}&text={0}", message, id);
+                var requestUrl = string.Format("https://api.telegram.org/bot8675955812:AAEV_c3dgnUY4JzVGLIRgOdXmpuJJI9tCb4/sendMessage?chat_id={1}&parse_mode=html&text={0}", message, id);
                 var webclient = new WebClient();
 
-                NLogLogger.Info(requestUrl);
+                //NLogLogger.Info(requestUrl);
                 webclient.DownloadString(requestUrl);
             }
             catch (Exception e)

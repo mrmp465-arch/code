@@ -200,6 +200,7 @@
 
                                                     <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
                                                     <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
+                                                    <asp:ListItem Text="Notify" Value="APIV3"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </div>
                                             <div class="form-group">
@@ -222,10 +223,16 @@
                                                 <label for="txtPhone">AppDeviceId</label>
                                                 <asp:TextBox ID="txtAppDeviceId" runat="server" CssClass="form-control" placeholder="AppDeviceId"></asp:TextBox>
                                             </div>
-                                            <div class="checkbox">
-                                                <label for="cbxIsActive">
-                                                    <asp:CheckBox ID="chkIsActive" Checked="False" runat="server"></asp:CheckBox>Trạng thái
-                                                </label>
+                                            <div class="form-group">
+
+                                                <label for="txtSolution">Trạng thái  *</label>
+                                                <asp:DropDownList ID="drpStatus" runat="server" CssClass="form-control">
+
+                                                    <asp:ListItem Text="Kích hoạt" Value="1"></asp:ListItem>
+                                                    <asp:ListItem Text="Chưa kích hoạt" Value="0"></asp:ListItem>
+                                                    <asp:ListItem Text="Bỏ qua" Value="-1"></asp:ListItem>
+                                                </asp:DropDownList>
+
                                             </div>
                                         </div>
                                     </div>
@@ -246,6 +253,8 @@
                                                 <asp:Label ID="lblBalanceWeb" runat="server"></asp:Label></h5>
                                             <h5>&#9734; Số dư Bank:
                                                 <asp:Label ID="lblBalanceBank" runat="server"></asp:Label></h5>
+                                            <h5 runat="server" visible="false" id="dvNotify">&#9734; Trạng thái notify: &nbsp;
+                                            <asp:Label ID="lblNotifyStatus" runat="server"></asp:Label></h5>
                                             <h5 runat="server" id="DVOTP" visible="False">&#9734; OTP: 
                                              <asp:Label ID="lbOTP" runat="server"></asp:Label></h5>
                                             <asp:Button ID="btnSyncBalance" runat="server" Text="Đồng bộ" CssClass="btn btn-block btn-default btn-flat" OnClick="bntSyncBalance_Click"></asp:Button>
@@ -304,7 +313,7 @@
                                                         <div class="device-status-row">
                                                             <asp:Label ID="lblDeviceInfo" runat="server"
                                                                 CssClass="status-green">
-                                                         </asp:Label>
+                                                            </asp:Label>
 
                                                             <asp:LinkButton ID="btnDeleteDevice" runat="server" Visible="false"
                                                                 CssClass="text-red"
@@ -410,6 +419,12 @@
     $("#<%=lblBalanceBank.ClientID %>").html(html);
 
 };
+function Loading2() {
+    //this.UnLoading();
+    var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
+    $("#<%=lblNotifyStatus.ClientID %>").html(html);
+
+};
 function UnLoading() {
     $('#LoadingContainer').remove();
 
@@ -431,12 +446,33 @@ if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
 
                 },
                 error: function () {
-                    $("#<%=lblBalanceBank.ClientID %>").html("");
-                    /*  UnLoading();*/
-                }
-            });
+            $("#<%=lblBalanceBank.ClientID %>").html("");
+            /*  UnLoading();*/
+        }
+    });
 }
+if ($("#<%=drpSolution.ClientID %>").val() == "APIV3") {
+    var params = {
+        BankCode: 'BankNotify',
+        BankAccount: $("#<%=txtBankAccount.ClientID %>").val(),
 
+    };
+    Loading2();
+    $.ajax({
+        type: 'GET',
+        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+        data: params,
+        success: function (data) {
+            /*UnLoading();*/
+            $("#<%=lblNotifyStatus.ClientID %>").html(data);
+
+        },
+        error: function () {
+            $("#<%=lblNotifyStatus.ClientID %>").html("");
+            /*  UnLoading();*/
+        }
+    });
+}
 
 
 
@@ -452,7 +488,7 @@ if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
 //    });
 //});
 
-    </script>
+</script>
     <style>
         .device-status-row {
             display: flex;

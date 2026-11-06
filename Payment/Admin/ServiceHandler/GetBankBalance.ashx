@@ -35,11 +35,18 @@ public class GetBankBalance : IHttpHandler
             if (data.BankCode == "MomoNotify")
 
             {
-                     result = GetNofiMomo(data.BankId);
+                result = GetNofiMomo(data.BankId);
             }
             else
             {
-                result = GetBalanceBank(data.BankCode, data.BankId);
+
+                if (data.BankCode == "BankNotify")
+
+                {
+                    result = GetNofiBank(data.BankAccount);
+                }
+                else
+                    result = GetBalanceBank(data.BankCode, data.BankId);
             }
         }
         context.Response.Write(result);
@@ -99,11 +106,25 @@ public class GetBankBalance : IHttpHandler
 
         var requesData = new RequestDataNotify()
         {
-            
+
             phone = momoId
         };
 
         var res = Task.Run(async () => await CallbackJson("http://45.76.183.159:3000/api/checkNotificationState", serializer.Serialize(requesData))).Result;
+        return res;
+
+    }
+    private string GetNofiBank(string bank)
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+        var requesData = new RequestBankNotify()
+        {
+
+            username = bank
+        };
+
+        var res = Task.Run(async () => await CallbackJson("http://66.42.63.21:3000/api/checkNotificationState", serializer.Serialize(requesData))).Result;
         return res;
 
     }
@@ -146,15 +167,21 @@ public class GetBankBalance : IHttpHandler
         public string RequestContent { get; set; }
         public string Signature { get; set; }
     }
+    public class RequestBankNotify
+    {
+        public string username { get; set; }
+
+    }
     public class RequestDataNotify
     {
         public string phone { get; set; }
-       
+
     }
     public class InputData
     {
         public string BankCode { get; set; }
         public string BankId { get; set; }
+        public string BankAccount { get; set; }
 
     }
 }

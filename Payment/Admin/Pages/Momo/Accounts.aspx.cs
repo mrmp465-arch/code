@@ -544,9 +544,9 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
             RequestContent = serializer.Serialize(obj),
         };
         Task.Run(async () => await CallbackJson(
-    UrlBaseService,
-    serializer.Serialize(requesData)
-));
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
     }
     protected void btAppClick(object sender, EventArgs e)
 
@@ -643,7 +643,11 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 CommandCode = "TRANS_SCAN",
                 RequestContent = _Bank.MomoId,
             };
-            var res = Task.Run(async () => await CallbackJson(url, serializer.Serialize(requesData))).Result;
+            //var res = Task.Run(async () => await CallbackJson(url, serializer.Serialize(requesData))).Result;
+            Task.Run(async () => await CallbackJson(
+                url,
+                serializer.Serialize(requesData)
+            ));
         }
 
         BindData();

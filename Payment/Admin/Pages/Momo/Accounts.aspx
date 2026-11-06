@@ -316,7 +316,7 @@
                                                 &nbsp;<%--<asp:LinkButton runat="server" Title='<%#Eval("Id") %>' CssClass="lbstatus">Dừng hẳn</asp:LinkButton>--%>
 
                                                 <asp:LinkButton ID="lnkUpdateTime" runat="server" OnCommand="UpdateTime_Command" Visible='true' CommandName="Callback" CommandArgument='<%#Eval("Id")%>' OnClientClick="return confirm('Bạn có muốn quét lại?')">[Quét lại] </asp:LinkButton>
-                                                <a onclick='StopBank(<%#Eval("Id") %>)' href="javascript:;" class="lbstatus">[Dừng hẳn]</a>
+                                                &nbsp;&nbsp;<a onclick='StopBank(<%#Eval("Id") %>)' href="javascript:;" class="lbstatus">[Dừng hẳn]</a>
                                             </td>
 
 
@@ -399,8 +399,7 @@
                         <asp:ListItem Text="Không update" Value=""></asp:ListItem>
                         <asp:ListItem Text="Quét His" Value="APIV2"></asp:ListItem>
                         <asp:ListItem Text="Notify" Value="APIV3"></asp:ListItem>
-                        <%--<asp:ListItem Text="APIV4" Value="APIV4"></asp:ListItem>
-     <asp:ListItem Text="API" Value="API"></asp:ListItem>--%>
+                       
                     </asp:DropDownList>
                 </div>
                 <div class="modal-footer">
@@ -490,7 +489,8 @@
 
             if (confirm("Bạn có muốn dừng hẳn")) {
                 var params = {
-                    id: id
+                    id: id,
+                    bankcode:'bank'
                 };
                 Loading();
                 $.ajax({

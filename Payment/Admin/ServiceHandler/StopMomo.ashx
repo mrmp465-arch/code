@@ -1,4 +1,4 @@
-﻿<%@ WebHandler Language="C#" Class="UpdateMomoStatus" Debug=true %>
+﻿<%@ WebHandler Language="C#" Class="UpdateMomoStatus" Debug="true" %>
 
 using System;
 
@@ -14,9 +14,11 @@ using Libs.Utils;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
 
-public class UpdateMomoStatus : IHttpHandler,IReadOnlySessionState
+public class UpdateMomoStatus : IHttpHandler, IReadOnlySessionState
 {
 
+
+    JavaScriptSerializer serializer = new JavaScriptSerializer();
     public void ProcessRequest(HttpContext context)
     {
         //if (!AppUtils.CheckRolesPermission(Resources.Url.BankAccount))
@@ -27,21 +29,40 @@ public class UpdateMomoStatus : IHttpHandler,IReadOnlySessionState
         if (HttpContext.Current.Session["UserID"] == null)
             return;
 
-        var UserID = Convert.ToInt32( HttpContext.Current.Session["UserID"] );
+        var UserID = Convert.ToInt32(HttpContext.Current.Session["UserID"]);
         if (UserID != 1)
         {
             var lst = new UsersRole().GetListByUser(UserID);
             if (!(lst != null && lst.Exists(e => e.Url.ToLower() == Url.ToLower())))
-                return ;
+                return;
         }
 
 
         var data = new PostGetHelper().GetFromQueryString<InputData>();
-        var id = int.Parse(data.id);
-        var _Bank = new MomoAccounts();
-        _Bank = _Bank.Get(id);
 
-        _Bank.Stop();
+        var id = int.Parse(data.id);
+        if (string.IsNullOrEmpty(data.bankcode))
+        {
+            var _Bank = new MomoAccounts();
+            _Bank = _Bank.Get(id);
+
+            _Bank.Stop();
+
+            if (_Bank.Solution == "APIV3")
+                NotifyMomo(_Bank.MomoId, 0);
+        }
+        else
+        {
+            var _Bank = new BankAccounts();
+            _Bank = _Bank.Get(id);
+
+            _Bank.Stop();
+            if (_Bank.Solution == "APIV3")
+                NotifyBank(_Bank.BankId, _Bank.BankCode, 0);
+        }
+
+
+
         //var _userLog = new UserLog
         //{
         //    UserName = AppUtils.UserName,
@@ -56,6 +77,7 @@ public class UpdateMomoStatus : IHttpHandler,IReadOnlySessionState
     {
         //public string BankCode { get; set; }
         public string id { get; set; }
+        public string bankcode { get; set; }
 
     }
     public bool IsReusable
@@ -64,6 +86,80 @@ public class UpdateMomoStatus : IHttpHandler,IReadOnlySessionState
         {
             return false;
         }
+    }
+    public void NotifyMomo(string momoid, int status)
+    {
+        var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
+        var obj = new { momoId = momoid, action = "start" };
+        if (status != 1)
+            obj = new { momoId = momoid, action = "stop" };
+        var requesData = new RequestData()
+        {
+            CommandCode = "NOTIFY_ACTION",
+            RequestContent = serializer.Serialize(obj),
+        };
+        Task.Run(async () => await CallbackJson(
+    UrlBaseService,
+    serializer.Serialize(requesData)
+));
+    }
+    public void NotifyBank(string bankId, string bankCode, int status)
+    {
+        if (bankCode != "ACB")
+            return;
+        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
+        var obj = new { BankId = bankId, BankCode = bankCode, Action = "start" };
+        if (status != 1)
+            obj = new { BankId = bankId, BankCode = bankCode, Action = "stop" };
+        var requesData = new RequestData()
+        {
+            CommandCode = "NOTIFY_ACTION",
+            RequestContent = serializer.Serialize(obj),
+        };
+
+        Task.Run(async () => await CallbackJson(
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
+    }
+    public class RequestData
+    {
+        public string PartnerCode { get; set; }
+        public string CommandCode { get; set; }
+        public string RequestContent { get; set; }
+        public string Signature { get; set; }
+    }
+    public static async Task<string> CallbackJson(string url, string postData)
+    {
+        var uri = new Uri(url);
+        var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
+        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        var client = new HttpClient();
+        client.Timeout = TimeSpan.FromSeconds(30);
+        try
+        {
+            NLogLogger.Info(new string[] { "CMS", "UpdateMomoStatus", "Request", postData });
+            var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);
+            if (response.Content != null)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                NLogLogger.Info(new string[] { "CMS", "UpdateMomoStatus", "Response", responseContent });
+                client.Dispose();
+                return responseContent;
+            }
+            else
+            {
+                NLogLogger.Info(new string[] { "CMS", "UpdateMomoStatus", "Response Is Null" });
+            }
+
+        }
+        catch (Exception e)
+        {
+            NLogLogger.Info(new string[] { "CMS", "Exeption Post", e.Message });
+            return string.Empty;
+        }
+        client.Dispose();
+        return string.Empty;
     }
 
 }

@@ -264,6 +264,24 @@ namespace Libs.API
             db.ExecuteNonQuerySP("sp_Bank_CMS_Delete"
                 , new SqlParameter("@Id", Id));
         }
+        public void Stop()
+        {
+            try
+            {
+                DBHelper db = new DBHelper(Configs.VPGMOMOConnectionStrings);
+                SqlParameter[] pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@ReturnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[1] = new SqlParameter("@Id", Id);
+                db.ExecuteNonQuerySP("sp_Bank_CMS_Stop", pars);
+                //Id = Convert.ToInt32(pars[0].Value);
+            }
+            catch (Exception ex)
+            {
+                NLogLogger.Info(new string[] { "Update Error", ex.Message.Replace("\n", " ") });
+                //Id = -99;
+            }
+
+        }
         public List<BankAccounts> GetList()
         {
             try

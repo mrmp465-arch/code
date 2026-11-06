@@ -1,16 +1,21 @@
-﻿using System;
+﻿using Libs.API;
+using Libs.Utils;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Libs.API;
-using System.Data;
-using Libs.Utils;
-using System.Web.Script.Serialization;
 
 public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
 {
+    JavaScriptSerializer serializer = new JavaScriptSerializer();
     protected void Page_Load(object sender, EventArgs e)
     {
         AppUtils.CheckRoles(Resources.Url.BankAccount);
@@ -34,6 +39,19 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
                 }
             }
             BindData();
+
+        }
+        if (IsPostBack)
+        {
+            string eventTarget = Request["__EVENTTARGET"];
+            string eventArgument = Request["__EVENTARGUMENT"];
+
+            if (eventTarget == "UpdateAll")
+            {
+
+
+                btUpdateAllClick();
+            }
 
         }
     }
@@ -63,7 +81,7 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
             data = data.Where(x => x.BankType.Equals(banktype)).ToList();
 
 
-        lblTota2.Text = String.Format("Tổng số bank : {0} - tổng số dư : {1}", data.Where(x => x.Status == 1).Count().ToString(), data.Where(x=>x.Type=="IN"||x.Type=="INOUT").Where(a=>a.StatusExtra==1).Sum(x => Convert.ToInt64(x.BalanceTotal)).ToString("N0"));
+        lblTota2.Text = String.Format("Tổng số bank : {0} - tổng số dư : {1}", data.Where(x => x.Status == 1).Count().ToString(), data.Where(x => x.Type == "IN" || x.Type == "INOUT").Where(a => a.StatusExtra == 1).Sum(x => Convert.ToInt64(x.BalanceTotal)).ToString("N0"));
 
 
 
@@ -102,21 +120,30 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
             data = data.Where(x => x.StatusExtra == 1).ToList();
 
         var status = int.Parse(drpStatus.SelectedValue);
-        //if (status == -1)
+
+        //if (status == -2)
         //    data = data;
+        //chưa kích hoạt
         if (status == 0)
             data = data.Where(x => x.Status == 0).ToList();
+        //kích hoạt
         if (status == 1)
             data = data.Where(x => x.Status == 1).ToList();
+        //bỏ qua
+        if (status == -1)
+            data = data.Where(x => x.Status == -1).ToList();
+        //sẵn sàng
+        if (status == 2)
+            data = data.Where(x => x.Status == 1 || x.Status == 0).ToList();
 
-       //if(txtPC.Text=="PC" || txtPC.Text == "")
-       // {
+        //if(txtPC.Text=="PC" || txtPC.Text == "")
+        // {
 
-       // }
-       // else
-       // {
-       //     data = data.Where(x => x.Computer.Equals(txtPC.Text)).ToList();
-       // }
+        // }
+        // else
+        // {
+        //     data = data.Where(x => x.Computer.Equals(txtPC.Text)).ToList();
+        // }
         if (!string.IsNullOrEmpty(drpComputer.SelectedValue))
 
             data = data.Where(x => x.Computer.Equals(drpComputer.SelectedValue)).ToList();
@@ -133,6 +160,34 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
         int Id = Convert.ToInt32(e.CommandArgument.ToString());
         var _Bank = new BankAccounts();
         _Bank.StopScanAt_Update(Id, DateTime.Now.AddMinutes(10));
+
+        _Bank.Id = Id;
+        _Bank = _Bank.Get();
+        if (_Bank.Solution == "APIV3")
+        {
+            var url = "http://127.0.0.1:9003/BankService.ashx";
+
+            
+            var requesData = new
+            {
+                CommandCode = "PROCESS_TRANS_IN",
+                RequestContent = serializer.Serialize(new ProcessTransIn
+                {
+                    BankCode=_Bank.BankCode,
+                    BankId=_Bank.BankId,
+                    FromDate="",
+                    ToDate = "",
+                    MaxRow =50,
+                })
+            };
+            Task.Run(async () => await CallbackJson(
+               url,
+               serializer.Serialize(requesData)
+           ));
+        }
+
+
+
         BindData();
     }
     protected void btAdd_Click(object sender, EventArgs e)
@@ -180,6 +235,57 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
 
         }
     }
+    public void NotifyBank(string bankId, string bankCode, int status)
+    {
+        if(bankCode!="ACB")
+            return;
+        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
+        var obj = new { BankId = bankId, BankCode = bankCode, Action = "start" };
+        if (status != 1)
+            obj = new { BankId = bankId, BankCode = bankCode, Action = "stop" };
+        var requesData = new RequestData()
+        {
+            CommandCode = "NOTIFY_ACTION",
+            RequestContent = serializer.Serialize(obj),
+        };
+       
+        Task.Run(async () => await CallbackJson(
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
+    }
+    public static async Task<string> CallbackJson(string url, string postData)
+    {
+        var uri = new Uri(url);
+        var httpContent = new StringContent(postData, Encoding.UTF8, "application/json");
+        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        var client = new HttpClient();
+        client.Timeout = TimeSpan.FromSeconds(30);
+        try
+        {
+            NLogLogger.Info(new string[] { "CMS", "Account.Edit", "Request", postData });
+            var response = await client.PostAsync(uri, httpContent).ConfigureAwait(false);
+            if (response.Content != null)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                NLogLogger.Info(new string[] { "CMS", "Account.Edit", "Response", responseContent });
+                client.Dispose();
+                return responseContent;
+            }
+            else
+            {
+                NLogLogger.Info(new string[] { "CMS", "Account.Edit", "Response Is Null" });
+            }
+
+        }
+        catch (Exception e)
+        {
+            NLogLogger.Info(new string[] { "CMS", "Exeption Post", e.Message });
+            return string.Empty;
+        }
+        client.Dispose();
+        return string.Empty;
+    }
     public string GetBankClass(object Type, object Status, object Balance, object MDIN, object BankCode)
     {
         try
@@ -204,7 +310,7 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
                     }
                     if (BankCode.ToString() == "ACB")
                     {
-                        if (int.Parse(Balance.ToString()) >100000000)
+                        if (int.Parse(Balance.ToString()) > 100000000)
                         {
                             return "bwarning";
                         }
@@ -230,7 +336,7 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
 
             }
         }
-        catch {  }
+        catch { }
 
         return "";
     }
@@ -315,6 +421,9 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
                 {
                     _Bank.Status = 0;
                     _Bank.Update();
+
+                    if (_Bank.Solution == "APIV3")
+                        NotifyBank(_Bank.BankId, _Bank.BankCode, _Bank.Status);
                     var _userLog = new UserLog
                     {
                         UserName = AppUtils.UserName,
@@ -330,6 +439,7 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
         System.Threading.Thread.Sleep(1000);
         Response.Redirect(Request.RawUrl);
     }
+
     protected void btApp2Click(object sender, EventArgs e)
 
     {
@@ -347,6 +457,10 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
                 {
                     _Bank.Status = 1;
                     _Bank.Update();
+
+                    if (_Bank.Solution == "APIV3")
+                        NotifyBank(_Bank.BankId, _Bank.BankCode, _Bank.Status);
+
                     var _userLog = new UserLog
                     {
                         UserName = AppUtils.UserName,
@@ -362,7 +476,94 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
         System.Threading.Thread.Sleep(1000);
         Response.Redirect(Request.RawUrl);
     }
-    public string GetQR(string BankCode, string BankId, string AccountName)
+    //quet
+    protected void btScanClick(object sender, EventArgs e)
+
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+        for (int i = 0; i < rptList.Items.Count; i++)
+        {
+            var _Partner = new Partners();
+            CheckBox cbx = (CheckBox)rptList.Items[i].FindControl("cbxStatus2");
+            Label TransactionID = (Label)rptList.Items[i].FindControl("ID");
+            if (cbx.Checked)
+            {
+                int id = Convert.ToInt32(TransactionID.Text);
+                var _Bank = new BankAccounts();
+                _Bank = _Bank.Get(id);
+
+                _Bank.StopScanAt_Update(id, DateTime.Now.AddMinutes(10));
+
+
+                if (_Bank.Solution == "APIV3")
+                {
+                    var url = "http://127.0.0.1:9003/BankService.ashx";
+
+
+                    var requesData = new
+                    {
+                        CommandCode = "PROCESS_TRANS_IN",
+                        RequestContent = serializer.Serialize(new ProcessTransIn
+                        {
+                            BankCode = _Bank.BankCode,
+                            BankId = _Bank.BankId,
+                            FromDate = "",
+                            ToDate = "",
+                            MaxRow = 50,
+                        })
+                    };
+                    Task.Run(async () => await CallbackJson(
+                       url,
+                       serializer.Serialize(requesData)
+                   ));
+                }
+
+
+            }
+        }
+        Response.Redirect(Request.RawUrl);
+    }
+    protected void btUpdateAllClick()
+
+    {
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+
+        for (int i = 0; i < rptList.Items.Count; i++)
+        {
+            var _Partner = new Partners();
+            CheckBox cbx = (CheckBox)rptList.Items[i].FindControl("cbxStatus2");
+            Label TransactionID = (Label)rptList.Items[i].FindControl("ID");
+            if (cbx.Checked)
+            {
+                int id = Convert.ToInt32(TransactionID.Text);
+                var _Bank = new BankAccounts();
+                _Bank = _Bank.Get(id);
+
+                if (Convert.ToInt32(txtBalanceMaxDay.Text) > 0)
+                    _Bank.BalanceMaxDay = Convert.ToInt32(txtBalanceMaxDay.Text);
+                if (Convert.ToInt32(txtBalanceMaxMonth.Text) > 0)
+                    _Bank.BalanceMaxMonth = Convert.ToInt32(txtBalanceMaxMonth.Text);
+                if (!string.IsNullOrEmpty(drpType2.SelectedValue))
+                    _Bank.Type = drpType2.SelectedValue;
+
+                if (!string.IsNullOrEmpty(drpSolution2.SelectedValue))
+                    _Bank.Solution = drpSolution2.SelectedValue;
+
+                _Bank.Update();
+                System.Threading.Thread.Sleep(100);
+                if (drpSolution2.SelectedValue == "APIV2"|| drpSolution2.SelectedValue == "APIV")
+                {
+                    NotifyBank(_Bank.BankId,_Bank.BankCode, 0);
+                }
+
+
+            }
+        }
+        Response.Redirect(Request.RawUrl);
+    }
+    public string  GetQR(string BankCode, string BankId, string AccountName)
     {
         if (BankCode == "NVB")
             BankCode = "NCB";
@@ -374,8 +575,24 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
         {
             return "font-weight:bold";
         }
-        
+
 
         return "";
+    }
+
+    public class RequestData
+    {
+        public string PartnerCode { get; set; }
+        public string CommandCode { get; set; }
+        public string RequestContent { get; set; }
+        public string Signature { get; set; }
+    }
+    public class ProcessTransIn
+    {
+        public string BankCode { get; set; }
+        public string BankId { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public int MaxRow { get; set; }
     }
 }
