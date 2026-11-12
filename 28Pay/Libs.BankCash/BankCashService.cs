@@ -164,13 +164,21 @@ namespace Libs.BankCash
                 //check ip
                 if (!string.IsNullOrEmpty(_partnerService.IPAddress))
                 {
-                    if (!_partnerService.IPAddress.Contains(IPAddress.Get()))
+                    var allowedIPs = (_partnerService.IPAddress ?? "").Split(',').Select(x => x.Trim());
+
+                    if (!allowedIPs.Contains(IPAddress.Get()))
                     {
-                        NLogLogger.Info(new string[] { "IpInvalid", _partnerService.IPAddress, IPAddress.Get()});
+                        NLogLogger.Info(new string[] { "IpInvalid", _partnerService.IPAddress, IPAddress.Get() });
                         return new APIResponse((int)ResponseCode.IpInvalid);
                     }
 
                 }
+                else
+                {
+                    NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
+                    return new APIResponse((int)ResponseCode.IpInvalid);
+                }
+
                 if (!_partnerService.CommandCode.Contains("bank"))
                 {
                     return new APIResponse((int)ResponseCode.ServiceIsLocked);

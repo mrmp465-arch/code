@@ -71,6 +71,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         btnSenOtpSms.OnClientClick = "validate(" + ")";
         btnOtpLogin.OnClientClick = "validate(" + ")";
         btnOpen.OnClientClick = "validate(" + ")";
+        btnRestartFCM.OnClientClick = "if (validate()) return false; return confirm('Bạn có chắc chắn muốn restart?');";
         AppUtils.CheckRoles(Resources.Url.MomoAccountEdit);
         serializer.MaxJsonLength = Int32.MaxValue;
 
@@ -184,13 +185,30 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
 
         }
         if (_Momo.Solution == "APIV3")
+
+        {
             dvNotify.Visible = true;
+            btnRestartFCM.Visible = true;
+        }
+       
         lblBalanceWeb.Text = _Momo.BalanceTotal.ToString("N0");
 
 
 
     }
+    protected void btnRestartFCM_Click(object sender, EventArgs e)
+    {
+        // Thực hiện xóa thiết bị
+        //new BankAccounts().ResetDevice(txtBankId.Text, drpBankCode.SelectedValue);
+        //lblDeviceInfo.Text = "Chưa có";
+        //lblDeviceInfo.CssClass = "status-red";
+        //btnDeleteDevice.Visible = false;
+        RestartFCM(txtMomoId.Text);
+        divResultSync.Attributes["class"] = "callout callout-success";
+        syncMessage.InnerHtml = "<i>Bạn đã thực hiện restart thành công.</i>";
+        divResultSync.Visible = true;
 
+    }
     protected void bntSendOTPMsg_Click(object sender, EventArgs e)
     {
 
@@ -335,6 +353,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         _Momo.BalanceMaxMonth = Convert.ToInt32(txtBalanceMaxMonth.Text);
         _Momo.Type = drpType.SelectedValue;
         _Momo.MomoPass = rijndaelKey.Encrypt(txtMomoPass.Text.Trim());
+        var OldSolution = _Momo.Solution;
         _Momo.Solution = drpSolution.SelectedValue;
 
 
@@ -344,13 +363,19 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         //    _Momo.StatusDetection = 0;
         //}
         _Momo.Update();
-        if (_Momo.Solution == "APIV3")
-            NotifyMomo(_Momo.MomoId, _Momo.Status);
 
-        if (_Momo.Solution == "APIV2")
+        if (OldSolution != drpSolution.SelectedValue)
         {
-            NotifyMomo(_Momo.MomoId, 0);
+            if (_Momo.Solution == "APIV3")
+                NotifyMomo(_Momo.MomoId, 1);
+
+            if (_Momo.Solution == "APIV2")
+            {
+                NotifyMomo(_Momo.MomoId, -1);
+            }
         }
+
+
         //Log User
         var _userLog = new UserLog
         {
@@ -365,8 +390,24 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
     public void NotifyMomo(string momoid, int status)
     {
         var obj = new { momoId = momoid, action = "start" };
-        if (status != 1)
+        if (status == 0)
             obj = new { momoId = momoid, action = "stop" };
+        if (status == -1)
+            obj = new { momoId = momoid, action = "stopnow" };
+        var requesData = new RequestData()
+        {
+            CommandCode = "NOTIFY_ACTION",
+            RequestContent = serializer.Serialize(obj),
+        };
+        Task.Run(async () => await CallbackJson(
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
+    }
+    public void RestartFCM(string momoid)
+    {
+        var obj = new { momoId = momoid, action = "restart" };
+       
         var requesData = new RequestData()
         {
             CommandCode = "NOTIFY_ACTION",

@@ -335,6 +335,8 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         _Momo.BalanceMaxMonth = Convert.ToInt32(txtBalanceMaxMonth.Text);
         _Momo.Type = drpType.SelectedValue;
         _Momo.MomoPass = rijndaelKey.Encrypt(txtMomoPass.Text.Trim());
+
+        var OldSolution = _Momo.Solution;
         _Momo.Solution = drpSolution.SelectedValue;
 
 
@@ -344,12 +346,15 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         //    _Momo.StatusDetection = 0;
         //}
         _Momo.Update();
-        if (_Momo.Solution == "APIV3")
-            NotifyMomo(_Momo.MomoId, _Momo.Status);
-
-        if (_Momo.Solution == "APIV2")
+        if (OldSolution != drpSolution.SelectedValue)
         {
-            NotifyMomo(_Momo.MomoId, 0);
+            if (_Momo.Solution == "APIV3")
+                NotifyMomo(_Momo.MomoId, 1);
+
+            if (_Momo.Solution == "APIV2")
+            {
+                NotifyMomo(_Momo.MomoId, 0);
+            }
         }
         //Log User
         var _userLog = new UserLog

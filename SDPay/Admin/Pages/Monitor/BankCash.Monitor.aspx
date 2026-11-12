@@ -292,7 +292,8 @@
                                                 <% if (AppUtils.IsAdmin)
                                                     { %>
                                                 |
-                                              
+                                                <a href="<%= Constant.ADMIN_PATH %><%= Resources.Url.BankTransaction %>?refcode=<%#Eval("TransactionID") %>" target="_blank">[BankLog]</a>
+ |
                                                 <asp:HyperLink
                                                     ID="lnbill"
                                                     CssClass="lightbox"

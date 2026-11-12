@@ -290,7 +290,7 @@ namespace Libs.BankCash.DrumV2
                     {
                         TelegramNotify.SendTeleV2(chatid, "[bankout]  " + request.RefCode + " " + request.BankName + " => Sai mã ngân hàng |receiving bankcode wrong | 银行代码错误");
                     }
-                   
+
 
                     return new APIResponse((int)ResponseCode.BankCodeInvalid);
                 }
@@ -333,16 +333,16 @@ namespace Libs.BankCash.DrumV2
                 if (user.Balance < request.Amount)
                 {
                     if (string.IsNullOrEmpty(chatid))
-                   
-                    if (string.IsNullOrEmpty(chatid))
-                    {
-                        TelegramNotify.SendTeleV2("-5351398382", "Đối tác " + transaction.PartnerCode + "  không đủ số dư để tạo lệnh bank out - " + request.RefCode);
-                    }
-                    else
-                    {
-                        TelegramNotify.SendTeleV2(chatid, "[bankout]  " + request.RefCode + " => Số dư không đủ | balance not enough | 平衡不足");
 
-                    }
+                        if (string.IsNullOrEmpty(chatid))
+                        {
+                            TelegramNotify.SendTeleV2("-5351398382", "Đối tác " + transaction.PartnerCode + "  không đủ số dư để tạo lệnh bank out - " + request.RefCode);
+                        }
+                        else
+                        {
+                            TelegramNotify.SendTeleV2(chatid, "[bankout]  " + request.RefCode + " => Số dư không đủ | balance not enough | 平衡不足");
+
+                        }
                     return new APIResponse((int)ResponseCode.BalanceNotEnough);
                 }
 
@@ -382,7 +382,7 @@ namespace Libs.BankCash.DrumV2
                 FullName = request.RefCode,
                 Mobile = string.Empty,
                 RefCode = request.RefCode,
-                
+
                 BankAccountName = request.BankAccountName,
                 BankAccountNumber = request.BankAccountNumber
             };
@@ -452,7 +452,7 @@ namespace Libs.BankCash.DrumV2
                 {
                     Deductdes = String.Format("Deduct momo cash amount: {2} transId: {0}-{1}", _BankCashAPI.TransactionID, _BankCashAPI.BankCode + "-" + _BankCashAPI.RefCode, Convert.ToInt64(_BankCashAPI.Amount).ToString("#,#").Replace(",", "."));
                 }
-               
+
 
 
                 var resultdeduct = UpdatePartnerBalance(_BankCashAPI.PartnerCode, Convert.ToInt64(_BankCashAPI.Amount), Fee, Deductdes, "BankOut_" + _BankCashAPI.TransactionID.ToString());
@@ -517,26 +517,26 @@ namespace Libs.BankCash.DrumV2
                     {
                         if (request.Amount >= smsValue)
                         {
-                            //  var chatId = partner.SMSPlusUrl;
-                            //TelegramNotify.SendTeleV2(chatid, "[CheckBankOut " + transaction.PartnerCode + "] Bankout awaiting confirmation " + request.RefCode + " => Please confirm");
                             var acc = HttpUtility.HtmlEncode(request.BankAccountNumber);
-                           
+                            //ParnterHideAcc
+                            //string PartnerHideAcc = ConfigurationManager.AppSettings["PartnerHideAcc"];
+                            //if(PartnerHideAcc.ToLower().Contains(partner.PartnerCode.ToLower()))
+                            //{
+                            //    acc = MaskString(acc);
+                            //}
                             acc = MaskString(acc);
-                            var accName = HttpUtility.HtmlEncode(request.BankAccountName);
-                            accName = MaskString2(accName);
                             var mess =
                               "🏦 <b>ConfirmBankOut</b>\n\n" +
-                              "📌 RefCode: <code>" + HttpUtility.HtmlEncode(request.RefCode) + "</code>\n" +
-                              "💰 Amount: <b>" + request.Amount.ToString("#,#").Replace(",", ".") + "</b>\n" +
-                              "🏛 Bank: " + request.BankName + "-" + acc + "-" + accName + "\n\n" +
-                              "⚠️ Cần xác nhận giao dịch này.\n" +
-                              "👉 Vui lòng bấm <b>Confirm</b> hoặc <b>Cancel</b> bên dưới.\n\n" +
-                              "────────────────────\n" +
-                              "🇬🇧 <b>Bankout Awaiting Confirmation</b>\n" +
-                              "RefCode: <code>" + request.RefCode + "</code>\n" +
-                              "Amount: <b>" + request.Amount.ToString("#,#").Replace(",", ".") + "</b>" + "\n" +
-                              "Bank: " + request.BankName + "-" + acc + "-" + accName + "\n\n";
+                              "📌 订单号 RefCode: <code>" + HttpUtility.HtmlEncode(request.RefCode) + "</code>\n" +
+                              "💰 金额 Amount: <b>" + request.Amount.ToString("#,#").Replace(",", ".") + "</b>\n" +
+                              "🏛 收款信息 Bank: " +
+                                  HttpUtility.HtmlEncode(request.BankName) + " - " +
+                                  acc + " - " +
+                                  HttpUtility.HtmlEncode(request.BankAccountName) + "\n\n" +
 
+                              "⚠️ Cần xác nhận giao dịch này. Vui lòng bấm <b>Confirm</b> hoặc <b>Cancel</b> bên dưới.\n" +
+                              "⚠️ This transaction requires confirmation. Please click <b>Confirm</b> or <b>Cancel</b> below.\n" +
+                              "⚠️ 该笔订单需要确认，请点击下方的 <b>确认（Confirm）</b> 或 <b>取消（Cancel）</b>。\n\n";
 
                             var mess2 =
                               "🏦 ConfirmBankOut\n\n" +
@@ -550,6 +550,7 @@ namespace Libs.BankCash.DrumV2
                              "RefCode: " + request.RefCode + "\n" +
                              "Amount: " + request.Amount.ToString("#,#").Replace(",", ".") + "\n" +
                              "Bank: " + request.BankName + "-" + acc + "-" + request.BankAccountName + "\n\n";
+
 
                             var userconfirm = partner.SMSPlusCheckUrl;
                             if (!string.IsNullOrEmpty(userconfirm))
@@ -568,7 +569,6 @@ namespace Libs.BankCash.DrumV2
                                 TelegramNotify.SendConfirmMessage(chatid, mess2, request.RefCode);
                             }
 
-                            //TelegramNotify.SendConfirmMessage(chatid, mess, request.RefCode);
 
                             _BankCashAPI.Status = -2;
                             _BankCashAPI.LogContent = "Chờ xác nhận";
@@ -579,11 +579,12 @@ namespace Libs.BankCash.DrumV2
                         }
                     }
                 }
+
                 if (request.Amount >= MinBankAproveAmount)
                 {
                     TelegramNotify.SendTeleV2("-5483981704", "[Duyệt] Có lệnh bankout cần duyệt  " + request.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + transaction.PartnerCode + " RefCode " + request.RefCode);
 
-                   
+
 
                     _BankCashAPI.Status = -2;
                     _BankCashAPI.LogContent = "Chờ duyệt";
@@ -768,7 +769,7 @@ namespace Libs.BankCash.DrumV2
                         var resObj = serializer.Deserialize<DrumBankLib.CashRespone>(response);
                         if (resObj.ResponseCode == 1)
                         {
-                           
+
 
                             _APIResponse = new APIResponse((int)ResponseCode.TransactionSuccessful);
 
@@ -786,7 +787,7 @@ namespace Libs.BankCash.DrumV2
 
                                 TelegramNotify.SendTeleV2("-5483981704", "[Duyệt] Có lệnh bankout cần duyệt  " + request.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + transaction.PartnerCode + " RefCode " + request.RefCode);
                                 System.Threading.Thread.Sleep(800);
-                                if (resObj.Description.Contains("All account")||resObj.Description.Contains("đủ điều kiện"))
+                                if (resObj.Description.Contains("All account") || resObj.Description.Contains("đủ điều kiện"))
                                 {
                                     TelegramNotify.SendTeleV2("-5483981704", "Tài khoản bank out không đủ tiền=> Vui lòng duyệt tay lệnh này");
                                 }
@@ -1027,7 +1028,7 @@ namespace Libs.BankCash.DrumV2
 
                     return apiResponse;
                 }
-               // LogCache.RemovePBankInfo(order.RefCode);
+                // LogCache.RemovePBankInfo(order.RefCode);
                 var partner = new Partners().GetCache(order.PartnerCode);
                 if (order.Status == 0)
                 {
@@ -1190,7 +1191,7 @@ namespace Libs.BankCash.DrumV2
                     order.LastTime = DateTime.Now;
                     order.Update();
 
-                   
+
 
                     var mess = "[Duyệt] Có lệnh bankout cần duyệt  " + order.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + order.PartnerCode + " RefCode " + order.RefCode + " Id " + order.TransactionID + " bank " + order.BankCode;
 
@@ -1262,7 +1263,7 @@ namespace Libs.BankCash.DrumV2
                         order.Note = newclObj.Comment;
                         order.Update();
 
-                      
+
 
                         var mess = "[Duyệt] Có lệnh bankout cần duyệt  " + order.Amount.ToString("#,#").Replace(",", ".") + " từ đối tác " + order.PartnerCode + " RefCode " + order.RefCode + " bank " + order.BankCode;
 

@@ -490,15 +490,19 @@ namespace Libs.BankCash.DrumV2
                         if (request.Amount >= smsValue)
                         {
                             var acc = HttpUtility.HtmlEncode(request.BankAccountNumber);
+                            var accName = HttpUtility.HtmlEncode(request.BankAccountName);
                             //ParnterHideAcc
                             //string PartnerHideAcc = ConfigurationManager.AppSettings["PartnerHideAcc"];
                             //if (PartnerHideAcc.ToLower().Contains(partner.PartnerCode.ToLower()))
                             //{
                             //    acc = MaskString(acc);
                             //}
-                            acc = MaskString(acc);
-                            var accName = HttpUtility.HtmlEncode(request.BankAccountName);
-                            accName = MaskString2(accName);
+                            var user = new Users().GetByUserName(partner.PartnerCode);
+                            if (user.IsShowFullOrder == 0)
+                            {
+                                acc = MaskString(acc);
+                                accName = MaskString2(accName);
+                            }
                             //  var chatId = partner.SMSPlusUrl;
                             //TelegramNotify.SendTeleV2(chatid, "[CheckBankOut " + transaction.PartnerCode + "] Bankout awaiting confirmation " + request.RefCode + " => Please confirm");
                             var mess =

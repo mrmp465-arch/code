@@ -272,7 +272,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
                     var requesData = new
                     {
-                        CommandCode = "TRANS_SCAN",
+                        CommandCode = "PROCESS_TRANS_IN",
                         RequestContent = _Bank.MomoId,
                     };
                     Task.Run(async () => await CallbackJson(
@@ -318,6 +318,11 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 if (drpSolution2.SelectedValue == "APIV2")
                 {
                     NotifyMomo(_Bank.MomoId, 0);
+                }
+                else
+                {
+                    NotifyMomo(_Bank.MomoId, 1);
+
                 }
 
 
@@ -641,7 +646,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
             var requesData = new
             {
-                CommandCode = "TRANS_SCAN",
+                CommandCode = "PROCESS_TRANS_IN",
                 RequestContent = _Bank.MomoId,
             };
             var res = Task.Run(async () => await CallbackJson(url, serializer.Serialize(requesData))).Result;

@@ -43,7 +43,7 @@ namespace BankGateV2.Callback
                 //check sign
 
                 var newclObj = serializer.Deserialize<MDrumBankLib.Callback>(callbackdata.ResponseContent);
-                if (string.IsNullOrEmpty(newclObj.Note) || newclObj.Note == "[COMMENT_INCORRECT_FORMAT]")
+                if (string.IsNullOrEmpty(newclObj.Note) || newclObj.Note == "[COMMENT_INCORRECT_FORMAT]" || newclObj.Note == "[INCORRECT_FORMAT]")
                 {
                     callbacResponse = new MDrumBankLib.CallbackResponse()
                     {

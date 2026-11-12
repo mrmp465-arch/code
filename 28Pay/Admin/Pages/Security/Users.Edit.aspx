@@ -95,6 +95,10 @@
                             <asp:TextBox ID="txtSMSCommand" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                         <div class="form-group">
+                            <asp:CheckBox ID="chkIsShowFullOrder" runat="server"></asp:CheckBox>
+                            <small>Hiện đầy đủ xác nhận rút tiền</small>
+                        </div>
+                        <div class="form-group">
                             <label for="txtSMSPlusUrl">Số tiền gửi bill tự động</label>
 
 

@@ -15,13 +15,13 @@ namespace Libs.BankCash
 
             //Unknown class
             Register("unknown", new Unknown.UnknownBankV2());
-            Register("24hbankcash", new _24h._24hBank());
+            
             //Register("kzmomocash", new KZ.KZBank());
             //Register("drumcash", new Drum.DrumBank());
             Register("drummomocash", new DrumV2.DrumV2Bank());
             Register("drumbankcash", new DrumV2.DrumV2Bank());
-            Register("vnpaycash", new Jav.JavBank());
-            Register("simexcash", new Simex.SimexBank());
+            Register("fastpaybankcash", new FastPay.fastbank());
+           
             //---------------------------
 
         }
@@ -33,36 +33,25 @@ namespace Libs.BankCash
             switch (providerCode)
             {
 
-                case "vnpaycash":
+                case "fastpaybankcash":
                     {
-                        dicts.Add("vnpaycash", hander);
+                        dicts.Add("fastpaybankcash", hander);
                         break;
                     }
-                case "24hbankcash":
-                    {
-                        dicts.Add("24hbankcash", hander);
-                        break;
-                    }
+              
+                    
                 case "drumbankcash":
                     {
                         dicts.Add("drumbankcash", hander);
                         break;
                     }
-                case "drumcash":
-                    {
-                        dicts.Add("drumcash", hander);
-                        break;
-                    }
+              
                 case "drummomocash":
                     {
                         dicts.Add("drummomocash", hander);
                         break;
                     }
-                case "simexcash":
-                    {
-                        dicts.Add("simexcash", hander);
-                        break;
-                    }
+               
                 default:
                     {
                         dicts.Add("unknown".ToLower(), hander);
@@ -78,19 +67,15 @@ namespace Libs.BankCash
             {
                 switch (providerCode)
                 {
-                    case "vnpaycash":
-                        return dicts["vnpaycash"];
-                    case "24hbankcash":
-                        return dicts["24hbankcash"];
+                    case "fastpaybankcash":
+                        return dicts["fastpaybankcash"];
+                   
                     case "drumbankcash":
                         return dicts["drumbankcash"];
-
-                    case "drumcash":
-                        return dicts["drumcash"];
+                   
                     case "drummomocash":
                         return dicts["drummomocash"];
-                    case "simexcash":
-                        return dicts["simexcash"];
+                   
                     default:
                         return dicts["unknown"];
                 }

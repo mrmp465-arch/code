@@ -58,7 +58,7 @@
                                 <asp:TextBox ID="txtMobile" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-2">
+                        <div class="col-xs-12 col-sm-6 col-md-2" style="display: none">
                             <div class="input-group">
                                 <span class="input-group-addon" style="padding: 5px;">BankType</span>
                                 <asp:DropDownList ID="drpBankType" runat="server" CssClass="form-control select2">
@@ -138,6 +138,18 @@
                                     <asp:ListItem Text="Kích hoạt" Value="1"></asp:ListItem>
                                     <asp:ListItem Text="Chưa kích hoạt" Value="0"></asp:ListItem>
                                     <asp:ListItem Text="Bỏ qua" Value="-1"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-2" >
+                            <div class="input-group">
+                                <span class="input-group-addon" style="padding: 5px;">Giải pháp</span>
+                                <asp:DropDownList ID="drpSolution" runat="server" CssClass="form-control">
+                                    <asp:ListItem Text="Chọn:" Value=""></asp:ListItem>
+
+                                    <asp:ListItem Text="Bản mới" Value="APIV2"></asp:ListItem>
+                                    <asp:ListItem Text="Bản cũ" Value="API"></asp:ListItem>
+                                    <asp:ListItem Text="Notify" Value="APIV3"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
                         </div>
@@ -247,10 +259,10 @@
                                     <th>Out</th>
                                     <th>T.Thái</th>
                                     <th>Partner</th>
-                                   
-                                    <th>PC</th>
-                                    <th>AppDeviceId</th>
                                      <th>K.Hoạt</th>
+                                   
+                                    <th>AppDeviceId</th>
+                                    <th>PC</th>
                                     <th>T.Vụ</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -295,23 +307,24 @@
                                             <td><%#GetStatus(Eval("StatusOverOut")) %></td>
                                             <td><%#GetStatusExtra(Eval("StatusExtra")) %></td>
                                             <td><%#Eval("PartnerName")%></td>
+                                            
                                             <td>
-
-                                                <asp:CheckBox ID="cbxStatus" CssClass="cbxStatus" runat="server" Checked='<%#Convert.ToBoolean(Eval("Status")) %>' Title='<%#Eval("Id") %>'></asp:CheckBox>
+                                                <%#GetStatusActive(Eval("Status")) %> &nbsp;
+                                                <asp:CheckBox ID="cbxStatus" Visible='<%# (Eval("Status").ToString() == "1" || Eval("Status").ToString() == "0" ) %> ' CssClass="cbxStatus" runat="server" Checked='<%#Convert.ToBoolean(Eval("Status")) %>' Title='<%#Eval("Id") %>'></asp:CheckBox>
                                                 <asp:Label ID="lblId" runat="server" Visible="false" Text='<%#Eval("Id") %>'></asp:Label>
                                                 <a onclick='StopBank(<%#Eval("Id") %>)' href="javascript:;" class="lbstatus">[Dừng hẳn]</a>
                                             </td>
                                             <td><%#Eval("PhoneDevice") %>-<%#Eval("Computer") %></td>
                                             <td><%#Eval("AppDeviceId") %></td>
                                             <td>
-                                              
+
                                                 <asp:LinkButton ID="lnkUpdateTime" runat="server" OnCommand="UpdateTime_Command" Visible='<%#  Eval("Type").ToString().Contains("IN")   %>' CommandName="Callback" CommandArgument='<%#Eval("Id")%>' OnClientClick="return confirm('Bạn có muốn quét lại?')">[Quét lại] </asp:LinkButton>
-                                               <asp:LinkButton ID="lnCallback" runat="server" OnCommand="Reset_Command" Visible='<%#  Eval("StatusOverIn").ToString() != "1" %>' CommandName="Callback" CommandArgument='<%#Eval("Id")%>' OnClientClick="return confirm('Bạn có muốn reset?')">[Reset] </asp:LinkButton>
-                                               
-                                                 
+                                                <asp:LinkButton ID="lnCallback" runat="server" OnCommand="Reset_Command" Visible='<%#  Eval("StatusOverIn").ToString() != "1" %>' CommandName="Callback" CommandArgument='<%#Eval("Id")%>' OnClientClick="return confirm('Bạn có muốn reset?')">[Reset] </asp:LinkButton>
+
+
                                             </td>
                                             <td>
-                                                 <a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountDelete %>?id=<%#Eval("Id") %>" onclick="return confirm('Bạn có muốn xóa?')" title="Xóa">[Xóa]</a>
+                                                <a href="<%=Constant.ADMIN_PATH %><%=Resources.Url.BankAccountDelete %>?id=<%#Eval("Id") %>" onclick="return confirm('Bạn có muốn xóa?')" title="Xóa">[Xóa]</a>
                                             </td>
                                         </tr>
                                     </ItemTemplate>
@@ -404,228 +417,228 @@
     <script src="<%=Constant.ADMIN_PATH %>Content/fancybox2.1.5/jquery.fancybox.pack.js"></script>
     <link href="<%=Constant.ADMIN_PATH %>Content/fancybox2.1.5/jquery.fancybox.css" rel="stylesheet" />
     <script type="text/javascript">
-$(document).ready(function () {
-    var table = $('#TableResponsive').DataTable({
-        responsive: true,
-        "autoWidth": false,
-        "paging": false,
-        "searching": false,
-        "info": false,
-        "ordering": true,
-    });
-    new $.fn.dataTable.FixedHeader(table);
+        $(document).ready(function () {
+            var table = $('#TableResponsive').DataTable({
+                responsive: true,
+                "autoWidth": false,
+                "paging": false,
+                "searching": false,
+                "info": false,
+                "ordering": true,
+            });
+            new $.fn.dataTable.FixedHeader(table);
 
-});
-$(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
-
-})
-$(document).ready(function () {
-    $(".lstlightbox a").fancybox({
-
-    });
-});
-this.DocumentHeght = function () {
-    return $(document).height();
-};
-this.GetFullHeight = function () {
-    return parseInt($(document).scrollTop() + $('html').height());
-};
-this.DocumentWidth = function () { return $(document).width(); };
-this.WindowHeight = function () { return $(window).height(); };
-this.WindowWidth = function () { return $(window).width(); };
-function Loading() {
-    var html = '<div id="LoadingContainer"><div  id="Loading" style="display: none; text-align: center; overflow-y: none; vertical-align: middle;"><img src="/cmspay/Content/loading48.gif" alt="loadding" /></div>';
-    html += '<div  id="LoadingOverlay"></div>';
-    html += '<style> #Loading{	width: 300px;	height: 300px;	z-index: 1400;	position: fixed;	padding: 5px;}#LoadingOverlay{	-moz-opacity: 0.8;	opacity: .80;	filter: alpha(opacity=10);	position: absolute;	z-index: 1200;	top: 0;	left: 0;	width: 100%;	height: 100%;	display: none;	background-color: #fff;}</style></div>';
-    $('body').append(html);
-    $('#Loading');
-    $('#LoadingOverlay').show();
-    var leftOffset = (this.WindowWidth() - 300) / 2;
-    var topOffset = (this.GetFullHeight() - 300) / 2;
-    $('#Loading').css('width', 300);
-    $('#Loading').css('height', 300);
-    $('#Loading').css('left', leftOffset);
-    $('#Loading').css('top', '47%'); //topOffset);
-    $('#Loading').show();
-    $('#LoadingOverlay').css('height', this.GetFullHeight());
-
-};
-function UnLoading() {
-    $('#LoadingContainer').remove();
-
-};
-function UpdateBank(id) {
-
-    if (confirm("Bạn có muốn cập nhật")) {
-        var params = {
-            id: id
-        };
-        Loading();
-        $.ajax({
-            type: 'GET',
-            url: '/cmspay/ServiceHandler/UpdateBankStatus.ashx',
-            data: params,
-            success: function (data) {
-                UnLoading();
-                $('#MAlertSuccess').modal()
-            },
-            error: function () {
-                UnLoading();
-            }
         });
-    }
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
 
-}
-$(document).ready(function () {
-    $(".cbxStatus").click(function () {
-        UpdateBank($(this).attr("title"));
-    });
-});
-function checkAll(obj1) {
-    var returnVal = undefined;
-    if (obj1.checked == true) {
+        })
+        $(document).ready(function () {
+            $(".lstlightbox a").fancybox({
 
-        returnVal = confirm("Bạn có muốn chọn tất cả?");
-        if (returnVal) {
-            $(this).attr("checked", true);
-            $(".CheckAll input").attr("checked", true);
-        }
-    }
-    else {
-
-        returnVal = confirm("Bạn có muốn Hủy chọn tất cả?");
-        if (returnVal) {
-            $(this).attr("checked", false);
-            $(".CheckAll input").attr("checked", false);
-        }
-    }
-
-
-}
-function CheckCanel() {
-    var check = 0;
-    $('.CheckAll input').each(function (i, e) {
-
-        if ($(e).prop("checked") == true) {
-            check = 1;
-
-        }
-
-    });
-
-    if (check == 0) {
-
-        alert('Vui lòng chọn bank để cập nhật');
-        return false;
-    }
-    if (confirm("Bạn có muốn tắt bank?")) {
-        return true;
-    }
-    return false;
-}
-function CheckApp() {
-    var check = 0;
-    $('.CheckAll input').each(function (i, e) {
-
-        if ($(e).prop("checked") == true) {
-            check = 1;
-
-        }
-
-    });
-
-    if (check == 0) {
-
-        alert('Vui lòng chọn bank để cập nhật');
-        return false;
-    }
-    if (confirm("Bạn có muốn bật bank?")) {
-        return true;
-    }
-    return false;
-}
-function CheckApp5() {
-    var check = 0;
-    $('.CheckAll input').each(function (i, e) {
-
-        if ($(e).prop("checked") == true) {
-            check = 1;
-
-        }
-
-    });
-
-    if (check == 0) {
-
-        alert('Vui lòng chọn tài khoản để quét');
-        return false;
-    }
-    if (confirm("Bạn có muốn quét?")) {
-        return true;
-    }
-    return false;
-}
-
-function CheckApp6() {
-    var check = 0;
-    $('.CheckAll input').each(function (i, e) {
-
-        if ($(e).prop("checked") == true) {
-            check = 1;
-
-        }
-
-    });
-
-    if (check == 0) {
-
-        alert('Vui lòng chọn tài khoản để sửa');
-        return false;
-    }
-    $('#updateModal').modal();
-    return false
-
-}
-function confirmUpdateAll() {
-
-    if ($("#<%=txtBalanceMaxDay.ClientID %>").val() == '') {
-
-        alert('Vui lòng nhập số tiền nhận tối đa trong ngày');
-        return false;
-    }
-    if ($("#<%=txtBalanceMaxMonth.ClientID %>").val() == '') {
-
-        alert('Vui lòng nhập số tiền nhận tối đa trong tháng');
-        return false;
-    }
-    // Gửi OTP về server qua __doPostBack
-    __doPostBack('UpdateAll', 'update');
-}
-function StopBank(id) {
-
-    if (confirm("Bạn có muốn dừng hẳn")) {
-        var params = {
-            id: id,
-            bankcode:'bank'
-        };
-        Loading();
-        $.ajax({
-            type: 'GET',
-            url: '/cmspay/ServiceHandler/StopMomo.ashx',
-            data: params,
-            success: function (data) {
-                UnLoading();
-                //$("button[id$='btView']").click();
-                $("#<%= btView.ClientID %>").click();
-            },
-            error: function () {
-                UnLoading();
-            }
+            });
         });
-    }
-}
+        this.DocumentHeght = function () {
+            return $(document).height();
+        };
+        this.GetFullHeight = function () {
+            return parseInt($(document).scrollTop() + $('html').height());
+        };
+        this.DocumentWidth = function () { return $(document).width(); };
+        this.WindowHeight = function () { return $(window).height(); };
+        this.WindowWidth = function () { return $(window).width(); };
+        function Loading() {
+            var html = '<div id="LoadingContainer"><div  id="Loading" style="display: none; text-align: center; overflow-y: none; vertical-align: middle;"><img src="/cmspay/Content/loading48.gif" alt="loadding" /></div>';
+            html += '<div  id="LoadingOverlay"></div>';
+            html += '<style> #Loading{	width: 300px;	height: 300px;	z-index: 1400;	position: fixed;	padding: 5px;}#LoadingOverlay{	-moz-opacity: 0.8;	opacity: .80;	filter: alpha(opacity=10);	position: absolute;	z-index: 1200;	top: 0;	left: 0;	width: 100%;	height: 100%;	display: none;	background-color: #fff;}</style></div>';
+            $('body').append(html);
+            $('#Loading');
+            $('#LoadingOverlay').show();
+            var leftOffset = (this.WindowWidth() - 300) / 2;
+            var topOffset = (this.GetFullHeight() - 300) / 2;
+            $('#Loading').css('width', 300);
+            $('#Loading').css('height', 300);
+            $('#Loading').css('left', leftOffset);
+            $('#Loading').css('top', '47%'); //topOffset);
+            $('#Loading').show();
+            $('#LoadingOverlay').css('height', this.GetFullHeight());
+
+        };
+        function UnLoading() {
+            $('#LoadingContainer').remove();
+
+        };
+        function UpdateBank(id) {
+
+            if (confirm("Bạn có muốn cập nhật")) {
+                var params = {
+                    id: id
+                };
+                Loading();
+                $.ajax({
+                    type: 'GET',
+                    url: '/cmspay/ServiceHandler/UpdateBankStatus.ashx',
+                    data: params,
+                    success: function (data) {
+                        UnLoading();
+                        $('#MAlertSuccess').modal()
+                    },
+                    error: function () {
+                        UnLoading();
+                    }
+                });
+            }
+
+        }
+        $(document).ready(function () {
+            $(".cbxStatus").click(function () {
+                UpdateBank($(this).attr("title"));
+            });
+        });
+        function checkAll(obj1) {
+            var returnVal = undefined;
+            if (obj1.checked == true) {
+
+                returnVal = confirm("Bạn có muốn chọn tất cả?");
+                if (returnVal) {
+                    $(this).attr("checked", true);
+                    $(".CheckAll input").attr("checked", true);
+                }
+            }
+            else {
+
+                returnVal = confirm("Bạn có muốn Hủy chọn tất cả?");
+                if (returnVal) {
+                    $(this).attr("checked", false);
+                    $(".CheckAll input").attr("checked", false);
+                }
+            }
+
+
+        }
+        function CheckCanel() {
+            var check = 0;
+            $('.CheckAll input').each(function (i, e) {
+
+                if ($(e).prop("checked") == true) {
+                    check = 1;
+
+                }
+
+            });
+
+            if (check == 0) {
+
+                alert('Vui lòng chọn bank để cập nhật');
+                return false;
+            }
+            if (confirm("Bạn có muốn tắt bank?")) {
+                return true;
+            }
+            return false;
+        }
+        function CheckApp() {
+            var check = 0;
+            $('.CheckAll input').each(function (i, e) {
+
+                if ($(e).prop("checked") == true) {
+                    check = 1;
+
+                }
+
+            });
+
+            if (check == 0) {
+
+                alert('Vui lòng chọn bank để cập nhật');
+                return false;
+            }
+            if (confirm("Bạn có muốn bật bank?")) {
+                return true;
+            }
+            return false;
+        }
+        function CheckApp5() {
+            var check = 0;
+            $('.CheckAll input').each(function (i, e) {
+
+                if ($(e).prop("checked") == true) {
+                    check = 1;
+
+                }
+
+            });
+
+            if (check == 0) {
+
+                alert('Vui lòng chọn tài khoản để quét');
+                return false;
+            }
+            if (confirm("Bạn có muốn quét?")) {
+                return true;
+            }
+            return false;
+        }
+
+        function CheckApp6() {
+            var check = 0;
+            $('.CheckAll input').each(function (i, e) {
+
+                if ($(e).prop("checked") == true) {
+                    check = 1;
+
+                }
+
+            });
+
+            if (check == 0) {
+
+                alert('Vui lòng chọn tài khoản để sửa');
+                return false;
+            }
+            $('#updateModal').modal();
+            return false
+
+        }
+        function confirmUpdateAll() {
+
+            if ($("#<%=txtBalanceMaxDay.ClientID %>").val() == '') {
+
+                alert('Vui lòng nhập số tiền nhận tối đa trong ngày');
+                return false;
+            }
+            if ($("#<%=txtBalanceMaxMonth.ClientID %>").val() == '') {
+
+                alert('Vui lòng nhập số tiền nhận tối đa trong tháng');
+                return false;
+            }
+            // Gửi OTP về server qua __doPostBack
+            __doPostBack('UpdateAll', 'update');
+        }
+        function StopBank(id) {
+
+            if (confirm("Bạn có muốn dừng hẳn")) {
+                var params = {
+                    id: id,
+                    bankcode: 'bank'
+                };
+                Loading();
+                $.ajax({
+                    type: 'GET',
+                    url: '/cmspay/ServiceHandler/StopMomo.ashx',
+                    data: params,
+                    success: function (data) {
+                        UnLoading();
+                        //$("button[id$='btView']").click();
+                        $("#<%= btView.ClientID %>").click();
+                    },
+                    error: function () {
+                        UnLoading();
+                    }
+                });
+            }
+        }
     </script>
     <style>
         .bwarning {

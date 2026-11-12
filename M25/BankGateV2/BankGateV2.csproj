@@ -102,6 +102,8 @@
     <Content Include="Callback\DrumMomo.ashx" />
     <Content Include="Callback\DrumMomoCash.ashx" />
     <Content Include="Callback\DrumMomoNV.ashx" />
+    <Content Include="Callback\fastbank.ashx" />
+    <Content Include="Callback\fastpaycash.ashx" />
     <None Include="packages.config" />
     <Content Include="Pages\Bank.aspx" />
     <Content Include="Pages\Detail.aspx" />
@@ -285,6 +287,12 @@
     </Compile>
     <Compile Include="Callback\DrumMomoNV.ashx.cs">
       <DependentUpon>DrumMomoNV.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Callback\fastbank.ashx.cs">
+      <DependentUpon>fastbank.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Callback\fastpaycash.ashx.cs">
+      <DependentUpon>fastpaycash.ashx</DependentUpon>
     </Compile>
     <Compile Include="Constant.cs" />
     <Compile Include="Controls\Footer.ascx.cs">

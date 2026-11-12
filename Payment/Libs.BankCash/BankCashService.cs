@@ -141,12 +141,19 @@ namespace Libs.BankCash
                 //check ip
                 if (!string.IsNullOrEmpty(_partnerService.IPAddress))
                 {
-                    if (!_partnerService.IPAddress.Contains(IPAddress.Get()))
+                    var allowedIPs = (_partnerService.IPAddress ?? "").Split(',').Select(x => x.Trim());
+
+                    if (!allowedIPs.Contains(IPAddress.Get()))
                     {
                         NLogLogger.Info(new string[] { "IpInvalid", _partnerService.IPAddress, IPAddress.Get()});
                         return new APIResponse((int)ResponseCode.IpInvalid);
                     }
 
+                }
+                else
+                {
+                    NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
+                    return new APIResponse((int)ResponseCode.IpInvalid);
                 }
                 //NLogLogger.Info(new string[] { "partnerStatus", _partnerService.Quota.ToString(), _partnerService.Occurs.ToString(), transaction.PartnerCode.ToString() });
                 if (_partnerService.Quota != 0 && _partnerService.Occurs == 1)

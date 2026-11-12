@@ -577,6 +577,7 @@ namespace BankGateV2
                 }
 
             }
+           
 
 
             // Thêm mới giao dịch, 

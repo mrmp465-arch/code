@@ -25,8 +25,17 @@ public partial class Pages_BankEWalletService_Bank_Transaction : System.Web.UI.P
     {
         AppUtils.CheckRoles(Resources.Url.BankTransaction);
 
+       
         if (!IsPostBack)
         {
+            var refcode = Request["refcode"];
+            if (!string.IsNullOrEmpty(refcode))
+            {
+
+                txtRefCode.Text = refcode;
+
+
+            }
             try
             {
                 init();

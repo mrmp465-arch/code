@@ -108,7 +108,9 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
             //data = data.Where(x => x.Type.Equals(type)).ToList();
         }
 
-
+        var solution = drpSolution.SelectedValue;
+        if (!string.IsNullOrEmpty(solution))
+            data = data.Where(x => x.Solution.Equals(solution)).ToList();
 
 
         var statusExtra = int.Parse(drpStatusExtra.SelectedValue);
@@ -167,17 +169,17 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
         {
             var url = "http://127.0.0.1:9003/BankService.ashx";
 
-            
+
             var requesData = new
             {
                 CommandCode = "PROCESS_TRANS_IN",
                 RequestContent = serializer.Serialize(new ProcessTransIn
                 {
-                    BankCode=_Bank.BankCode,
-                    BankId=_Bank.BankId,
-                    FromDate="",
+                    BankCode = _Bank.BankCode,
+                    BankId = _Bank.BankId,
+                    FromDate = "",
                     ToDate = "",
-                    MaxRow =50,
+                    MaxRow = 50,
                 })
             };
             Task.Run(async () => await CallbackJson(
@@ -237,18 +239,20 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
     }
     public void NotifyBank(string bankId, string bankCode, int status)
     {
-        if(bankCode!="ACB")
+        if (bankCode != "ACB")
             return;
         var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
         var obj = new { BankId = bankId, BankCode = bankCode, Action = "start" };
-        if (status != 1)
+        if (status == 0)
             obj = new { BankId = bankId, BankCode = bankCode, Action = "stop" };
+        if (status == -1)
+            obj = new { BankId = bankId, BankCode = bankCode, Action = "stopnow" };
         var requesData = new RequestData()
         {
             CommandCode = "NOTIFY_ACTION",
             RequestContent = serializer.Serialize(obj),
         };
-       
+
         Task.Run(async () => await CallbackJson(
             UrlBaseService,
             serializer.Serialize(requesData)
@@ -540,6 +544,7 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
                 int id = Convert.ToInt32(TransactionID.Text);
                 var _Bank = new BankAccounts();
                 _Bank = _Bank.Get(id);
+                var OldSolution = _Bank.Solution;
 
                 if (Convert.ToInt32(txtBalanceMaxDay.Text) > 0)
                     _Bank.BalanceMaxDay = Convert.ToInt32(txtBalanceMaxDay.Text);
@@ -551,19 +556,33 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
                 if (!string.IsNullOrEmpty(drpSolution2.SelectedValue))
                     _Bank.Solution = drpSolution2.SelectedValue;
 
-                _Bank.Update();
-                System.Threading.Thread.Sleep(100);
-                if (drpSolution2.SelectedValue == "APIV2"|| drpSolution2.SelectedValue == "APIV")
+
+                if (!string.IsNullOrEmpty(drpSolution2.SelectedValue))
                 {
-                    NotifyBank(_Bank.BankId,_Bank.BankCode, 0);
+                    if (OldSolution != drpSolution2.SelectedValue)
+                    {
+                        {
+                            if (drpSolution2.SelectedValue == "APIV2" || drpSolution2.SelectedValue == "API")
+                            {
+                                NotifyBank(_Bank.BankId, _Bank.BankCode, -1);
+                            }
+                            if (drpSolution2.SelectedValue == "APIV3")
+                            {
+                                NotifyBank(_Bank.BankId, _Bank.BankCode, 1);
+                            }
+
+                        }
+                    }
                 }
 
 
+
+                _Bank.Update();
+                }
             }
+            Response.Redirect(Request.RawUrl);
         }
-        Response.Redirect(Request.RawUrl);
-    }
-    public string  GetQR(string BankCode, string BankId, string AccountName)
+    public string GetQR(string BankCode, string BankId, string AccountName)
     {
         if (BankCode == "NVB")
             BankCode = "NCB";
@@ -579,7 +598,25 @@ public partial class Pages_BankEWalletService_Bank_Accounts : System.Web.UI.Page
 
         return "";
     }
+    public string GetStatusActive(object statusOver)
+    {
+        if (statusOver.ToString() == "1")
+        {
+            return "<span class=\"label label-success\">Kích hoạt</span>";
+        }
 
+        if (statusOver.ToString() == "-1")
+        {
+            return "<span class=\"label label-default\">Bỏ qua</span>";
+        }
+
+        if (statusOver.ToString() == "0")
+        {
+            return "<span class=\"label label-warning\">Chưa kích hoạt</span>";
+        }
+
+        return statusOver.ToString();
+    }
     public class RequestData
     {
         public string PartnerCode { get; set; }

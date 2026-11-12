@@ -29,6 +29,10 @@ public partial class Pages_Monitor_Config : System.Web.UI.Page
         txtBlockAccount.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("BlockAccount")).DataValue;
 
 
+        txtService.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("Service")).DataValue;
+        txtServiceOUT.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("ServiceOut")).DataValue;
+        txtServiceMM.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("ServiceMM")).DataValue;
+
         txtMinBankAproveAmount.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("MinBankAproveAmount")).DataValue;
         txtBankCodeInMaintain.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("BankCodeInMaintain")).DataValue;
         txtBankPrefix.Text = lstconfig.FirstOrDefault(x => x.DataKey.Equals("BankPrefix")).DataValue;
@@ -57,6 +61,11 @@ public partial class Pages_Monitor_Config : System.Web.UI.Page
         systemDataConfig.Update("BankCodeInMaintain", txtBankCodeInMaintain.Text);
         systemDataConfig.Update("BankCodeVS8", txtBankCodeVS.Text);
         systemDataConfig.Update("BankPrefix", txtBankPrefix.Text);
+
+
+        systemDataConfig.Update("Service", txtService.Text);
+        systemDataConfig.Update("ServiceMM", txtServiceMM.Text);
+        systemDataConfig.Update("ServiceOut", txtServiceOUT.Text);
 
         systemDataConfig.Update("BlockAccount", txtBlockAccount.Text);
         systemDataConfig.DeleteCache();

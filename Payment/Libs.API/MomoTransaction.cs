@@ -21,6 +21,7 @@ namespace Libs.API
         public long MomoTransId { get; set; }
         public string MomoId { get; set; }
         public string Comment { get; set; }
+        public string CommentOrg { get; set; }
         public DateTime? TimeMomoSuccess { get; set; }
         public DateTime? CreatedTime { get; set; }
         public DateTime? UpdateTime { get; set; }
@@ -128,6 +129,18 @@ namespace Libs.API
             pars[3] = new SqlParameter("@MomoId", MomoId);
 
             db.ExecuteNonQuerySP("sp_APITransaction_UpdateCash", pars);
+            ReturnValue = Convert.ToInt64(pars[0].Value);
+            return ReturnValue;
+        }
+        public long UpdateCode(string bankTransId, string code)
+        {
+            DBHelper db = new DBHelper(Configs.VPGMOMOConnectionStrings);
+            SqlParameter[] pars = new SqlParameter[3];
+            pars[0] = new SqlParameter("@ReturnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            pars[1] = new SqlParameter("@BankTransId", bankTransId);
+            pars[2] = string.IsNullOrEmpty(code) ? new SqlParameter("@Comment", DBNull.Value) : new SqlParameter("@Comment", code);
+
+            db.ExecuteNonQuerySP("sp_APITransactionCMS_UpdateCode", pars);
             ReturnValue = Convert.ToInt64(pars[0].Value);
             return ReturnValue;
         }

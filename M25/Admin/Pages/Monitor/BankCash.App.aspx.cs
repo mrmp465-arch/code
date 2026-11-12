@@ -679,7 +679,67 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
                         };
                         _userLog.Add();
 
+                        if (_CardAPILog.ProviderCode == "fastpaybankcash")
+                        {
 
+
+                            var ck = getck(_CardAPILog.PartnerCode, _CardAPILog.BankCode.ToUpper());
+                            var Fee = Convert.ToInt64(Convert.ToInt64(_CardAPILog.Amount) * (ck));
+                            string callbackurl = "http://45.32.101.192:1592/Callback/fastpaycash.ashx";
+                            CashRespone cashResult = new CashRespone();
+                            CashRequestV3 _cashRequest = new CashRequestV3();
+                            _cashRequest.PartnerCode = "5pay";
+                            _cashRequest.AccountName = _CardAPILog.BankAccountName;
+                            _cashRequest.Amount = Convert.ToInt32(_CardAPILog.Amount);
+
+                            _cashRequest.CallbackUrl = callbackurl;
+                            _cashRequest.RefCode = _CardAPILog.RefCode.ToString();
+                            _cashRequest.BankCode = _CardAPILog.BankCode;
+                            _cashRequest.AccountNumber = _CardAPILog.BankAccountNumber;
+
+                            var lstbankcode = new BankCodeTranfer().GetListCache();
+                            var signature = Encrypts.MD5("m52" + _cashRequest.AccountNumber + _cashRequest.AccountName + _cashRequest.BankCode + _cashRequest.Amount + _cashRequest.RefCode + _cashRequest.CallbackUrl + "ef3baad8e245d7315cdcaaf9a9d23bf2");
+                            //var signature = ToSha256(_cashRequest.bank_code + _CardAPILog.BankAccountNumber + _cashRequest.amount.ToString() + _CardAPILog.RefCode.ToString() + "COM7rexcAGn97byY3zKmGYMs8BQaS9X8");
+                            _cashRequest.Signature = signature;
+                            var urlService = "http://45.32.115.186:1592/bankout/cash.ashx";
+
+                            NLogLogger.Info(new string[] { "fast", "Order Request", urlService });
+                            var response = Task.Run(async () => await PostTask(urlService, serializer.Serialize(_cashRequest))).Result;
+                            NLogLogger.Info(new string[] { "fast", "Order Response", response });
+                            try
+                            {
+
+                                var resObj = serializer.Deserialize<APIResponse>(response);
+                                if (resObj.ResponseCode == 1)
+                                {
+
+                                }
+                                else
+                                {
+                                    UpdatePartnerBalanceTopup(_CardAPILog.PartnerCode, Convert.ToInt64(_CardAPILog.Amount), Fee, String.Format("Refund withdrawal amount: {2} mgd: {0}-{1}", _CardAPILog.TransactionID, _CardAPILog.BankCode + "-" + _CardAPILog.RefCode, Convert.ToInt64(_CardAPILog.Amount).ToString("#,#").Replace(",", ".")), "BankOutRefund_" + _CardAPILog.TransactionID.ToString());
+
+
+                                    _CardAPILog.Status = -1;
+
+                                    _CardAPILog.LogContent = serializer.Serialize(resObj);
+                                    _CardAPILog.LastTime = DateTime.Now;
+                                    _CardAPILog.Update();
+
+
+
+                                }
+                            }
+                            catch
+                            {
+                                _CardAPILog.Status = -3;
+                                _CardAPILog.LogContent = "suspicious";
+                                _CardAPILog.LastTime = DateTime.Now;
+                                _CardAPILog.Update();
+                                //UpdatePartnerBalanceTopup(_CardAPILog.PartnerCode, Convert.ToInt64(_CardAPILog.Amount), Fee, String.Format("Hoàn tiền rút bank số tiền: {2} mgd: {0}-{1}", _CardAPILog.TransactionID, _CardAPILog.BankCode + "-" + _CardAPILog.RefCode, Convert.ToInt64(_CardAPILog.Amount).ToString("#,#").Replace(",", ".")), "BankOutRefund_" + _CardAPILog.TransactionID.ToString());
+
+                            }
+
+                        }
 
                         if (_CardAPILog.ProviderCode == "drumbankcash")
                         {
@@ -801,6 +861,19 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
 
         System.Threading.Thread.Sleep(500);
         GetList();
+    }
+    public class CashRequestV3
+    {
+        public string AccountName { get; set; }
+        public string BankCode { get; set; }
+        public string AccountNumber { get; set; }
+        public string Signature { get; set; }
+
+        public string RefCode { get; set; }
+
+        public string PartnerCode { get; set; }
+        public int Amount { get; set; }
+        public string CallbackUrl { get; set; }
     }
     public string GetStatusExtra(object statusOver)
     {

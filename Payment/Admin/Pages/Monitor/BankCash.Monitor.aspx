@@ -259,12 +259,13 @@
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td><%#Eval("LastTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td>
-                                                <%# 
-                                            (Eval("LastTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value) 
-                                            ? ((DateTime)Eval("LastTime") - (DateTime)Eval("CreatedTime")).TotalSeconds.ToString("N0") 
-                                            : ""
-                                                %>
-                                            </td>
+                                                <%#
+                                                      (Eval("LastTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value)
+                                                      ? Math.Floor(((DateTime)Eval("LastTime") - (DateTime)Eval("CreatedTime")).TotalSeconds).ToString("N0")
+                                                      : ""
+                                                  %>
+                                              </td>
+                                            
                                             <td><%#Eval("OrderInfo") %></td>
                                             <% if (AppUtils.IsAdmin)
                                                 {%>
@@ -285,7 +286,8 @@
                                                
 
                                                 <% } %>
-                                                <asp:HyperLink
+                                                 <a href="<%= Constant.ADMIN_PATH %><%= Resources.Url.BankTransaction %>?refcode=<%#Eval("TransactionID") %>" target="_blank" >[BankLog]</a>
+                                                |  <asp:HyperLink
                                                     ID="lnbill"
                                                     CssClass="lightbox"
                                                     NavigateUrl='<%# "https://momo.opaps.info/Pages/Detail.aspx?orderNo=" + Eval("TransactionID") %>'
@@ -293,6 +295,8 @@
                                                     Visible='<%# Eval("Status").ToString() == "1" %>'>
                                                     [Xem bill]
                                                 </asp:HyperLink>
+                                               
+                                               
 
                                             </td>
                                             </td>

@@ -65,6 +65,8 @@
     <Compile Include="CoCo\CoCoBank.cs" />
     <Compile Include="CoCo\CoCoBankLib.cs" />
     <Compile Include="Configs.cs" />
+    <Compile Include="FastPay\fastbank.cs" />
+    <Compile Include="FastPay\fastbankLib.cs" />
     <Compile Include="IBankCashHandler.cs" />
     <Compile Include="Jav\JavBank.cs" />
     <Compile Include="Jav\JavBankLib.cs" />

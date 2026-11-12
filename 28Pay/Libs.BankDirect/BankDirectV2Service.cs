@@ -341,6 +341,29 @@ namespace Libs.BankDirect
                     }
                 }
 
+                
+                PartnerService _partnerServiceout = new PartnerService();
+                //Kiểm tra Partner co được add Service ko
+                _partnerServiceout = _partnerServiceout.Get(transaction.PartnerID, 18);
+                //check ip
+                if (!string.IsNullOrEmpty(_partnerServiceout.IPAddress))
+                {
+                    var allowedIPs = (_partnerServiceout.IPAddress ?? "").Split(',').Select(x => x.Trim());
+
+                    if (!allowedIPs.Contains(IPAddress.Get()))
+                    {
+                        NLogLogger.Info(new string[] { "IpInvalid", _partnerServiceout.IPAddress, IPAddress.Get() });
+                        return new APIResponse((int)ResponseCode.IpInvalid);
+                    }
+
+                }
+                else
+                {
+                    NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
+                    return new APIResponse((int)ResponseCode.IpInvalid);
+                }
+
+
                 transaction.ProviderCode = providerCode;
                 var handler = BankDirectV2Factory.GetHandler(providerCode);
                 result = handler.Order(transaction);

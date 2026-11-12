@@ -49,7 +49,7 @@
 
                         <% if (AppUtils.IsAdmin || AppUtils.IsProvider)
                             { %>
-                        <div class="col-xs-12 col-sm-6 col-md-2" style="display: none">
+                        <div class="col-xs-12 col-sm-6 col-md-2">
                             <asp:DropDownList ID="drpProvider" runat="server" CssClass="form-control select2">
                             </asp:DropDownList>
                         </div>
@@ -172,6 +172,7 @@
                                     <th><%= Resources.Pay.OrderInfo%></th>
                                     <% if (AppUtils.IsAdmin)
                                         {%>
+                                    <th>Provider</th>
                                     <th>Người duyệt</th>
                                     <%}%>
                                     <th><%= Resources.Pay.Status%></th>
@@ -208,7 +209,11 @@
 
                                             <td><%#GetOrderNo(Eval("FullName"),Eval("Signature"),Eval("BankCode"),Eval("PartnerCode")) %></td>
                                             <td><%#Eval("OrderInfo") %></td>
+                                            <% if (AppUtils.IsAdmin)
+                                            {%>
+                                            <td><%#Eval("ProviderCode") %></td>
                                             <td><%#GetSignature(Eval("Signature")) %></td>
+                                            <%}%>
                                             <td style="width: 80px"><%#GetStatusExtra(Eval("Status"),Eval("PartnerCode"),Eval("Amount"),Eval("TotalAmount")) %></td>
 
                                             <td style="font-size: 105%">

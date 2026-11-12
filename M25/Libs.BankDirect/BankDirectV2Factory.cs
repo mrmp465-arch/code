@@ -20,7 +20,11 @@ namespace Libs.BankDirect
             Register("drummomo", new MDrumV2.MDrumV2Bank());
             Register("drumbank", new MDrumV2.MDrumV2Bank());
 
-           
+
+            Register("fastpaymomo", new FastPay.fastBank());
+
+            Register("fastpaybank", new FastPay.fastBank());
+
         }
 
 
@@ -46,27 +50,18 @@ namespace Libs.BankDirect
                         dicts.Add("drumbank", hander);
                         break;
                     }
-                case "24hbank":
+                case "fastpaybank":
                     {
-                        dicts.Add("24hbank", hander);
+                        dicts.Add("fastpaybank", hander);
                         break;
                     }
-                case "kzmomo":
+                case "fastpaymomo":
                     {
-                        dicts.Add("kzmomo", hander);
+                        dicts.Add("fastpaymomo", hander);
                         break;
                     }
 
-                case "vnpaybank":
-                    {
-                        dicts.Add("vnpaybank", hander);
-                        break;
-                    }
-                case "simex":
-                    {
-                        dicts.Add("simex", hander);
-                        break;
-                    }
+             
                 default:
                     {
                         dicts.Add("unknown".ToLower(), hander);
@@ -89,15 +84,12 @@ namespace Libs.BankDirect
                   
                     case "drumbank":
                         return dicts["drumbank"];
-                    case "24hbank":
-                        return dicts["24hbank"];
-                    case "kzmomo":
-                        return dicts["kzmomo"];
-                    case "vnpaybank":
-                        return dicts["vnpaybank"];
 
-                    case "simex":
-                        return dicts["simex"];
+                    case "fastpaymomo":
+                        return dicts["fastpaymomo"];
+                    case "fastpaybank":
+                        return dicts["fastpaybank"];
+                  
                     default:
                         return dicts["unknown"];
                 }

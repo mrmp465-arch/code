@@ -275,6 +275,26 @@ namespace Libs.BankDirect
                     return new APIResponse((int)ResponseCode.ProviderNotFound);
 
                 }
+                PartnerService _partnerService = new PartnerService();
+                //Kiểm tra Partner co được add Service ko
+                _partnerService = _partnerService.Get(transaction.PartnerID, 18);
+                //check ip
+                if (!string.IsNullOrEmpty(_partnerService.IPAddress))
+                {
+                    var allowedIPs = (_partnerService.IPAddress ?? "").Split(',').Select(x => x.Trim());
+
+                    if (!allowedIPs.Contains(IPAddress.Get()))
+                    {
+                        NLogLogger.Info(new string[] { "IpInvalid", _partnerService.IPAddress, IPAddress.Get() });
+                        return new APIResponse((int)ResponseCode.IpInvalid);
+                    }
+
+                }
+                else
+                {
+                    NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
+                    return new APIResponse((int)ResponseCode.IpInvalid);
+                }
                 //if (transaction.PartnerCode=="pp")
                 //{
                 //    providerCode = "simex";

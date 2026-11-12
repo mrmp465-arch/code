@@ -253,8 +253,21 @@
                                                 <asp:Label ID="lblBalanceWeb" runat="server"></asp:Label></h5>
                                             <h5>&#9734; Số dư Bank:
                                                 <asp:Label ID="lblBalanceBank" runat="server"></asp:Label></h5>
-                                            <h5 runat="server" visible="false" id="dvNotify">&#9734; Trạng thái notify: &nbsp;
-                                            <asp:Label ID="lblNotifyStatus" runat="server"></asp:Label></h5>
+
+
+
+                                            <div class="device-status-row">
+                                                <h5 runat="server" visible="false" id="dvNotify">&#9734; Trạng thái notify: &nbsp;
+                                                        <asp:Label ID="lblNotifyStatus" runat="server"></asp:Label></h5>
+
+                                                <asp:LinkButton ID="btnRestartFCM" runat="server" Visible="false"
+                                                    CssClass="text-green"
+                                                    ToolTip="Restart FCM"
+                                                    OnClick="btnRestartFCM_Click">
+                                                    <i class="fa fa-refresh"></i>
+                                                </asp:LinkButton>
+                                            </div>
+
                                             <h5 runat="server" id="DVOTP" visible="False">&#9734; OTP: 
                                              <asp:Label ID="lbOTP" runat="server"></asp:Label></h5>
                                             <asp:Button ID="btnSyncBalance" runat="server" Text="Đồng bộ" CssClass="btn btn-block btn-default btn-flat" OnClick="bntSyncBalance_Click"></asp:Button>
@@ -402,7 +415,7 @@
                 }
             }
 
-}
+        }
 
         this.DocumentHeght = function () {
             return $(document).height();
@@ -416,79 +429,85 @@
         function Loading() {
             //this.UnLoading();
             var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
-    $("#<%=lblBalanceBank.ClientID %>").html(html);
+            $("#<%=lblBalanceBank.ClientID %>").html(html);
 
-};
-function Loading2() {
-    //this.UnLoading();
-    var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
-    $("#<%=lblNotifyStatus.ClientID %>").html(html);
+        };
+        function Loading2() {
+            //this.UnLoading();
+            var html = '<img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top:-5px" alt="loadding" />';
+            $("#<%=lblNotifyStatus.ClientID %>").html(html);
 
-};
-function UnLoading() {
-    $('#LoadingContainer').remove();
+        };
+        function UnLoading() {
+            $('#LoadingContainer').remove();
 
-};
-if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
+        };
+        if ($("#<%=lblBalanceBank.ClientID %>").html() != "-1") {
             var params = {
                 BankCode: $("#<%=drpBankCode.ClientID %>").val(),
                 BankId: $("#<%=txtBankId.ClientID %>").val(),
 
-    };
-    Loading();
-    $.ajax({
-        type: 'GET',
-        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
-        data: params,
-        success: function (data) {
-            /*UnLoading();*/
-            $("#<%=lblBalanceBank.ClientID %>").html(data);
+            };
+            Loading();
+            $.ajax({
+                type: 'GET',
+                url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+                data: params,
+                success: function (data) {
+                    /*UnLoading();*/
+                    $("#<%=lblBalanceBank.ClientID %>").html(data);
+
+
 
                 },
                 error: function () {
-            $("#<%=lblBalanceBank.ClientID %>").html("");
-            /*  UnLoading();*/
+                    $("#<%=lblBalanceBank.ClientID %>").html("");
+                    /*  UnLoading();*/
+                }
+            });
         }
-    });
-}
-if ($("#<%=drpSolution.ClientID %>").val() == "APIV3") {
-    var params = {
-        BankCode: 'BankNotify',
-        BankAccount: $("#<%=txtBankAccount.ClientID %>").val(),
+        if ($("#<%=drpSolution.ClientID %>").val() == "APIV3") {
+            $("#<%=btnRestartFCM.ClientID %>").hide();
+            var params = {
+                BankCode: 'BankNotify',
+                BankAccount: $("#<%=txtBankAccount.ClientID %>").val(),
 
-    };
-    Loading2();
-    $.ajax({
-        type: 'GET',
-        url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
-        data: params,
-        success: function (data) {
-            /*UnLoading();*/
-            $("#<%=lblNotifyStatus.ClientID %>").html(data);
+            };
+            Loading2();
+            $.ajax({
+                type: 'GET',
+                url: '/cmspay/ServiceHandler/GetBankBalance.ashx',
+                data: params,
+                success: function (data) {
+                    /*UnLoading();*/
+                    $("#<%=lblNotifyStatus.ClientID %>").html(data);
+                    if (data.includes('running')) {
+                        $("#<%=btnRestartFCM.ClientID %>").show();
+                    }
 
-        },
-        error: function () {
-            $("#<%=lblNotifyStatus.ClientID %>").html("");
-            /*  UnLoading();*/
+                },
+                error: function () {
+                    $("#<%=lblNotifyStatus.ClientID %>").html("");
+                    /*  UnLoading();*/
+                }
+            });
         }
-    });
-}
 
 
 
-//$(document).ready(function () {
-//    $('.base64-img').on('click', function () {
-//        var src = $(this).children('img').first().attr('src');
-//        $('#zoom-img').attr('src', src);
-//        $('#zoom-modal').css('display', 'flex'); // sho
-//    });
+        //$(document).ready(function () {
+        //    $('.base64-img').on('click', function () {
+        //        var src = $(this).children('img').first().attr('src');
+        //        $('#zoom-img').attr('src', src);
+        //        $('#zoom-modal').css('display', 'flex'); // sho
+        //    });
 
-//    $('#zoom-modal').on('click', function () {
-//        $(this).hide();
-//    });
-//});
+        //    $('#zoom-modal').on('click', function () {
+        //        $(this).hide();
+        //    });
+        //});
 
-</script>
+    </script>
     <style>
         .device-status-row {
             display: flex;
@@ -504,6 +523,10 @@ if ($("#<%=drpSolution.ClientID %>").val() == "APIV3") {
             }
 
             .device-status-row .fa-trash {
+                font-size: 18px;
+            }
+
+            .device-status-row .fa-refresh {
                 font-size: 18px;
             }
 

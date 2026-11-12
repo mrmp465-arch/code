@@ -135,7 +135,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             lblDescription2.Text = BankExt.Description;
 
             //xu ly DeviceInfo
-            if (_bank.BankCode == "ACB" && _bank.StatusExtra == 1)
+            if ((_bank.BankCode == "ACB" && _bank.StatusExtra == 1) || _bank.BankCode == "VPB")
             {
                 pnbGroupDevice.Visible = true;
                 if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
@@ -160,6 +160,17 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
                 }
             }
+
+        }
+        else
+        {
+            if (_bank.BankCode == "VPB")
+            {
+                pnbGroupDevice.Visible = true;
+                lblDeviceInfo.Text = "Chưa có";
+                lblDeviceInfo.CssClass = "status-red";
+            }
+
         }
         drpBankCode.SelectedValue = _bank.BankCode;
         drpBankType.SelectedValue = _bank.BankType;
@@ -302,7 +313,30 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         _bank.PinOtp = txtPinOtp.Text;
         _bank.BankType = drpBankType.SelectedValue;
         _bank.AppDeviceId = txtAppDeviceId.Text;
-        _bank.CloudPhoneId = txtCloudPhoneId.Text;
+
+        if (!string.IsNullOrEmpty(txtCloudPhoneId.Text))
+        {
+            if (_bank.CloudPhoneId != txtCloudPhoneId.Text)
+            {
+                {
+                    var _Bank = new BankAccounts();
+                    var data = _Bank.GetList().OrderBy(x => x.Type).ToList();
+                    if (data.Exists(x => x.CloudPhoneId == txtCloudPhoneId.Text.Trim()))
+                    {
+                        var exbank = data.FirstOrDefault(x => x.CloudPhoneId == txtCloudPhoneId.Text.Trim());
+                        var mess = "Đã tồn tại bank " + exbank.BankId + " có CloudPhoneId trùng";
+                        Page.ClientScript.RegisterClientScriptBlock(
+                           this.GetType(),
+                           "Script",
+                           "$(document).ready(function() { alert('" + mess + "'); });",
+                           true
+                       );
+                        return;
+                    }
+                }
+            }
+        }
+        _bank.CloudPhoneId = txtCloudPhoneId.Text.Trim();
         _bank.Note = txtNote.Text;
 
         //StringBuilder strBuilder = new StringBuilder();
@@ -429,6 +463,8 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
 
         }
+        lblDeviceInfo.Text = "Chưa có";
+        lblDeviceInfo.CssClass = "status-red";
         return -1;
     }
     protected string ConvertBase64(Stream Path)

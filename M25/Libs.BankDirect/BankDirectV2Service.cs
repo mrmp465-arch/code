@@ -235,6 +235,37 @@ namespace Libs.BankDirect
 
                 //}
                 var providerCode = "drumbank";
+                if (request.BankName.ToUpper() == "MOMO")
+                {
+
+                    providerCode = "drummomo";
+                }
+
+                var systemDataConfig = new SystemDataConfig();
+                var lstConfig = systemDataConfig.GetListCache();
+
+                var service = systemDataConfig.GetKey(lstConfig, "Service");
+                
+                if (service == "fast")
+                {
+                   
+                    if (request.BankName.ToUpper() != "MOMO")
+                    {
+
+                        providerCode = "fastpaybank";
+                    }
+                }
+                var serviceMM = systemDataConfig.GetKey(lstConfig, "ServiceMM");
+
+                if (service == "fast")
+                {
+                   
+                    if (request.BankName.ToUpper() == "MOMO")
+                    {
+
+                        providerCode = "fastpaymomo";
+                    }
+                }
                 //if (transaction.PartnerCode=="pp")
                 //{
                 //    providerCode = "simex";
@@ -272,6 +303,27 @@ namespace Libs.BankDirect
 
 
                 //}
+
+                PartnerService _partnerServiceout = new PartnerService();
+                //Kiểm tra Partner co được add Service ko
+                _partnerServiceout = _partnerServiceout.Get(transaction.PartnerID, 18);
+                //check ip
+                if (!string.IsNullOrEmpty(_partnerServiceout.IPAddress))
+                {
+                    var allowedIPs = (_partnerServiceout.IPAddress ?? "").Split(',').Select(x => x.Trim());
+
+                    if (!allowedIPs.Contains(IPAddress.Get()))
+                    {
+                        NLogLogger.Info(new string[] { "IpInvalid", _partnerServiceout.IPAddress, IPAddress.Get() });
+                        return new APIResponse((int)ResponseCode.IpInvalid);
+                    }
+
+                }
+                else
+                {
+                    NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
+                    return new APIResponse((int)ResponseCode.IpInvalid);
+                }
 
 
                 transaction.ProviderCode = providerCode;

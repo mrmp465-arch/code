@@ -271,7 +271,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
                     var requesData = new
                     {
-                        CommandCode = "TRANS_SCAN",
+                        CommandCode = "PROCESS_TRANS_IN",
                         RequestContent = _Bank.MomoId,
                     };
                     Task.Run(async () => await CallbackJson(
@@ -285,6 +285,8 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
         }
         Response.Redirect("/cmspay/pages/momo/accounts.aspx");
     }
+
+    //update all
     protected void btApp6Click()
 
     {
@@ -301,6 +303,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 string MomoId = TransactionID.Text;
                 var _Bank = new MomoAccounts();
                 _Bank = _Bank.Get(MomoId);
+                var OldSolution = _Bank.Solution;
                 int Id = _Bank.Id;
                 if (Convert.ToInt32(txtBalanceMaxDay.Text) > 0)
                     _Bank.BalanceMaxDay = Convert.ToInt32(txtBalanceMaxDay.Text);
@@ -312,13 +315,24 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
                 if (!string.IsNullOrEmpty(drpSolution2.SelectedValue))
                     _Bank.Solution = drpSolution2.SelectedValue;
 
-                _Bank.Update();
-                System.Threading.Thread.Sleep(100);
-                if (drpSolution2.SelectedValue == "APIV2")
+                if (!string.IsNullOrEmpty(drpSolution2.SelectedValue))
                 {
-                    NotifyMomo(_Bank.MomoId, 0);
+                    if (OldSolution != drpSolution2.SelectedValue)
+                    {
+
+                        if (drpSolution2.SelectedValue == "APIV2")
+                        {
+                            NotifyMomo(_Bank.MomoId, -1);
+                        }
+                        else
+                        {
+                            NotifyMomo(_Bank.MomoId, 1);
+
+                        }
+                    }
                 }
 
+                _Bank.Update();
 
             }
         }
@@ -536,8 +550,10 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
     {
         var UrlBaseService = "http://127.0.0.1:9003/MomoService.ashx";
         var obj = new { momoId = momoid, action = "start" };
-        if (status != 1)
+        if (status == 0)
             obj = new { momoId = momoid, action = "stop" };
+        if (status == -1)
+            obj = new { momoId = momoid, action = "stopnow" };
         var requesData = new RequestData()
         {
             CommandCode = "NOTIFY_ACTION",
@@ -640,7 +656,7 @@ public partial class Pages_Momo_Accounts : System.Web.UI.Page
 
             var requesData = new
             {
-                CommandCode = "TRANS_SCAN",
+                CommandCode = "PROCESS_TRANS_IN",
                 RequestContent = _Bank.MomoId,
             };
             //var res = Task.Run(async () => await CallbackJson(url, serializer.Serialize(requesData))).Result;

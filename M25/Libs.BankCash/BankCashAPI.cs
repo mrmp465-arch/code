@@ -75,6 +75,16 @@ namespace Libs.BankCash
 
 
         }
+        public BankCashAPI GetByRefcodeV2(string refcode)
+        {
+            DBHelper db = new DBHelper(Configs.VPGAPIConnectionStrings);
+            SqlParameter[] pars = new SqlParameter[1];
+
+            pars[0] = new SqlParameter("@RefCode", refcode);
+            return db.GetInstanceSP<BankCashAPI>("sp_BankCashAPI_Select_RefCodeV2", pars);
+
+
+        }
         public long Add()
         {
             DBHelper db = new DBHelper(Configs.VPGAPIConnectionStrings);

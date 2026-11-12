@@ -291,13 +291,13 @@
                                             <td><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}" )%></td>
                                             <td><%#Eval("UpdateTime", "{0:dd/MM HH:mm:ss}")%></td>
-                                            <td>
-                                                <%# 
-                                                (Eval("UpdateTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value) 
-                                                ? ((DateTime)Eval("UpdateTime") - (DateTime)Eval("CreatedTime")).TotalSeconds.ToString("N0") 
-                                                : ""
-                                                %>
-                                            </td>
+                                             <td>
+     <%#
+         (Eval("UpdateTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value)
+         ? Math.Floor(((DateTime)Eval("UpdateTime") - (DateTime)Eval("CreatedTime")).TotalSeconds).ToString("N0")
+         : ""
+     %>
+ </td>
                                             <td><%#Eval("CommentOrg") %></td>
                                             <td><%#GetCodeStatus(Eval("CommandCode").ToString(),Eval("PartnerCode").ToString(),Eval("Comment").ToString(),Eval("CommentOrg").ToString()) %></td>
                                             <td><%#Eval("Status") %></td>

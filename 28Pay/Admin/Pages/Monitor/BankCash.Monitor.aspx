@@ -85,7 +85,7 @@
 
                         <% if (AppUtils.IsAdmin)
                             { %>
-                        <div class="col-xs-12 col-sm-6 col-md-2" >
+                        <div class="col-xs-12 col-sm-6 col-md-2">
                             <asp:DropDownList ID="drpProvider" runat="server" CssClass="form-control ">
                             </asp:DropDownList>
                         </div>
@@ -161,7 +161,7 @@
                     <!-- /.box-header -->
                     <div class="box-body no-padding">
                         <div style="height: 20px; clear: both;"></div>
-                       
+
                         <% if (AppUtils.IsAdmin)
                             {%>
                         <div class="pull-left" style="padding: 10px">
@@ -236,7 +236,7 @@
 
                                             <td><%#Eval("RefCode") %></td>
 
-                                            <% if (!AppUtils.IsAdmin )
+                                            <% if (!AppUtils.IsAdmin)
                                                 { %>
 
                                             <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
@@ -248,7 +248,8 @@
 
                                             </td>
                                             <%}
-                                            else {  %>
+                                                else
+                                                {  %>
 
                                             <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
                                                 <br />
@@ -260,7 +261,7 @@
                                             </td>
                                             <%}%>
                                             <td><%#Eval("Mobile") %></td>
-                                             <td <%#GetAmountStyle(Eval("Amount"))%>> <%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
+                                            <td <%#GetAmountStyle(Eval("Amount"))%>><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
                                             <td><%#Convert.ToInt64(Eval("Fee")).ToString("N0").Replace(".", ",") %></td>
                                             <%-- <% if (AppUtils.UserName.Contains("admin"))
                                                 { %>
@@ -269,10 +270,10 @@
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td><%#Eval("LastTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td>
-                                                <%# 
-                                            (Eval("LastTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value) 
-                                            ? ((DateTime)Eval("LastTime") - (DateTime)Eval("CreatedTime")).TotalSeconds.ToString("N0") 
-                                            : ""
+                                                <%#
+           (Eval("LastTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value)
+           ? Math.Floor(((DateTime)Eval("LastTime") - (DateTime)Eval("CreatedTime")).TotalSeconds).ToString("N0")
+           : ""
                                                 %>
                                             </td>
                                             <td><%#Eval("OrderInfo") %></td>
@@ -293,6 +294,8 @@
                                                     { %>
                                                 |
                                               
+                                               <a href="<%= Constant.ADMIN_PATH %><%= Resources.Url.BankTransaction %>?refcode=<%#Eval("TransactionID") %>" target="_blank">[BankLog]</a>
+                                                | 
                                                 <asp:HyperLink
                                                     ID="lnbill"
                                                     CssClass="lightbox"

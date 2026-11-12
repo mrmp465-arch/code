@@ -231,7 +231,7 @@
 
                                             <td><%#Eval("RefCode") %></td>
 
-                                            <% if (!AppUtils.IsAdmin )
+                                            <% if (!AppUtils.IsAdmin)
                                                 { %>
 
                                             <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
@@ -243,7 +243,8 @@
 
                                             </td>
                                             <%}
-                                            else {  %>
+                                                else
+                                                {  %>
 
                                             <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
                                                 <br />
@@ -262,10 +263,10 @@
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td><%#Eval("LastTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td>
-                                                <%# 
-                                            (Eval("LastTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value) 
-                                            ? ((DateTime)Eval("LastTime") - (DateTime)Eval("CreatedTime")).TotalSeconds.ToString("N0") 
-                                            : ""
+                                                <%#
+           (Eval("LastTime") != DBNull.Value && Eval("CreatedTime") != DBNull.Value)
+           ? Math.Floor(((DateTime)Eval("LastTime") - (DateTime)Eval("CreatedTime")).TotalSeconds).ToString("N0")
+           : ""
                                                 %>
                                             </td>
                                             <td><%#Eval("OrderInfo") %></td>
@@ -284,7 +285,8 @@
                                                 <% if (AppUtils.IsAdmin)
                                                     { %>
                                                 |
-                                           <%--     <asp:LinkButton ID="lnCallback" runat="server" OnCommand="Callback_Command" CommandName="Callback" OnClientClick="return confirm('Bạn có muốn thực hiện?')" CommandArgument='<%#Eval("TransactionID")%>' Visible='<%# Eval("Status").ToString() == "0"||Eval("Status").ToString() == "-3"||Eval("Status").ToString() == "-4"  %>'> [Đơn đúng] </asp:LinkButton>--%>
+                                                                                        <a href="<%= Constant.ADMIN_PATH %><%= Resources.Url.BankTransaction %>?refcode=<%#Eval("TransactionID") %>" target="_blank">[BankLog]</a>
+                                                |                                              |
                                                 <asp:HyperLink
                                                     ID="lnbill"
                                                     CssClass="lightbox"
@@ -348,36 +350,36 @@
             $('.select2').select2()
 
         })
-        
+
     </script>
     <script type="text/javascript">
 
-         var refreshPageInterval = 30;
+        var refreshPageInterval = 30;
 
-         setInterval("countDownPageRefresh()", 1000);//1 s gọi 1 lần
-         $(document).mouseover(function () {
-             funcResetRefreshPageInterval();
-         });
-         $(window).scroll(function () {
-             funcResetRefreshPageInterval();
-         });
-         window.onkeypress = funcResetRefreshPageInterval;
-         function funcResetRefreshPageInterval() {
-             refreshPageInterval = 60;
-         }
-         function countDownPageRefresh() {
-             refreshPageInterval = refreshPageInterval - 1;
-             //console.log(refreshPageInterval);
+        setInterval("countDownPageRefresh()", 1000);//1 s gọi 1 lần
+        $(document).mouseover(function () {
+            funcResetRefreshPageInterval();
+        });
+        $(window).scroll(function () {
+            funcResetRefreshPageInterval();
+        });
+        window.onkeypress = funcResetRefreshPageInterval;
+        function funcResetRefreshPageInterval() {
+            refreshPageInterval = 60;
+        }
+        function countDownPageRefresh() {
+            refreshPageInterval = refreshPageInterval - 1;
+            //console.log(refreshPageInterval);
 
-             if (refreshPageInterval <= 0) {
-                 funcResetRefreshPageInterval();
+            if (refreshPageInterval <= 0) {
+                funcResetRefreshPageInterval();
 
-                 if ($('#<%= cbAuto.ClientID %>').is(':checked')) {
+                if ($('#<%= cbAuto.ClientID %>').is(':checked')) {
                      document.getElementById('<%= btView.ClientID %>').click();
-                 }
+                }
 
-             }
-         }
+            }
+        }
 
     </script>
     <script>

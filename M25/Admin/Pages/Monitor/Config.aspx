@@ -126,13 +126,37 @@
                             <asp:TextBox ID="txtBankCodeInMaintain" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" style="display: none">
                         <div class="form-group">
                             <label for="txtBankCodeInMaintain">Danh sách bank VS8(ACB,MB,BIDV,VCB)</label>
                             <asp:TextBox ID="txtBankCodeVS" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
                     <div style="clear: both"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtService">Dịch vụ backup Bank IN(fast)</label>
+                            <asp:TextBox ID="txtService" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
+                    <div style="clear: both">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtService">Dịch vụ backup MOMO IN(fast)</label>
+                            <asp:TextBox ID="txtServiceMM" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
+                    <div style="clear: both">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtService">Dịch vụ backup Bank OUT (fast)</label>
+                            <asp:TextBox ID="txtServiceOUT" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
+                        </div>
+                    </div>
+                    <div style="clear: both">
+                    </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="txtBankPrefix">Nội dung chuyển tiền</label>
@@ -246,7 +270,7 @@
                             <asp:TextBox ID="txtMomoLimitAmoutCash" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>
                         </div>
                     </div>
-                     <div class="col-md-2">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="txtName">Số tài khoản momo active</label>
                             <asp:TextBox ID="txtMomoActiveAccount" runat="server" CssClass="form-control" placeholder=""></asp:TextBox>

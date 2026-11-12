@@ -70,6 +70,8 @@
     <Compile Include="Entity\BankAccount.cs" />
     <Compile Include="Entity\Callback.cs" />
     <Compile Include="Entity\Order.cs" />
+    <Compile Include="FastPay\fastBank.cs" />
+    <Compile Include="FastPay\fastBankLib.cs" />
     <Compile Include="Gpay\QrHelper.cs" />
     <Compile Include="Gpay\VietQrEmvBuilder.cs" />
     <Compile Include="IBankDirectV2Handler.cs" />

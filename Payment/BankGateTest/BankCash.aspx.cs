@@ -90,7 +90,7 @@ namespace BankGateTest
             order.CallbackUrl = "https://bankgate.coroach.xyz/VPGJsonService.ashx";
             order.RefCode = DateTime.Now.ToString("ddMMyyyyHHmmssfffzzz");
             order.BankName = "ACB";
-            order.BankAccountName = "HOANG THAO VAN";
+            order.BankAccountName = "1111111111";
             order.BankAccountNumber = "48753407";
             var requestContent = serializer.Serialize(order);
             var signature = Encrypts.MD5(partnerCode + serviceCode + commandCode + requestContent + partnerKey);

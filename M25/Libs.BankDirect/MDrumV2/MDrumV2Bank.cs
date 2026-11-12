@@ -996,7 +996,7 @@ namespace Libs.BankDirect.MDrumV2
                                 QRCode = bankinfo.QRCodeBase64,
                                 //LinkOpenApp = bankinfo.LinkOpenApp,
                                 Timeout = 60 * 10,
-                                Url = String.Format("https://info.airapp.me/Pages/Momo.aspx?orderNo={0}", add.ToString()),
+                                Url = String.Format("https://info.m52app.info/Pages/Momo.aspx?orderNo={0}", add.ToString()),
                                 BankCode = tran.BankName,
                                 AccountNumber = bankinfo.MomoId,
                                 AccountName = bankinfo.MomoName
@@ -1008,7 +1008,7 @@ namespace Libs.BankDirect.MDrumV2
                                 orderRes.AccountNumber = bankinfo.BankId;
                                 var VietUrl = $"https://img.vietqr.io/image/{addTran.BankCode}-{bankinfo.BankId}-compact.jpg?amount={orderRes.Amount}&addInfo={HttpUtility.UrlEncode(orderRes.OrderNo)}";
 
-                                orderRes.Url = String.Format("https://info.airapp.me/Pages/Bank.aspx?orderNo={0}", add.ToString());
+                                orderRes.Url = String.Format("https://info.m52app.info/Pages/Bank.aspx?orderNo={0}", add.ToString());
                                 orderRes.QRCode = VietUrl;
 
 

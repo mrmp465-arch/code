@@ -165,8 +165,8 @@
                                     <th>Amount</th>
                                     <th>CreatedTime</th>
                                     <th>LastTime</th>
-                                    <th>Nội dung ck</th>
-                                    <%--<th>Des</th>--%>
+                                    <th>Nội dung </th>
+                                    <th>Code</th>
                                     <th>Status</th>
                                     <th>Tác vụ</th>
                                 </tr>
@@ -188,12 +188,13 @@
                                             <td><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(",", ".") %></td>
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}" )%></td>
                                             <td><%#Eval("UpdateTime", "{0:dd/MM HH:mm:ss}")%></td>
-                                            <td><%#Eval("Comment") %></td>
+                                             <td><%#Eval("CommentOrg") == DBNull.Value ? "" : Eval("CommentOrg").ToString() %></td>
+                                             <td><%#GetCodeStatus(Eval("CommandCode").ToString(),Eval("PartnerCode").ToString(),Eval("Comment").ToString(),Eval("CommentOrg") == DBNull.Value ? "" : Eval("CommentOrg").ToString()) %></td>
                                             <%--<td><%#Eval("Description") %></td>--%>
                                             <td><%#Eval("Status") %></td>
                                             <td>
                                                 <asp:HyperLink NavigateUrl='<%#CheckTranOutUrl(Eval("Id").ToString()) %>' Visible='<%# (Eval("CommandCode").ToString() == "OUT" || Eval("CommandCode").ToString() == "TRANSFER" || Eval("CommandCode").ToString() == "CASH") %>' runat="server"> [Kiểm tra] </asp:HyperLink>
-                                                <asp:HyperLink NavigateUrl='<%#EditTranInUrl(Eval("Id").ToString()) %>' Visible='<%#  Eval("CommandCode").ToString() == "IN" %>' runat="server"> [Sửa ND] </asp:HyperLink>
+                                                <asp:HyperLink NavigateUrl='<%#EditTranInUrl(Eval("Id").ToString()) %>' Visible='<%#  Eval("CommandCode").ToString() == "IN" %>' runat="server"> [Sửa Code] </asp:HyperLink>
                                                 &nbsp;<asp:LinkButton ID="lnCallback" runat="server" OnCommand="Callback_Command" CommandName="Callback" CommandArgument='<%#Eval("Id")%>' Visible='False' OnClientClick="return confirm('Bạn có muốn thực hiện?')">[Callback] </asp:LinkButton>
                                                 &nbsp;<asp:LinkButton ID="lnUpdateCash" runat="server" OnCommand="UpdateCash_Command" CommandName="UpdateCash" CommandArgument='<%#Eval("Id")%>' Visible='<%#Eval("CommandCode").ToString() == "CASH" && Eval("Status").ToString() == "-1" %>' OnClientClick="return confirm('Bạn có muốn thực hiện?')">[Cập nhật đúng] </asp:LinkButton>
                                             </td>

@@ -52,6 +52,7 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         cbxIsPartner.Checked = Convert.ToBoolean(_User.IsPartner);
         cbxIsTopup.Checked = Convert.ToBoolean(_User.IsTopup);
         cbxIsProvider.Checked = Convert.ToBoolean(_User.IsProvider);
+
         txtIp.Text = _User.Ip;
         drpOrder.SelectedValue = _User.Source;
         IsUserAdmin = _User.IsAdmin;
@@ -59,6 +60,7 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
         IsUserToup = _User.IsTopup;
 
         chkWithdraw.Checked = Convert.ToBoolean(_User.Withdraw);
+        chkIsShowFullOrder.Checked = Convert.ToBoolean(_User.IsShowFullOrder);
         //txtDeposit.Text = _User.F2a.ToString();
 
         var LstPartners = new Partners().GetList();
@@ -369,6 +371,7 @@ public partial class Pages_Security_Users_Edit : System.Web.UI.Page
             _User.Source = drpOrder.SelectedValue;
         }
         _User.Withdraw = Convert.ToInt32(chkWithdraw.Checked);
+        _User.IsShowFullOrder = Convert.ToInt32(chkIsShowFullOrder.Checked);
         //_User.F2a = txtDeposit.Text;
         _User.Update();
         if (_User.IsPartner == 1)

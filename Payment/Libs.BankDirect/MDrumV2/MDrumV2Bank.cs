@@ -254,7 +254,7 @@ namespace Libs.BankDirect.MDrumV2
                     {
                         data = data.Where(x => x.PartnerName == "ALL").ToList();
                     }
-                   
+
                 }
             }
 
@@ -1070,7 +1070,7 @@ namespace Libs.BankDirect.MDrumV2
                 if (tran.BankName.ToUpper() == "MOMO")
                 {
                     url = urlBaseService;
-
+                    requestData.PartnerCode = "order";
                 }
                 else
                 {
@@ -1237,7 +1237,7 @@ namespace Libs.BankDirect.MDrumV2
                                 orderRes.LinkOpenApp = String.Format("https://momo.opaps.info/Pages/Bank.aspx?orderNo={0}", add.ToString());
                                 orderRes.LinkWebView = String.Format("https://momo.opaps.info/Pages/Bank.aspx?orderNo={0}", add.ToString());
 
-                                if(transaction.PartnerCode=="qx88")
+                                if (transaction.PartnerCode == "qx88")
                                 {
                                     orderRes.LinkOpenApp = String.Format("https://info.qxapp.info/Pages/Bank.aspx?orderNo={0}", add.ToString());
                                     orderRes.LinkWebView = String.Format("https://info.qxapp.info/Pages/Bank.aspx?orderNo={0}", add.ToString());
@@ -1583,6 +1583,10 @@ namespace Libs.BankDirect.MDrumV2
                     {
                         new BankTransaction().UpdateCodeById(callback.TransId, "[ORDER_NOTFOUND]|" + callback.Note);
                     }
+                    if (!string.IsNullOrEmpty(callback.MomoTransId))
+                    {
+                        new MomoTransaction().UpdateCode(callback.MomoTransId, "[ORDER_NOTFOUND]");
+                    }
                 }
                 return apiResponse;
             }
@@ -1596,10 +1600,14 @@ namespace Libs.BankDirect.MDrumV2
                     {
                         new BankTransaction().UpdateCodeById(callback.TransId, "[ORDER_DUPLICATE]|" + callback.Note);
                     }
+                    if (!string.IsNullOrEmpty(callback.MomoTransId))
+                    {
+                        new MomoTransaction().UpdateCode(callback.MomoTransId, "[ORDER_DUPLICATE]");
+                    }
                 }
                 return apiResponse;
             }
-            if (callback.CheckTransId != "1" && order.PartnerCode == "5pay")
+            if (callback.CheckTransId != "1" && (order.PartnerCode == "5pay" || order.PartnerCode == "m52" || order.PartnerCode == "cd99" ) )
             {
                 if (order.Status == 0)
                 {
@@ -1607,23 +1615,32 @@ namespace Libs.BankDirect.MDrumV2
                     {
                         if (Convert.ToInt64(order.Amount) != callback.Amount)
                         {
-                            var partner2 = new Partners().GetCache(order.PartnerCode);
-                            if (partner2.SMSUrl == "5pay")
-                            {
-                                if (!string.IsNullOrEmpty(callback.BankTransId) && callback.Note.Length == 10)
-                                {
-                                    new BankTransaction().UpdateCodeById(callback.TransId, "[ORDER_WRONGAMOUNT]");
-                                    apiResponse.ResponseCode = (int)ResponseCode.OrderNotFound;
-                                    apiResponse.Description = "Đơn sai số tiền";
-                                    return apiResponse;
-                                }
-                            }
+
+                            new BankTransaction().UpdateCodeById(callback.TransId, "[ORDER_WRONGAMOUNT]");
+                            apiResponse.ResponseCode = (int)ResponseCode.OrderNotFound;
+                            apiResponse.Description = "Đơn sai số tiền";
+                            return apiResponse;
+
 
                         }
 
 
                     }
+                    if (!string.IsNullOrEmpty(callback.MomoTransId))
+                    {
+                        if (Convert.ToInt64(order.Amount) != callback.Amount)
+                        {
 
+                            new MomoTransaction().UpdateCode(callback.MomoTransId, "[ORDER_WRONGAMOUNT]");
+                            apiResponse.ResponseCode = (int)ResponseCode.OrderNotFound;
+                            apiResponse.Description = "Đơn sai số tiền";
+                            return apiResponse;
+
+
+                        }
+
+
+                    }
                 }
             }
             if (callback.CheckTransId != "1")

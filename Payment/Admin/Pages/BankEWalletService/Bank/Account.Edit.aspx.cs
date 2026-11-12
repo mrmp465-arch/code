@@ -66,7 +66,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         btnOtpLogin2.OnClientClick = "validate(" + ")";
         btnGetDevice.OnClientClick = "validate(" + ")";
         btnDeleteDevice.OnClientClick = "if (validate()) return false; return confirm('Bạn có chắc chắn muốn xóa thiết bị này?');";
-
+        btnRestartFCM.OnClientClick = "if (validate()) return false; return confirm('Bạn có chắc chắn muốn restart?');";
 
         AppUtils.CheckRoles(Resources.Url.BankAccountEdit);
         //RoleUpload = AppUtils.CheckRolesPermission(Resources.Url.BankAccountUpdateImg);
@@ -96,7 +96,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             lblDescription2.Text = BankExt.Description;
 
             //xu ly DeviceInfo
-            if (_bank.BankCode == "ACB" && _bank.StatusExtra == 1)
+            if ((_bank.BankCode == "ACB" && _bank.StatusExtra == 1) || _bank.BankCode == "VPB")
             {
                 pnbGroupDevice.Visible = true;
                 if (!string.IsNullOrEmpty(BankExt.DeviceInfo))
@@ -120,6 +120,16 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
                     lblDeviceInfo.CssClass = "status-red";
 
                 }
+            }
+
+        }
+        else
+        {
+            if ( _bank.BankCode == "VPB")
+            {
+                pnbGroupDevice.Visible = true;
+                lblDeviceInfo.Text = "Chưa có";
+                lblDeviceInfo.CssClass = "status-red";
             }
 
         }
@@ -233,7 +243,11 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
                 lbOTP.Text = resultOTP.otp;
         }
         if (_bank.Solution == "APIV3")
+        {
             dvNotify.Visible = true;
+            btnRestartFCM.Visible = true;
+        }
+
         //imge
 
     }
@@ -254,6 +268,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         _bank.Id = Convert.ToInt32(AppUtils.Request("id"));
         _bank = _bank.Get();
 
+
         _bank.BankCode = drpBankCode.SelectedValue;
         _bank.BankId = txtBankId.Text;
         _bank.BankName = txtBankName.Text.Trim();
@@ -263,6 +278,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         _bank.BalanceMaxMonth = Convert.ToInt32(txtBalanceMaxMonth.Text);
         _bank.Type = drpType.SelectedValue;
         _bank.BankPass = rijndaelKey.Encrypt(txtBankPass.Text.Trim());
+        var OldSolution = _bank.Solution;
         _bank.Solution = drpSolution.SelectedValue;
         _bank.Computer = txtComputer.Text;
         _bank.PhoneDevice = txtPhone.Text;
@@ -285,7 +301,7 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
                         Page.ClientScript.RegisterClientScriptBlock(
                            this.GetType(),
                            "Script",
-                           "$(document).ready(function() { alert('"+ mess+"'); });",
+                           "$(document).ready(function() { alert('" + mess + "'); });",
                            true
                        );
                         return;
@@ -295,6 +311,16 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
         }
         _bank.CloudPhoneId = txtCloudPhoneId.Text.Trim();
 
+        if (OldSolution != drpSolution.SelectedValue)
+        {
+            if (_bank.Solution == "APIV3")
+                NotifyBank(_bank.BankId, _bank.BankCode, 1);
+            else
+                NotifyBank(_bank.BankId, _bank.BankCode, -1);
+
+
+
+        }
 
 
         _bank.Update();
@@ -303,10 +329,8 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
         _bank.DeleteCache();
 
-        if (_bank.Solution == "APIV3")
-            NotifyBank(_bank.BankId, _bank.BankCode, _bank.Status);
-        else
-            NotifyBank(_bank.BankId, _bank.BankCode, 0);
+
+
         //Log User
         var _userLog = new UserLog
         {
@@ -324,8 +348,28 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             return;
         var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
         var obj = new { BankId = bankId, BankCode = bankCode, Action = "start" };
-        if (status != 1)
+        if (status == 0)
             obj = new { BankId = bankId, BankCode = bankCode, Action = "stop" };
+        if (status == -1)
+            obj = new { BankId = bankId, BankCode = bankCode, Action = "stopnow" };
+        var requesData = new RequestData()
+        {
+            CommandCode = "NOTIFY_ACTION",
+            RequestContent = serializer.Serialize(obj),
+        };
+
+        Task.Run(async () => await CallbackJson(
+            UrlBaseService,
+            serializer.Serialize(requesData)
+        ));
+    }
+    public void RestartFCM(string bankId, string bankCode)
+    {
+        if (bankCode != "ACB")
+            return;
+        var UrlBaseService = "http://127.0.0.1:9003/BankService.ashx";
+        var obj = new { BankId = bankId, BankCode = bankCode, Action = "restart" };
+
         var requesData = new RequestData()
         {
             CommandCode = "NOTIFY_ACTION",
@@ -426,6 +470,19 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
             NLogLogger.Info(new string[] { "ImageHelper", "ImgResize", "Base64 Invalid", e.Message });
             return string.Empty;
         }
+    }
+    protected void btnRestartFCM_Click(object sender, EventArgs e)
+    {
+        // Thực hiện xóa thiết bị
+        //new BankAccounts().ResetDevice(txtBankId.Text, drpBankCode.SelectedValue);
+        //lblDeviceInfo.Text = "Chưa có";
+        //lblDeviceInfo.CssClass = "status-red";
+        //btnDeleteDevice.Visible = false;
+        RestartFCM(txtBankId.Text, drpBankCode.SelectedValue);
+        divResultSync.Attributes["class"] = "callout callout-success";
+        syncMessage.InnerHtml = "<i>Bạn đã thực hiện restart thành công.</i>";
+        divResultSync.Visible = true;
+
     }
     protected void bntSyncBalance_Click(object sender, EventArgs e)
     {
@@ -711,6 +768,8 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
 
         }
+        lblDeviceInfo.Text = "Chưa có";
+        lblDeviceInfo.CssClass = "status-red";
         return -1;
     }
 

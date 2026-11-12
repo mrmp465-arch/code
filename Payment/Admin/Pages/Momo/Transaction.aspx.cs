@@ -260,6 +260,76 @@ public partial class Pages_Momo_Transaction : System.Web.UI.Page
 
 
     }
+    public string GetCodeStatus(string type, string sn, string code, string fullcode)
+    {
+        try
+        {
+
+       
+        var old = "";
+
+        if (code.Contains("|"))
+        {
+            var arr = code.Split('|');
+            code = arr[0];
+            old = arr[1];
+        }
+
+        if (type == "IN")
+        {
+            if (fullcode.Contains("SYS") )
+            {
+                return "THÀNH CÔNG";
+            }
+            if (sn == "sn")
+            {
+                return "THÀNH CÔNG";
+            }
+            else
+            {
+
+
+                if (code == "[COMMENT_INCORRECT_FORMAT]" || code == "[COMMENT_INCORRECT]" || code == "[INCORRECT_FORMAT]" || code.ToUpper() == "[ORDER_NOTFOUND]")
+                {
+                    return "<div style='color:red'>SAI CODE | " + old + "</div>";
+                }
+                else
+                {
+                    if (code.ToUpper() == "[ORDER_DUPLICATE]")
+                    {
+                        return "<div style='color:red'>TRÙNG CODE |" + old + "</div>";
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(code) || fullcode.Contains("SYS"))
+                        {
+                            return "<div style='color:red'>SAI CODE</div>";
+                        }
+                        else
+                        {
+                            if (code.ToUpper() == "[ORDER_WRONGAMOUNT]")
+                            {
+                                return "<div style='color:red'>SAI SỐ TIỀN</div>";
+                            }
+                            if (code.ToUpper() == "[ORDER_OVERTIME]")
+                            {
+                                return "<div style='color:red'>OVERTIME</div>";
+                            }
+                        }
+
+                        return code;
+                    }
+
+                }
+            }
+        }
+        return "";
+        }
+        catch
+        {
+            return "";
+        }
+    }
     public class BalanceResponse
     {
         public int ResponseCode { get; set; }

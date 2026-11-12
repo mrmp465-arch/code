@@ -491,9 +491,15 @@ namespace Libs.BankCash.DrumV2
                             //  var chatId = partner.SMSPlusUrl;
                             //TelegramNotify.SendTeleV2(chatid, "[CheckBankOut " + transaction.PartnerCode + "] Bankout awaiting confirmation " + request.RefCode + " => Please confirm");
                             var acc = HttpUtility.HtmlEncode(request.BankAccountNumber);
-                            acc = MaskString(acc);
+                           
                             var accName = HttpUtility.HtmlEncode(request.BankAccountName);
-                            accName = MaskString2(accName);
+                            var user = new Users().GetByUserName(partner.PartnerCode);
+                            if (user.IsShowFullOrder == 0)
+                            {
+                                acc = MaskString(acc);
+                                accName = MaskString2(accName);
+                            }
+                            
                             var mess =
                                "🏦 <b>ConfirmBankOut</b>\n\n" +
                                "📌 订单号 RefCode: <code>" + HttpUtility.HtmlEncode(request.RefCode) + "</code>\n" +

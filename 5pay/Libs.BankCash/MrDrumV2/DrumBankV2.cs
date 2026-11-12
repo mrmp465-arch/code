@@ -504,13 +504,13 @@ namespace Libs.BankCash.DrumV2
                         if (request.Amount >= smsValue)
                         {
                             var acc = HttpUtility.HtmlEncode(request.BankAccountNumber);
-                            //ParnterHideAcc
-                            //string PartnerHideAcc = ConfigurationManager.AppSettings["PartnerHideAcc"];
-                            //if(PartnerHideAcc.ToLower().Contains(partner.PartnerCode.ToLower()))
-                            //{
-                            //    acc = MaskString(acc);
-                            //}
-                            acc = MaskString(acc);
+                            var user = new Users().GetByUserName(partner.PartnerCode);
+                            if (user.IsShowFullOrder == 0)
+                            {
+                                acc = MaskString(acc);
+                                //accName = MaskString2(accName);
+                            }
+                            //acc = MaskString(acc);
                             var mess =
                               "🏦 <b>ConfirmBankOut</b>\n\n" +
                               "📌 订单号 RefCode: <code>" + HttpUtility.HtmlEncode(request.RefCode) + "</code>\n" +
