@@ -53,9 +53,10 @@ public partial class Pages_BankEWalletService_Bank_Account_Add : System.Web.UI.P
             _userLog.Add();
 
             //phân bổ
-            var _PartnerBank = new PartnerMomo();
+            //phân bổ
+            var _PartnerBank = new PartnerBank();
             _PartnerBank.PartnerId = 1;
-            _PartnerBank.MomoId = result;
+            _PartnerBank.BId = result;
             _PartnerBank.Status = 1;
             _PartnerBank.OrderNo = 1;
             _PartnerBank.Add();

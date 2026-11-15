@@ -224,6 +224,10 @@
                                                 <asp:TextBox ID="txtAppDeviceId" runat="server" CssClass="form-control" placeholder="AppDeviceId"></asp:TextBox>
                                             </div>
                                             <div class="form-group">
+                                                <label for="txtPhone">Ghi chú</label>
+                                                <asp:TextBox ID="txtNote" runat="server" CssClass="form-control" placeholder="Ghi chú"></asp:TextBox>
+                                            </div>
+                                            <div class="form-group">
 
                                                 <label for="txtSolution">Trạng thái  *</label>
                                                 <asp:DropDownList ID="drpStatus" runat="server" CssClass="form-control">
@@ -467,7 +471,7 @@
             });
         }
         if ($("#<%=drpSolution.ClientID %>").val() == "APIV3") {
-            $("#<%=btnRestartFCM.ClientID %>").hide();
+            //$("#<%=btnRestartFCM.ClientID %>").hide();
             var params = {
                 BankCode: 'BankNotify',
                 BankAccount: $("#<%=txtBankAccount.ClientID %>").val(),
@@ -481,9 +485,9 @@
                 success: function (data) {
                     /*UnLoading();*/
                     $("#<%=lblNotifyStatus.ClientID %>").html(data);
-                    if (data.includes('running')) {
+                   <%-- if (data.includes('running')) {
                         $("#<%=btnRestartFCM.ClientID %>").show();
-                    }
+                    }--%>
 
                 },
                 error: function () {

@@ -152,7 +152,7 @@
                             <tbody>
                                 <asp:Repeater ID="rptList" runat="server">
                                     <ItemTemplate>
-                                        <tr>
+                                        <tr style="<%#GetAmountClass(Eval("Amount"))%>>">
                                             <td>
                                                 <asp:CheckBox ID="cbxStatus" runat="server" CssClass="CheckAll"></asp:CheckBox>&nbsp;
                                                 <asp:Label ID="ID" runat="server" Visible="false" Text='<%#Eval("TransactionID") %>'></asp:Label>
@@ -165,7 +165,7 @@
                                             <td><%#Eval("PartnerCode")%></td>
                                             <% } %>
 
-                                            <td><%#Eval("RefCode") %></td>
+                                            <td "><%#Eval("RefCode") %></td>
                                             <td <%#GetAmountStyle(Eval("Amount"))%>><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(".", ",") %></td>
                                             <td><%= Resources.Pay.BankCode%>:<b><%#Eval("BankCode") %></b>
                                                 <br />
@@ -179,7 +179,7 @@
                                                 <a href="<%#GetQR(Eval("BankCode").ToString(),Eval("BankAccountNumber").ToString(),Convert.ToInt64(Eval("Amount")).ToString(),Eval("BankAccountName").ToString()) %>">
                                                     <img src="/cmspay/qr.png" height="35" />
                                                 </a>
-                                             </td>
+                                            </td>
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}") %></td>
                                             <td><%#GetLog(Eval("LogContent").ToString())%></td>
                                         </tr>
@@ -187,6 +187,7 @@
                                 </asp:Repeater>
                             </tbody>
                         </table>
+
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -217,17 +218,18 @@
             });
 
         });
-        $(function () {
-            var table = $('#TableResponsive').DataTable({
-                responsive: true, "autoWidth": false, "paging": false, "searching": false, "info": false, "ordering": false
-            });
-            new $.fn.dataTable.FixedHeader(table);
-        });
+        //$(function () {
+        //    var table = $('#TableResponsive').DataTable({
+        //        responsive: true, "autoWidth": false, "paging": false, "searching": false, "info": false, "ordering": false
+        //    });
+        //    new $.fn.dataTable.FixedHeader(table);
+        //});
         $(function () {
             //Initialize Select2 Elements
             $('.select2').select2()
 
         })
+
     </script>
 
     <script type="text/javascript">
@@ -347,6 +349,7 @@
             }
         }
 
+
     </script>
     <style>
         .label {
@@ -360,4 +363,5 @@
             padding: 3px !important;
         }
     </style>
+
 </asp:Content>

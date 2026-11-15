@@ -64,7 +64,7 @@ namespace BankGateV2.Pages
                 return;
             }
             CurrentTime = DateTime.Now;
-            ExpTime = bankinfo.CreateDate.Value.AddMinutes(5);
+            ExpTime = bankinfo.CreateDate.Value.AddMinutes(10);
             //if (type=="link")
             //{
             //    Response.Redirect(bankinfo.LinkOpenApp);

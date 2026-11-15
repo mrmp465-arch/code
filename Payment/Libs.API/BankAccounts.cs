@@ -21,7 +21,8 @@ namespace Libs.API
         public string BankId { get; set; }
 
         public string DeviceInfo { get; set; }
-        
+        public string clientId { get; set; }
+
 
     }
 
@@ -56,6 +57,8 @@ namespace Libs.API
         public string AppDeviceId { get; set; }
         public string CloudPhoneId { get; set; }
         public string PartnerName { get; set; }
+        public string Note { get; set; }
+        
 
 
         public DateTime StopScanAt { get; set; }
@@ -205,7 +208,7 @@ namespace Libs.API
             try
             {
                 DBHelper db = new DBHelper(Configs.VPGBankConnectionStrings);
-                SqlParameter[] pars = new SqlParameter[18];
+                SqlParameter[] pars = new SqlParameter[19];
                 pars[0] = new SqlParameter("@ReturnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 pars[1] = new SqlParameter("@Id", Id);
                 pars[2] = new SqlParameter("@BankCode", BankCode);
@@ -224,6 +227,7 @@ namespace Libs.API
                 pars[15] = new SqlParameter("@ProfileImage", ProfileImage);
                 pars[16] = new SqlParameter("@AppDeviceId", AppDeviceId);
                 pars[17] = new SqlParameter("@CloudPhoneId", CloudPhoneId);
+                pars[18] = new SqlParameter("@Note", Note);
                 db.ExecuteNonQuerySP("sp_Bank_CMS_Update", pars);
                 //Id = Convert.ToInt32(pars[0].Value);
             }

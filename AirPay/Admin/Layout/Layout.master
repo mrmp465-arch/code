@@ -39,7 +39,21 @@
     <script src="/Content/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/Content/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/Content/dist/js/adminlte.min.js"></script>
+	    <style type="text/css">
+    .td-highlight {
+        background-color: #fff3cd !important;
+        border-top: 2px solid #dc3545 !important;
+        border-bottom: 2px solid #dc3545 !important;
+    }
 
+    .td-first {
+        border-left: 2px solid #dc3545 !important;
+    }
+
+    .td-last {
+        border-right: 2px solid #dc3545 !important;
+    }
+</style>
 </head>
 <body class="hold-transition skin-blue-light sidebar-mini">
     <form id="form1" runat="server">

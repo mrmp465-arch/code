@@ -1108,8 +1108,17 @@ public partial class Pages_Monitor_BankCash_App : System.Web.UI.Page
     public string GetAmountStyle(object log)
     {
         var amount = Convert.ToInt64(log);
-        if (amount >= 20000000)
-            return "style='color:red;font-weight:bold'";
+        if (amount >= 50000000)
+            return "style='color:red;font-weight:bold;font-size:110%'";
+        return "";
+
+
+    }
+    public string GetAmountClass(object log)
+    {
+        var amount = Convert.ToInt64(log);
+        if (amount >= 50000000)
+            return "background-color:#fff5b8;\r\n           outline:1px solid #4a90e2;\r\n           outline-offset:-1px;";
         return "";
 
 

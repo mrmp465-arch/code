@@ -156,14 +156,18 @@ namespace Libs.BankCash
                     if (!allowedIPs.Contains(IPAddress.Get()))
                     {
                         NLogLogger.Info(new string[] { "IpInvalid", _partnerService.IPAddress, IPAddress.Get() });
-                        return new APIResponse((int)ResponseCode.IpInvalid);
+                        var results = new APIResponse((int)ResponseCode.IpInvalid);
+                        results.Description += " " + IPAddress.Get();
+                        return result;
                     }
 
                 }
                 else
                 {
                     NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
-                    return new APIResponse((int)ResponseCode.IpInvalid);
+                    var results = new APIResponse((int)ResponseCode.IpInvalid);
+                    results.Description += " " + IPAddress.Get();
+                    return result;
                 }
                 //NLogLogger.Info(new string[] { "partnerStatus", _partnerService.Quota.ToString(), _partnerService.Occurs.ToString(), transaction.PartnerCode.ToString() });
                 if (_partnerService.Quota != 0 && _partnerService.Occurs == 1)

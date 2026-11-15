@@ -86,6 +86,7 @@ namespace BankGateV2.ServiceHandler
 
                         }
                         string filePath = Path.Combine(UploadFolderPhysical, index.ToString() + ".jpg");
+                        NLogLogger.Info(filePath);
                         if (File.Exists(filePath))
                         {
 

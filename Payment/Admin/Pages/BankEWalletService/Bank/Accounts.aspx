@@ -262,6 +262,7 @@
                                      <th>K.Hoạt</th>
                                    
                                     <th>AppDeviceId</th>
+                                     <th>Ghi chú</th>
                                     <th>PC</th>
                                     <th>T.Vụ</th>
                                     <th>Xóa</th>
@@ -314,8 +315,11 @@
                                                 <asp:Label ID="lblId" runat="server" Visible="false" Text='<%#Eval("Id") %>'></asp:Label>
                                                 <a onclick='StopBank(<%#Eval("Id") %>)' href="javascript:;" class="lbstatus">[Dừng hẳn]</a>
                                             </td>
-                                            <td><%#Eval("PhoneDevice") %>-<%#Eval("Computer") %></td>
+
+                                           
                                             <td><%#Eval("AppDeviceId") %></td>
+                                            <td><%#Eval("Note") %></td>
+                                             <td><%#Eval("PhoneDevice") %>-<%#Eval("Computer") %></td>
                                             <td>
 
                                                 <asp:LinkButton ID="lnkUpdateTime" runat="server" OnCommand="UpdateTime_Command" Visible='<%#  Eval("Type").ToString().Contains("IN")   %>' CommandName="Callback" CommandArgument='<%#Eval("Id")%>' OnClientClick="return confirm('Bạn có muốn quét lại?')">[Quét lại] </asp:LinkButton>

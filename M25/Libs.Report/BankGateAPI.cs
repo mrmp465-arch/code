@@ -122,7 +122,7 @@ namespace Libs.Report
                 , new SqlParameter("@OrderInfo", orderNo));
         }
         // Lấy danh sách
-        public DataTable GetTable(int top, string partnerCodes, string provider, DateTime fromdate, DateTime requestTime, int? status, string bankCode,string refCode, string orderNo, string orderInfo,long? amount=null,string bankid="",int type=1, bool isDay = false)
+        public DataTable GetTable(int top, string partnerCodes, string provider, DateTime fromdate, DateTime requestTime, int? status, string bankCode, string refCode, string orderNo, string orderInfo, long? amount = null, string bankid = "", int type = 1)
         {
             DBHelper db = new DBHelper(Configs.VPGAPIReportConnectionStrings);
             return db.GetDataTableSP("sp_BankGateAPI_Search"
@@ -130,14 +130,13 @@ namespace Libs.Report
                  , string.IsNullOrEmpty(bankCode) ? new SqlParameter("@BankCode", DBNull.Value) : new SqlParameter("@BankCode", bankCode)
                 , string.IsNullOrEmpty(bankid) ? new SqlParameter("@BankAccountNumber", DBNull.Value) : new SqlParameter("@BankAccountNumber", bankid)
                  , string.IsNullOrEmpty(partnerCodes) ? new SqlParameter("@PartnerCodes", DBNull.Value) : new SqlParameter("@PartnerCodes", partnerCodes)
-                , status == null? new SqlParameter("@Status", DBNull.Value) : new SqlParameter("@Status", status)
+                , status == null ? new SqlParameter("@Status", DBNull.Value) : new SqlParameter("@Status", status)
                  , amount == null ? new SqlParameter("@Amount", DBNull.Value) : new SqlParameter("@Amount", amount)
                , string.IsNullOrEmpty(provider) ? new SqlParameter("@Provider", DBNull.Value) : new SqlParameter("@Provider", provider)
                 , string.IsNullOrEmpty(refCode) ? new SqlParameter("@RefCode", DBNull.Value) : new SqlParameter("@RefCode", refCode)
                 , string.IsNullOrEmpty(orderNo) ? new SqlParameter("@OrderNo", DBNull.Value) : new SqlParameter("@OrderNo", orderNo)
                  , string.IsNullOrEmpty(orderInfo) ? new SqlParameter("@OrderInfo", DBNull.Value) : new SqlParameter("@OrderInfo", orderInfo)
                , new SqlParameter("@RequestTime", requestTime)
-                , isDay == false ? new SqlParameter("@IsDay ", false) : new SqlParameter("@IsDay ", isDay)
                  , new SqlParameter("@FromDate", fromdate)
                  , new SqlParameter("@Type", type)
                 );

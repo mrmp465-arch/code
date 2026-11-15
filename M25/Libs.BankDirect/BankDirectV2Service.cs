@@ -257,7 +257,7 @@ namespace Libs.BankDirect
                 }
                 var serviceMM = systemDataConfig.GetKey(lstConfig, "ServiceMM");
 
-                if (service == "fast")
+                if (serviceMM == "fast")
                 {
                    
                     if (request.BankName.ToUpper() == "MOMO")
@@ -315,14 +315,18 @@ namespace Libs.BankDirect
                     if (!allowedIPs.Contains(IPAddress.Get()))
                     {
                         NLogLogger.Info(new string[] { "IpInvalid", _partnerServiceout.IPAddress, IPAddress.Get() });
-                        return new APIResponse((int)ResponseCode.IpInvalid);
+                        var results = new APIResponse((int)ResponseCode.IpInvalid);
+                        results.Description += " " + IPAddress.Get();
+                        return result;
                     }
 
                 }
                 else
                 {
                     NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
-                    return new APIResponse((int)ResponseCode.IpInvalid);
+                    var results = new APIResponse((int)ResponseCode.IpInvalid);
+                    results.Description += " " + IPAddress.Get();
+                    return result;
                 }
 
 

@@ -50,6 +50,8 @@ namespace Libs.API
 
         public int ByPass20M { get; set; }
 
+        public string Note { get; set; }
+
         public DateTime StopScanAt { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -113,7 +115,7 @@ namespace Libs.API
             try
             {
                 DBHelper db = new DBHelper(Configs.VPGMOMOConnectionStrings);
-                SqlParameter[] pars = new SqlParameter[13];
+                SqlParameter[] pars = new SqlParameter[14];
                 pars[0] = new SqlParameter("@ReturnValue", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 pars[1] = new SqlParameter("@MomoName", MomoName);
                 pars[2] = new SqlParameter("@MomoId", MomoId);
@@ -127,6 +129,7 @@ namespace Libs.API
                 pars[10] = new SqlParameter("@ProfileImage", ProfileImage);
                 pars[11] = new SqlParameter("@StatusDetection", StatusDetection);
                 pars[12] = new SqlParameter("@ByPass20M", ByPass20M);
+                pars[13] = new SqlParameter("@Note", Note);
                 db.ExecuteNonQuerySP("sp_Momo_CMS_Update", pars);
                 //Id = Convert.ToInt32(pars[0].Value);
             }

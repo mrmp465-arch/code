@@ -226,6 +226,10 @@
                                         </asp:DropDownList>
                                     </div>
                                     <div class="form-group">
+                                        <label for="txtPhone">Ghi chú</label>
+                                        <asp:TextBox ID="txtNote" runat="server" CssClass="form-control" placeholder="Ghi chú"></asp:TextBox>
+                                    </div>
+                                    <div class="form-group">
 
                                         <label for="txtSolution">Trạng thái  *</label>
                                         <asp:DropDownList ID="drpStatus" runat="server" CssClass="form-control">

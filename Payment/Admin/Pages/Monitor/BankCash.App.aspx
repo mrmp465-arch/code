@@ -327,5 +327,19 @@
             width: 138px !important;
             padding: 3px !important;
         }
+
+        .table tr.row-highlight td {
+            border-top: 2px solid #dc3545 !important;
+            border-bottom: 2px solid #dc3545 !important;
+            background-color: #fff3cd;
+        }
+
+            .table tr.row-highlight td:first-child {
+                border-left: 2px solid #dc3545 !important;
+            }
+
+            .table tr.row-highlight td:last-child {
+                border-right: 2px solid #dc3545 !important;
+            }
     </style>
 </asp:Content>

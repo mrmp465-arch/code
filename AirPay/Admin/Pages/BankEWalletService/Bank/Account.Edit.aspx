@@ -274,10 +274,10 @@
                                                 </asp:Panel>
                                             </asp:Panel>
                                         </blockquote>
-                                            <blockquote id="GroupDevice" runat="server" style="border-color: olive">
-                                    <asp:Panel runat="server" ID="pnbGroupDevice" Visible="false">
-                                        <p>
-                                            Trạng thái thông tin thiết bị
+                                        <blockquote id="GroupDevice" runat="server" style="border-color: olive">
+                                            <asp:Panel runat="server" ID="pnbGroupDevice" Visible="false">
+                                                <p>
+                                                    Trạng thái thông tin thiết bị
                                             <h5>
                                                 <div id="divLoading" runat="server" visible="false">
                                                     <img src="/cmspay/Content/loading2014.gif" height="30px" style="margin-top: -5px" alt="loadding" />
@@ -286,7 +286,7 @@
                                                 <div class="device-status-row">
                                                     <asp:Label ID="lblDeviceInfo" runat="server"
                                                         CssClass="status-green">
-                                                 </asp:Label>
+                                                    </asp:Label>
 
                                                     <asp:LinkButton ID="btnDeleteDevice" runat="server" Visible="false"
                                                         CssClass="text-red"
@@ -298,13 +298,13 @@
                                                 <br />
                                                 <br />
                                                 <i>(Chú ý: Chỉ thực hiện 1 lần duy nhất để tránh lỗi tài khoản)</i></h5>
-                                            <asp:Button ID="btnGetDevice" runat="server" Text="Lấy mới" CssClass="btn btn-block btn-default btn-flat" OnClick="bntGetDevice_Click"></asp:Button>
-                                        </p>
+                                                    <asp:Button ID="btnGetDevice" runat="server" Text="Lấy mới" CssClass="btn btn-block btn-default btn-flat" OnClick="bntGetDevice_Click"></asp:Button>
+                                                </p>
 
 
 
-                                    </asp:Panel>
-                                </blockquote>
+                                            </asp:Panel>
+                                        </blockquote>
 
                                     </div>
                                 </div>
@@ -380,19 +380,39 @@
             $("#<%=txtAmountForm4.ClientID %>").prop('required', false);
             $("#<%=drpBankCodeForm4.ClientID %>").prop('required', false);
 
-            //$(param).prop('disabled', true);
-
-            //$(param).click(function () {                
-            //    alert(`Now You Postback Start`);
-            //});
-
             if (Array.isArray(params)) {
-                for (i = 0; i < params.length; i++) {
+                for (var i = 0; i < params.length; i++) {
                     $(params[i]).prop('required', true);
                 }
             }
 
+            // Kiểm tra các trường bắt buộc
+            for (var i = 0; i < params.length; i++) {
+                if (!params[i].checkValidity()) {
+                    params[i].reportValidity();
+                    return false;
+                }
+            }
+
+            return true;
         }
+        function confirmCashForm4() {
+            var bank = $("#<%=drpBankCodeForm4.ClientID %> option:selected").text();
+           var stk = $("#<%=txtBankIdForm4.ClientID %>").val();
+            var ten = $("#<%=txtBankNameForm4.ClientID %>").val();
+           var tien = $("#<%=txtAmountForm4.ClientID %>").val();
+
+           var tienFormat = Number(tien.replace(/[.,]/g, ''))
+               .toLocaleString('vi-VN');
+
+           return confirm(
+               "Bạn có chắc chắn muốn chuyển tiền?\n\n" +
+               "Ngân hàng: " + bank + "\n" +
+               "Số tài khoản: " + stk + "\n" +
+               "Tên tài khoản: " + ten + "\n" +
+               "Số tiền: " + tienFormat + " VNĐ"
+           );
+       }
         this.DocumentHeght = function () {
             return $(document).height();
         };
@@ -433,75 +453,75 @@
                     /*  UnLoading();*/
                 }
             });
-}
+        }
 
 
 
-//$(document).ready(function () {
-//    $('.base64-img').on('click', function () {
-//        var src = $(this).children('img').first().attr('src');
-//        $('#zoom-img').attr('src', src);
-//        $('#zoom-modal').css('display', 'flex'); // sho
-//    });
+        //$(document).ready(function () {
+        //    $('.base64-img').on('click', function () {
+        //        var src = $(this).children('img').first().attr('src');
+        //        $('#zoom-img').attr('src', src);
+        //        $('#zoom-modal').css('display', 'flex'); // sho
+        //    });
 
-//    $('#zoom-modal').on('click', function () {
-//        $(this).hide();
-//    });
-//});
-$(document).ready(function () {
-    $('.base64-img').each(function () {
-        var imgSrc = $(this).find('img').attr('src');
-        $(this).attr('href', imgSrc);
-    });
-});
-$(document).ready(function () {
-    $(".base64-img").fancybox({
+        //    $('#zoom-modal').on('click', function () {
+        //        $(this).hide();
+        //    });
+        //});
+        $(document).ready(function () {
+            $('.base64-img').each(function () {
+                var imgSrc = $(this).find('img').attr('src');
+                $(this).attr('href', imgSrc);
+            });
+        });
+        $(document).ready(function () {
+            $(".base64-img").fancybox({
 
-    });
-});
-</script>
+            });
+        });
+    </script>
     <style>
-                      .device-status-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
+        .device-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
 
-    .device-status-row .status-green,
-    .device-status-row .status-red {
-        min-width: 150px;
-        text-align: center;
-    }
+            .device-status-row .status-green,
+            .device-status-row .status-red {
+                min-width: 150px;
+                text-align: center;
+            }
 
-    .device-status-row .fa-trash {
-        font-size: 18px;
-    }
+            .device-status-row .fa-trash {
+                font-size: 18px;
+            }
 
-.status-green {
-    background-color: #dff0d8;
-    color: #3c763d;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    display: inline-block;
-    border-radius: 3px;
-}
+        .status-green {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            border-radius: 3px;
+        }
 
-.status-red {
-    background-color: #f2dede;
-    color: #a94442;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    display: inline-block;
-    border-radius: 3px;
-}
+        .status-red {
+            background-color: #f2dede;
+            color: #a94442;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-block;
+            border-radius: 3px;
+        }
 
-.status-green, .status-red {
-    min-width: 150px;
-    text-align: center;
-}
+        .status-green, .status-red {
+            min-width: 150px;
+            text-align: center;
+        }
 
         input[type=file] {
             font-size: 10px;

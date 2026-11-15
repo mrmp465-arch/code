@@ -181,7 +181,7 @@
                                     <th>Out</th>
                                     <th>T.Thái</th>
                                     <th>Source</th>
-
+                                     <th>Ghi chú</th>
                                     <th>K.Hoạt</th>
                                     <%-- <th>G.Pháp</th>--%>
                                     <th>T.Vụ</th>
@@ -213,7 +213,7 @@
                                             <td><%#GetStatusExtra(Eval("StatusExtra")) %></td>
                                             <%--  <td><%#Eval("Source")%></td>--%>
                                             <td><%#Eval("PartnerName")%></td>
-
+                                             <td><%#Eval("Note") %></td>
                                             <td><%#GetStatusActive(Eval("Status")) %> &nbsp;
 
                                                  <asp:CheckBox Visible='<%# (Eval("Status").ToString() == "1" || Eval("Status").ToString() == "0" ) %> ' ID="cbxStatus" CssClass="cbxStatus" runat="server" Checked='<%#Convert.ToBoolean(Eval("Status")) %>' Title='<%#Eval("Id") %>'></asp:CheckBox>

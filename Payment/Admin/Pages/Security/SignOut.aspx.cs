@@ -17,7 +17,13 @@ public partial class Pages_Security_SignOut : System.Web.UI.Page
         }
         else
         {
-            Response.Redirect(Constant.ADMIN_PATH + Resources.Url.SignIn + "?u=" + HttpUtility.UrlEncode(Request["u"].ToLower()));
+            string url = Request["u"].ToLower();
+
+            if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+            {
+                url = "https://" + url.Substring(7);
+            }
+            Response.Redirect(Constant.ADMIN_PATH + Resources.Url.SignIn + "?u=" + HttpUtility.UrlEncode(url));
         }
     }
 }

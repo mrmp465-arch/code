@@ -125,6 +125,8 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         txtBalanceMaxMonth.Text = _Momo.BalanceMaxMonth.ToString();
         lblAccount.Text = _Momo.Solution + " - Tài khoản " + _Momo.MomoId;
 
+        txtNote.Text = _Momo.Note;
+
         ViewState["Solution"] = _Momo.Solution;
 
         var MoMoExt = new MomoAccounts().GetExt(_Momo.MomoId);
@@ -203,10 +205,21 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         //lblDeviceInfo.Text = "Chưa có";
         //lblDeviceInfo.CssClass = "status-red";
         //btnDeleteDevice.Visible = false;
-        RestartFCM(txtMomoId.Text);
-        divResultSync.Attributes["class"] = "callout callout-success";
-        syncMessage.InnerHtml = "<i>Bạn đã thực hiện restart thành công.</i>";
-        divResultSync.Visible = true;
+
+        var login =RestartFCM(txtMomoId.Text);
+        if (login.ResponseCode == (int)ResponseCode.OtpRequired)
+        {
+            divResultSync.Attributes["class"] = "callout callout-success";
+            syncMessage.InnerHtml = "<i>Bạn đã thực hiện restart thành công.</i>";
+            divResultSync.Visible = true;
+
+        }
+        else{
+            divResultSync.Attributes["class"] = "callout callout-warning";
+            syncMessage.InnerHtml = string.Format("<i>{0}.</i>", login.Description);
+            divResultSync.Visible = true;
+        }
+       
 
     }
     protected void bntSendOTPMsg_Click(object sender, EventArgs e)
@@ -356,6 +369,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
         var OldSolution = _Momo.Solution;
         _Momo.Solution = drpSolution.SelectedValue;
 
+        _Momo.Note = txtNote.Text;
 
 
         //if (chkIsActive.Checked)
@@ -404,7 +418,7 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
             serializer.Serialize(requesData)
         ));
     }
-    public void RestartFCM(string momoid)
+    public APIResponse RestartFCM(string momoid)
     {
         var obj = new { momoId = momoid, action = "restart" };
        
@@ -413,10 +427,14 @@ public partial class Pages_Momo_Account_Edit : System.Web.UI.Page
             CommandCode = "NOTIFY_ACTION",
             RequestContent = serializer.Serialize(obj),
         };
-        Task.Run(async () => await CallbackJson(
-            UrlBaseService,
-            serializer.Serialize(requesData)
-        ));
+       
+        var res = Task.Run(async () => await CallbackJson(UrlBaseService, serializer.Serialize(requesData))).Result;
+        var resObj = serializer.Deserialize<APIResponse>(res);
+        if (resObj != null)
+        {
+            return resObj;
+        }
+        return new APIResponse((int)ResponseCode.TransactionFailed);
     }
     protected void bntSyncBalance_Click(object sender, EventArgs e)
     {
