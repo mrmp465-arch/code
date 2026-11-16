@@ -234,6 +234,16 @@
                             </div>
                             <!-- /input-group -->
                         </div>
+                          </div>
+  <div class="col-xs-12 col-sm-6 col-md-2">
+      <div class="input-group">
+          <span class="input-group-addon">
+              <asp:CheckBox runat="server" ID="chkAutoRefresh" Checked="True" />
+          </span>
+          <span class="form-control">Tự động cập nhật</span>
+      </div>
+      <!-- /input-group -->
+  </div>
                         <div class="col-xs-12 col-sm-6 col-md-2">
                             <asp:Button ID="btView" runat="server" CssClass="btn btn-primary" OnClick="btView_Click" Text="Xem"></asp:Button>
                             &nbsp;
@@ -343,7 +353,38 @@
     <script src="<%=Constant.ADMIN_PATH %>Content/bower_components/moment/min/moment.min.js"></script>
     <script src="<%=Constant.ADMIN_PATH %>Content/dist/js/bootstrap-datetimepicker.js"></script>
     <script type="text/javascript" src="<%=Constant.ADMIN_PATH %>Content/bower_components/select2/dist/js/select2.full.min.js"></script>
+        <script type="text/javascript">
+            var refreshTimer = null;
 
+            $(document).ready(function () {
+                $("#<%= chkAutoRefresh.ClientID %>").change(function () {
+            if ($(this).is(":checked")) {
+                startAutoRefresh();
+            } else {
+                stopAutoRefresh();
+            }
+        });
+
+        if ($("#<%= chkAutoRefresh.ClientID %>").is(":checked")) {
+                startAutoRefresh();
+            }
+        });
+
+            function startAutoRefresh() {
+                stopAutoRefresh();
+
+                refreshTimer = setInterval(function () {
+                    __doPostBack('AutoRefresh', '');
+                }, 60000);
+            }
+
+            function stopAutoRefresh() {
+                if (refreshTimer != null) {
+                    clearInterval(refreshTimer);
+                    refreshTimer = null;
+                }
+            }
+        </script>
         <script src="<%=Constant.ADMIN_PATH %>Content/fancybox2.1.5/jquery.fancybox.pack.js"></script>
 <link href="<%=Constant.ADMIN_PATH %>Content/fancybox2.1.5/jquery.fancybox.css" rel="stylesheet" />
      <script>

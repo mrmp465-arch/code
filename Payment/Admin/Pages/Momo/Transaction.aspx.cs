@@ -35,6 +35,10 @@ public partial class Pages_Momo_Transaction : System.Web.UI.Page
             }
 
         }
+        else if (Request["__EVENTTARGET"] == "AutoRefresh")
+        {
+            GetList();
+        }
     }
     private void init()
     {

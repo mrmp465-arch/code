@@ -20,6 +20,7 @@ namespace Libs.API
         public string Description { get; set; }
         public string BankId { get; set; }
         public string DeviceInfo { get; set; }
+        public string clientId { get; set; }
 
     }
 

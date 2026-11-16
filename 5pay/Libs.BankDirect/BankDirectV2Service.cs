@@ -365,18 +365,14 @@ namespace Libs.BankDirect
                     if (!allowedIPs.Contains(IPAddress.Get()))
                     {
                         NLogLogger.Info(new string[] { "IpInvalid", _partnerServiceout.IPAddress, IPAddress.Get() });
-                        var results = new APIResponse((int)ResponseCode.IpInvalid);
-                        results.Description += " " + IPAddress.Get();
-                        return result;
+                        return new APIResponse((int)ResponseCode.IpInvalid);
                     }
 
                 }
                 else
                 {
                     NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
-                    var results = new APIResponse((int)ResponseCode.IpInvalid);
-                    results.Description += " " + IPAddress.Get();
-                    return result;
+                    return new APIResponse((int)ResponseCode.IpInvalid);
                 }
 
                 transaction.ProviderCode = providerCode;

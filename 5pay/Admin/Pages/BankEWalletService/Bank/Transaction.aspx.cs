@@ -47,6 +47,10 @@ public partial class Pages_BankEWalletService_Bank_Transaction : System.Web.UI.P
             }
 
         }
+        else if (Request["__EVENTTARGET"] == "AutoRefresh")
+        {
+            GetList();
+        }
     }
     private void init()
     {

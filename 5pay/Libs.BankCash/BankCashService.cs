@@ -167,18 +167,14 @@ namespace Libs.BankCash
                     if (!allowedIPs.Contains(IPAddress.Get()))
                     {
                         NLogLogger.Info(new string[] { "IpInvalid", _partnerService.IPAddress, IPAddress.Get() });
-                        var results = new APIResponse((int)ResponseCode.IpInvalid);
-                        results.Description += " " + IPAddress.Get();
-                        return result;
+                        return new APIResponse((int)ResponseCode.IpInvalid);
                     }
 
                 }
                 else
                 {
                     NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
-                    var results = new APIResponse((int)ResponseCode.IpInvalid);
-                    results.Description += " " + IPAddress.Get();
-                    return result;
+                    return new APIResponse((int)ResponseCode.IpInvalid);
                 }
 
 

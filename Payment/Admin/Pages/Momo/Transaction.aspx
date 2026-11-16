@@ -44,7 +44,7 @@
                             </div>
 
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-1">
+                        <div class="col-xs-12 col-sm-6 col-md-1" style="display:none">
                             <asp:DropDownList ID="drpPartner" runat="server" CssClass="form-control select2">
                             </asp:DropDownList>
                         </div>
@@ -114,7 +114,15 @@
                             </div>
                             <!-- /input-group -->
                         </div>
-
+                        <div class="col-xs-12 col-sm-6 col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <asp:CheckBox runat="server" ID="chkAutoRefresh" Checked="True" />
+                                </span>
+                                <span class="form-control">Tự động cập nhật</span>
+                            </div>
+                            <!-- /input-group -->
+                        </div>
                         <div class="col-xs-12 col-sm-6 col-md-2" style="display: none">
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -188,8 +196,8 @@
                                             <td><%#Convert.ToInt64(Eval("Amount")).ToString("N0").Replace(",", ".") %></td>
                                             <td><%#Eval("CreatedTime", "{0:dd/MM HH:mm:ss}" )%></td>
                                             <td><%#Eval("UpdateTime", "{0:dd/MM HH:mm:ss}")%></td>
-                                             <td><%#Eval("CommentOrg") == DBNull.Value ? "" : Eval("CommentOrg").ToString() %></td>
-                                             <td><%#GetCodeStatus(Eval("CommandCode").ToString(),Eval("PartnerCode").ToString(),Eval("Comment").ToString(),Eval("CommentOrg") == DBNull.Value ? "" : Eval("CommentOrg").ToString()) %></td>
+                                            <td><%#Eval("CommentOrg") == DBNull.Value ? "" : Eval("CommentOrg").ToString() %></td>
+                                            <td><%#GetCodeStatus(Eval("CommandCode").ToString(),Eval("PartnerCode").ToString(),Eval("Comment").ToString(),Eval("CommentOrg") == DBNull.Value ? "" : Eval("CommentOrg").ToString()) %></td>
                                             <%--<td><%#Eval("Description") %></td>--%>
                                             <td><%#Eval("Status") %></td>
                                             <td>
@@ -272,6 +280,38 @@
             }
         }
 
+    </script>
+    <script type="text/javascript">
+        var refreshTimer = null;
+
+        $(document).ready(function () {
+            $("#<%= chkAutoRefresh.ClientID %>").change(function () {
+                    if ($(this).is(":checked")) {
+                        startAutoRefresh();
+                    } else {
+                        stopAutoRefresh();
+                    }
+                });
+
+                if ($("#<%= chkAutoRefresh.ClientID %>").is(":checked")) {
+                    startAutoRefresh();
+                }
+            });
+
+        function startAutoRefresh() {
+            stopAutoRefresh();
+
+            refreshTimer = setInterval(function () {
+                __doPostBack('AutoRefresh', '');
+            }, 60000);
+        }
+
+        function stopAutoRefresh() {
+            if (refreshTimer != null) {
+                clearInterval(refreshTimer);
+                refreshTimer = null;
+            }
+        }
     </script>
     <style>
         .bwarning {

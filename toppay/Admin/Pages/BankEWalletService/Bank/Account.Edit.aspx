@@ -316,7 +316,7 @@
                 <div class="device-status-row">
                     <asp:Label ID="lblDeviceInfo" runat="server"
                         CssClass="status-green">
-                 </asp:Label>
+                    </asp:Label>
 
                     <asp:LinkButton ID="btnDeleteDevice" runat="server" Visible="false"
                         CssClass="text-red"
@@ -410,18 +410,38 @@
             $("#<%=txtAmountForm4.ClientID %>").prop('required', false);
             $("#<%=drpBankCodeForm4.ClientID %>").prop('required', false);
 
-            //$(param).prop('disabled', true);
-
-            //$(param).click(function () {                
-            //    alert(`Now You Postback Start`);
-            //});
-
             if (Array.isArray(params)) {
-                for (i = 0; i < params.length; i++) {
+                for (var i = 0; i < params.length; i++) {
                     $(params[i]).prop('required', true);
                 }
             }
 
+            // Kiểm tra các trường bắt buộc
+            for (var i = 0; i < params.length; i++) {
+                if (!params[i].checkValidity()) {
+                    params[i].reportValidity();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        function confirmCashForm4() {
+            var bank = $("#<%=drpBankCodeForm4.ClientID %> option:selected").text();
+             var stk = $("#<%=txtBankIdForm4.ClientID %>").val();
+             var ten = $("#<%=txtBankNameForm4.ClientID %>").val();
+             var tien = $("#<%=txtAmountForm4.ClientID %>").val();
+
+            var tienFormat = Number(tien.replace(/[.,]/g, ''))
+                .toLocaleString('vi-VN');
+
+            return confirm(
+                "Bạn có chắc chắn muốn chuyển tiền?\n\n" +
+                "Ngân hàng: " + bank + "\n" +
+                "Số tài khoản: " + stk + "\n" +
+                "Tên tài khoản: " + ten + "\n" +
+                "Số tiền: " + tienFormat + " VNĐ"
+            );
         }
         this.DocumentHeght = function () {
             return $(document).height();
@@ -463,33 +483,33 @@
                     /*  UnLoading();*/
                 }
             });
-}
+        }
 
 
 
-//$(document).ready(function () {
-//    $('.base64-img').on('click', function () {
-//        var src = $(this).children('img').first().attr('src');
-//        $('#zoom-img').attr('src', src);
-//        $('#zoom-modal').css('display', 'flex'); // sho
-//    });
+        //$(document).ready(function () {
+        //    $('.base64-img').on('click', function () {
+        //        var src = $(this).children('img').first().attr('src');
+        //        $('#zoom-img').attr('src', src);
+        //        $('#zoom-modal').css('display', 'flex'); // sho
+        //    });
 
-//    $('#zoom-modal').on('click', function () {
-//        $(this).hide();
-//    });
-//});
-$(document).ready(function () {
-    $('.base64-img').each(function () {
-        var imgSrc = $(this).find('img').attr('src');
-        $(this).attr('href', imgSrc);
-    });
-});
-$(document).ready(function () {
-    $(".base64-img").fancybox({
+        //    $('#zoom-modal').on('click', function () {
+        //        $(this).hide();
+        //    });
+        //});
+        $(document).ready(function () {
+            $('.base64-img').each(function () {
+                var imgSrc = $(this).find('img').attr('src');
+                $(this).attr('href', imgSrc);
+            });
+        });
+        $(document).ready(function () {
+            $(".base64-img").fancybox({
 
-    });
-});
-</script>
+            });
+        });
+    </script>
     <style>
         .device-status-row {
             display: flex;

@@ -148,6 +148,11 @@ namespace Libs.BankCash
                 //Kiểm tra Partner co được add Service ko
                 _partnerService = _partnerService.Get(transaction.PartnerID, transaction.ServiceID);
 
+                if (!_partnerService.CommandCode.Contains("bank"))
+                {
+                    return new APIResponse((int)ResponseCode.ServiceIsLocked);
+                }
+
                 //check ip
                 if (!string.IsNullOrEmpty(_partnerService.IPAddress))
                 {
@@ -156,18 +161,14 @@ namespace Libs.BankCash
                     if (!allowedIPs.Contains(IPAddress.Get()))
                     {
                         NLogLogger.Info(new string[] { "IpInvalid", _partnerService.IPAddress, IPAddress.Get() });
-                        var results = new APIResponse((int)ResponseCode.IpInvalid);
-                        results.Description += " " + IPAddress.Get();
-                        return result;
+                        return new APIResponse((int)ResponseCode.IpInvalid);
                     }
 
                 }
                 else
                 {
                     NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
-                    var results = new APIResponse((int)ResponseCode.IpInvalid);
-                    results.Description += " " + IPAddress.Get();
-                    return result;
+                    return new APIResponse((int)ResponseCode.IpInvalid);
                 }
                 //NLogLogger.Info(new string[] { "partnerStatus", _partnerService.Quota.ToString(), _partnerService.Occurs.ToString(), transaction.PartnerCode.ToString() });
                 if (_partnerService.Quota != 0 && _partnerService.Occurs == 1)

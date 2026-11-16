@@ -231,7 +231,7 @@ namespace Libs.BankDirect.FastPay
                         if (addTran.BankCode.ToUpper() == "MOMO")
                         {
                             orderRes.QRCode = "data:image/png;base64," + orderResponse.QRCode.Replace(" ", "+");
-                            orderRes.Url = String.Format("https://info.m52app.info/Pages/Momo.aspx?orderNo={0}", add.ToString());
+                            orderRes.Url = orderResponse.Url;
                         }
 
                        

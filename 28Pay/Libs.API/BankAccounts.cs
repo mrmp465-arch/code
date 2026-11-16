@@ -22,8 +22,8 @@ namespace Libs.API
 
         public string DeviceInfo { get; set; }
 
+        public string clientId { get; set; }
 
-        
 
     }
 

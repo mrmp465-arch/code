@@ -57,12 +57,13 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
     protected void Page_Load(object sender, EventArgs e)
     {
         serializer.MaxJsonLength = int.MaxValue;
-       btnCashForm4.OnClientClick =
-     "if(!confirm('Bạn có chắc chắn muốn chuyển tiền?')) return false;" +
-     "return validate([" + txtBankIdForm4.ClientID + "," +
-                          txtBankNameForm4.ClientID + "," +
-                          txtAmountForm4.ClientID + "]," +
-                          btnCashForm4.ClientID + ");";
+        btnCashForm4.OnClientClick =
+      "if (!validate([" +
+          txtBankIdForm4.ClientID + "," +
+          txtBankNameForm4.ClientID + "," +
+          txtAmountForm4.ClientID +
+      "]," + btnCashForm4.ClientID + ")) return false;" +
+      "return confirmCashForm4();";
         btAdd.OnClientClick = "validate(" + ")";
         btnSyncBalance.OnClientClick = "validate(" + ")";
         btnReLogin.OnClientClick = "validate(" + ")";
@@ -934,6 +935,13 @@ public partial class Pages_BankEWalletService_Bank_Account_Edit : System.Web.UI.
 
         btnCashForm4.Enabled = true;
         calloutForm4.Visible = true;
+        txtAmountForm4.Text = "";
+        txtNoteForm4.Text = "";
+        txtBankNameForm4.Text = "";
+        txtBankIdForm4.Text = "";
+        drpBankCodeForm4.SelectedValue = "";
+        //drpBankCode2.SelectedValue = "";
+        //drpBankCode3.SelectedValue = "";
     }
 
     public static async Task<string> CallbackJson(string url, string postData)

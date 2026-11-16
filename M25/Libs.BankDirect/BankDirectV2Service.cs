@@ -304,6 +304,24 @@ namespace Libs.BankDirect
 
                 //}
 
+                PartnerService _partnerService = new PartnerService();
+                //Kiểm tra Partner co được add Service ko
+                _partnerService = _partnerService.Get(transaction.PartnerID, transaction.ServiceID);
+                if (request.BankName.ToUpper().Equals("MOMO"))
+                {
+                    //if (!_partnerService.CommandCode.Contains("bank"))
+                    //{
+                    //    return new APIResponse((int)ResponseCode.ServiceIsLocked);
+                    //}
+                }
+                else
+                {
+                    if (!_partnerService.CommandCode.Contains("bank"))
+                    {
+                        return new APIResponse((int)ResponseCode.ServiceIsLocked);
+                    }
+                }
+
                 PartnerService _partnerServiceout = new PartnerService();
                 //Kiểm tra Partner co được add Service ko
                 _partnerServiceout = _partnerServiceout.Get(transaction.PartnerID, 18);
@@ -315,18 +333,14 @@ namespace Libs.BankDirect
                     if (!allowedIPs.Contains(IPAddress.Get()))
                     {
                         NLogLogger.Info(new string[] { "IpInvalid", _partnerServiceout.IPAddress, IPAddress.Get() });
-                        var results = new APIResponse((int)ResponseCode.IpInvalid);
-                        results.Description += " " + IPAddress.Get();
-                        return result;
+                        return new APIResponse((int)ResponseCode.IpInvalid);
                     }
 
                 }
                 else
                 {
                     NLogLogger.Info(new string[] { "IpInvalid", IPAddress.Get() });
-                    var results = new APIResponse((int)ResponseCode.IpInvalid);
-                    results.Description += " " + IPAddress.Get();
-                    return result;
+                    return new APIResponse((int)ResponseCode.IpInvalid);
                 }
 
 

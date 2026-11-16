@@ -403,23 +403,43 @@
         function validate(params, param) {
 
             $("#<%=txtBankIdForm4.ClientID %>").prop('required', false);
-            $("#<%=txtBankNameForm4.ClientID %>").prop('required', false);
-            $("#<%=txtAmountForm4.ClientID %>").prop('required', false);
-            $("#<%=drpBankCodeForm4.ClientID %>").prop('required', false);
+             $("#<%=txtBankNameForm4.ClientID %>").prop('required', false);
+             $("#<%=txtAmountForm4.ClientID %>").prop('required', false);
+             $("#<%=drpBankCodeForm4.ClientID %>").prop('required', false);
 
-            //$(param).prop('disabled', true);
+     if (Array.isArray(params)) {
+         for (var i = 0; i < params.length; i++) {
+             $(params[i]).prop('required', true);
+         }
+     }
 
-            //$(param).click(function () {                
-            //    alert(`Now You Postback Start`);
-            //});
+     // Kiểm tra các trường bắt buộc
+     for (var i = 0; i < params.length; i++) {
+         if (!params[i].checkValidity()) {
+             params[i].reportValidity();
+             return false;
+         }
+     }
 
-            if (Array.isArray(params)) {
-                for (i = 0; i < params.length; i++) {
-                    $(params[i]).prop('required', true);
-                }
-            }
+     return true;
+ }
+ function confirmCashForm4() {
+     var bank = $("#<%=drpBankCodeForm4.ClientID %> option:selected").text();
+    var stk = $("#<%=txtBankIdForm4.ClientID %>").val();
+     var ten = $("#<%=txtBankNameForm4.ClientID %>").val();
+     var tien = $("#<%=txtAmountForm4.ClientID %>").val();
 
-        }
+     var tienFormat = Number(tien.replace(/[.,]/g, ''))
+         .toLocaleString('vi-VN');
+
+     return confirm(
+         "Bạn có chắc chắn muốn chuyển tiền?\n\n" +
+         "Ngân hàng: " + bank + "\n" +
+         "Số tài khoản: " + stk + "\n" +
+         "Tên tài khoản: " + ten + "\n" +
+         "Số tiền: " + tienFormat + " VNĐ"
+     );
+ }
 
         this.DocumentHeght = function () {
             return $(document).height();
